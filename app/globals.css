@@ -148,3 +148,22 @@
   -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
 
+/* Estilo base para botones magnéticos */
+.btn-magnet {
+  @apply text-lg px-8 py-6 rounded-md transition-all duration-300;
+}
+
+/* Estilo para botón principal */
+.btn-primary {
+  @apply bg-purple-600 hover:bg-purple-700 text-white shadow-md;
+}
+
+/* Estilo para botón secundario */
+.btn-secondary {
+  @apply bg-transparent border border-purple-500 hover:bg-purple-500/10 text-white;
+}
+
+.btn-magnet {
+  @apply bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-md transition;
+}
+

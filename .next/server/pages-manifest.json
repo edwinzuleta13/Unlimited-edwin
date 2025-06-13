@@ -1,1 +1,11 @@
+<<<<<<< HEAD
 {}
+=======
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/signin": "pages/signin.js",
+  "/signup": "pages/signup.js"
+}
+>>>>>>> 25954b4902ab1c0d6067226b55fd4b61435ce427

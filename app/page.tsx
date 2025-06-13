@@ -1,5 +1,6 @@
 "use client"
-
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Image from "next/image"
@@ -97,6 +98,41 @@ export default function Home() {
       <ParticleBackground />
       <div className="fixed inset-0 noise" />
       <TechCursor />
+<div className="absolute top-6 right-6 z-50 flex gap-4">
+  <Link href="/signin">
+    <MagneticButton
+      className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
+      onClick={() => {
+        if (audioReady) {
+          const audio = new Audio("/hover.mp3")
+          audio.volume = 0.1
+          audio.play().catch((error) =>
+            console.error("Error playing audio:", error)
+          )
+        }
+      }}
+    >
+      Iniciar sesión
+    </MagneticButton>
+  </Link>
+  <Link href="/signup">
+    <MagneticButton
+      className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
+      onClick={() => {
+        if (audioReady) {
+          const audio = new Audio("/hover.mp3")
+          audio.volume = 0.1
+          audio.play().catch((error) =>
+            console.error("Error playing audio:", error)
+          )
+        }
+      }}
+    >
+      Registrarse
+    </MagneticButton>
+  </Link>
+</div>
+
       <FloatingChatWidget />
 
       {/* Hero Section */}
@@ -175,7 +211,7 @@ export default function Home() {
             Conoce Nuestros Servicios
           </MagneticButton>
         </motion.div>
-
+ 
         <motion.div
           initial={{ y: 0 }}
           animate={{ y: [0, 10, 0] }}

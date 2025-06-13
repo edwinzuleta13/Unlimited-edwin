@@ -32,6 +32,7 @@ import TechnologicalExpertise from "@/components/technological-expertise"
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
 const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
 
+
 export default function Home() {
   const { setCursorVariant } = useMouse()
   const { startTransition } = useTransition()

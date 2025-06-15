@@ -19,7 +19,7 @@ exports.modules = {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (\"4beccf4f9e91\");\nif (false) {}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9hcHAvZ2xvYmFscy5jc3MiLCJtYXBwaW5ncyI6Ijs7OztBQUFBLGlFQUFlLGNBQWM7QUFDN0IsSUFBSSxLQUFVLEVBQUUsRUFBdUIiLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcRWR3aW5cXERlc2t0b3BcXHVubGltaXRlZFxcdW50aXRsZWQtdGVjaFxcdW50aXRsZWQtdGVjaFxcYXBwXFxnbG9iYWxzLmNzcyJdLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBcIjRiZWNjZjRmOWU5MVwiXG5pZiAobW9kdWxlLmhvdCkgeyBtb2R1bGUuaG90LmFjY2VwdCgpIH1cbiJdLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./app/globals.css\n");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (\"a77196fc5f00\");\nif (false) {}\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9hcHAvZ2xvYmFscy5jc3MiLCJtYXBwaW5ncyI6Ijs7OztBQUFBLGlFQUFlLGNBQWM7QUFDN0IsSUFBSSxLQUFVLEVBQUUsRUFBdUIiLCJzb3VyY2VzIjpbIkM6XFxVc2Vyc1xcRWR3aW5cXERlc2t0b3BcXHVubGltaXRlZFxcdW50aXRsZWQtdGVjaFxcdW50aXRsZWQtdGVjaFxcYXBwXFxnbG9iYWxzLmNzcyJdLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBcImE3NzE5NmZjNWYwMFwiXG5pZiAobW9kdWxlLmhvdCkgeyBtb2R1bGUuaG90LmFjY2VwdCgpIH1cbiJdLCJuYW1lcyI6W10sImlnbm9yZUxpc3QiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./app/globals.css\n");
 
 /***/ }),
 
@@ -207,11 +207,7 @@ module.exports = require("path");
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-<<<<<<< HEAD
-var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/framer-motion","vendor-chunks/motion-dom","vendor-chunks/motion-utils","vendor-chunks/@vercel","vendor-chunks/next-themes","vendor-chunks/@swc"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F_not-found%2Fpage&page=%2F_not-found%2Fpage&appPaths=&pagePath=node_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fnot-found-error.js&appDir=C%3A%5CUsers%5CEdwin%5CDesktop%5Cunlimited%5Cuntitled-tech%5Cuntitled-tech%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5CEdwin%5CDesktop%5Cunlimited%5Cuntitled-tech%5Cuntitled-tech&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
-=======
 var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/@swc","vendor-chunks/framer-motion","vendor-chunks/motion-dom","vendor-chunks/motion-utils","vendor-chunks/@vercel","vendor-chunks/next-themes"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader/index.js?name=app%2F_not-found%2Fpage&page=%2F_not-found%2Fpage&appPaths=&pagePath=node_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fnot-found-error.js&appDir=C%3A%5CUsers%5CEdwin%5CDesktop%5Cunlimited%5Cuntitled-tech%5Cuntitled-tech%5Capp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=C%3A%5CUsers%5CEdwin%5CDesktop%5Cunlimited%5Cuntitled-tech%5Cuntitled-tech&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
->>>>>>> 25954b4902ab1c0d6067226b55fd4b61435ce427
 module.exports = __webpack_exports__;
 
 })();

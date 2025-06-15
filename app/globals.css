@@ -167,3 +167,20 @@
   @apply bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-md transition;
 }
 
+.noise {
+  background-image: url('/noise.png');
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow {
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+}
+

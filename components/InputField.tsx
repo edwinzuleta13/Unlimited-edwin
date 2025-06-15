@@ -21,7 +21,7 @@ export const InputField: React.FC<Props> = ({ label, name, type = 'text', value,
         type={type}
         value={value}
         onChange={onChange}
-        className="w-full px-3 py-2 border border-gray-300 rounded"
+        className="w-full px-4 py-2 bg-black/20 text-white border border-purple-500 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
       />
     </div>
   );

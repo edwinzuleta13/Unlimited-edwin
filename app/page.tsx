@@ -56,39 +56,42 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    setIsLoaded(true)
+useEffect(() => {
+  setIsLoaded(true)
 
-    // Initialize audio
-    const audio = new Audio("/hover.mp3")
-    audio.volume = 0.1
-    audio.load()
+  const audio = new Audio("/hover.mp3")
+  audio.volume = 0.1
 
-    audio.oncanplaythrough = () => {
-      setAudioReady(true)
+  audio.onerror = () => {
+    console.warn("🔇 Archivo de audio /hover.mp3 no se encontró o falló al cargar.")
+  }
+
+  audio.oncanplaythrough = () => {
+    setAudioReady(true)
+  }
+
+  const playSound = () => {
+    if (audioReady) {
+      audio.currentTime = 0
+      audio.play().catch((error) => console.error("Error al reproducir el audio:", error))
     }
+  }
 
-    const playSound = () => {
-      if (audioReady) {
-        audio.currentTime = 0
-        audio.play().catch((error) => console.error("Error playing audio:", error))
-      }
+  const handleMouseOver = (e: MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button, a")) {
+      playSound()
     }
+  }
 
-    const handleMouseOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest("button, a")) {
-        playSound()
-      }
-    }
+  document.addEventListener("mouseover", handleMouseOver)
 
-    document.addEventListener("mouseover", handleMouseOver)
+  return () => {
+    document.removeEventListener("mouseover", handleMouseOver)
+    audio.pause()
+    audio.src = ""
+  }
+}, [audioReady])
 
-    return () => {
-      document.removeEventListener("mouseover", handleMouseOver)
-      audio.pause()
-      audio.src = ""
-    }
-  }, [audioReady])
 
   const handleExploreClick = () => {
     startTransition()
@@ -96,12 +99,17 @@ export default function Home() {
   }
 
   return (
-    <div className="relative" ref={containerRef}>
-      <ParticleBackground />
-      <div className="fixed inset-0 noise" />
+    
+    <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none" ref={containerRef}>
+      <div className="absolute inset-0 z-0">
+              <ParticleBackground />
+              <div className="fixed inset-0 noise" />
+            </div>
       <TechCursor />
-      <AuthNav />
 
+        <header className="relative z-10 w-full py-6 px-8 flex justify-end">
+          <AuthNav />
+        </header>
 
       <FloatingChatWidget />
 
@@ -395,41 +403,66 @@ export default function Home() {
       <TechnologicalExpertise />
 
       {/* CTA Section */}
-      <section id="contacto" className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="gradient-border">
-            <div className="bg-black/50 backdrop-blur rounded-xl p-8 md:p-12">
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
-                    ¿Listo para transformar tu negocio?
-                  </h2>
-                  <p className="text-lg text-purple-300 mb-6">
-                    Agenda una consulta gratuita con nuestros expertos y descubre cómo podemos ayudarte a alcanzar tus
-                    objetivos tecnológicos.
-                  </p>
-                  <MagneticButton
-                    className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
-                    onClick={() => {
-                      if (audioReady) {
-                        const audio = new Audio("/hover.mp3")
-                        audio.volume = 0.1
-                        audio.play().catch((error) => console.error("Error playing audio:", error))
-                      }
-                      scrollToSection("contacto")
-                    }}
-                  >
-                    Contactar Ahora <ArrowRight className="ml-2" />
-                  </MagneticButton>
-                </div>
-                <div className="relative h-64 md:h-full">
-                  <Scene />
-                </div>
-              </div>
-            </div>
-          </div>
+<motion.section
+  id="contacto"
+  className="py-20 px-4"
+  initial={{ opacity: 0, y: 100 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
+  viewport={{ once: true }}
+>
+  <div className="container mx-auto">
+    <div className="gradient-border">
+      <div className="bg-black/50 backdrop-blur rounded-xl p-6 md:p-12">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text text-center md:text-left">
+              ¿Listo para transformar tu negocio?
+            </h2>
+            <p className="text-lg text-purple-300 mb-6 text-center md:text-left">
+              Agenda una consulta gratuita con nuestros expertos y descubre cómo podemos ayudarte a alcanzar tus
+              objetivos tecnológicos.
+            </p>
+            <motion.div
+              whileTap={{ scale: 0.95 }}
+              className="w-full flex justify-center md:justify-start"
+            >
+              <MagneticButton
+                className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
+                onClick={() => {
+                  const audio = new Audio("/hover.mp3");
+                  audio.volume = 0.1;
+                  audio.oncanplaythrough = () => {
+                    audio.currentTime = 0;
+                    audio.play().catch((error) => console.error("Error playing audio:", error));
+                  };
+                  scrollToSection("contacto");
+                }}
+              >
+                Contactar Ahora <ArrowRight className="ml-2" />
+              </MagneticButton>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="relative h-64 md:h-full"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Scene />
+          </motion.div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</motion.section>
 
       {/* Contact Section */}
       <section className="py-20 px-4 bg-gradient-to-b from-purple-900/20 to-transparent">

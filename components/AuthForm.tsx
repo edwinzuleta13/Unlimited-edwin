@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // 🚀 redirección
+import { useRouter } from 'next/navigation'; // 🔁 Redirección para App Router
 import { InputField } from './InputField';
 import MagneticButton from './magnetic-button';
 import { supabase } from '@/services/supabaseClient';
@@ -17,7 +17,7 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const router = useRouter(); // 🔁 Redirección
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,30 +25,53 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
     setSuccess('');
 
     if (type === 'signup') {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { role },
-        },
-      });
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess('Cuenta creada correctamente. Revisa tu correo.');
-      }
-    }
+  // Paso 1: Verificar si el correo ya existe
+  const { data: existsData, error: existsError } = await supabase.rpc('email_exists', {
+    email_input: email,
+  });
+
+  if (existsError) {
+    console.error("Error al verificar existencia:", existsError);
+    setError("Error al verificar el correo. Intenta nuevamente.");
+    return;
+  }
+
+  if (existsData) {
+    setError("Ese correo ya está registrado. Redirigiendo a iniciar sesión...");
+    setTimeout(() => {
+      router.push('/signin');
+    }, 3000);
+    return;
+  }
+
+  // Paso 2: Crear cuenta si el correo NO existe
+  const { error: signupError } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { role },
+    },
+  });
+
+  if (signupError) {
+    setError(signupError.message);
+  } else {
+    setSuccess("Cuenta creada correctamente. Revisa tu correo.");
+  }
+}
+
 
     if (type === 'signin') {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+
       if (error) {
         setError(error.message);
       } else {
         setSuccess('Inicio de sesión exitoso.');
-        router.push('/'); // ✅ Redirige al home
+        router.push('/');
       }
     }
   };
@@ -82,9 +105,7 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
               onChange={(e) => setRole(e.target.value)}
               className="w-full bg-purple-950 bg-opacity-40 border border-purple-500 text-white placeholder-purple-300 rounded-md p-3 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-400"
             >
-              <option disabled value="">
-                Selecciona un rol
-              </option>
+              <option disabled value="">Selecciona un rol</option>
               <option value="usuario">Usuario</option>
               <option value="admin">Admin</option>
               <option value="cliente">Cliente</option>

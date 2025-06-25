@@ -24,7 +24,8 @@ export default function AuthNav() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/';
+    // ✅ Redirección compatible con localhost y producción
+    window.location.href = window.location.origin;
   };
 
   const getInitials = (email: string) => {

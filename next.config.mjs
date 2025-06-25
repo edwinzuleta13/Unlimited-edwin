@@ -16,6 +16,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  output: 'export', // 👈 esta es la línea nueva
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,

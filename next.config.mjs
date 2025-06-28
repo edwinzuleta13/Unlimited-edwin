@@ -16,7 +16,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  output: 'export', // 👈 esta es la línea nueva
+  // output: 'export', // 👈 esta línea se comenta para permitir rutas API
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,

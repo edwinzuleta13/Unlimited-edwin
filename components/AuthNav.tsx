@@ -24,7 +24,6 @@ export default function AuthNav() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    // ✅ Redirección compatible con localhost y producción
     window.location.href = window.location.origin;
   };
 
@@ -60,15 +59,15 @@ export default function AuthNav() {
             {getInitials(user.email)}
           </button>
 
-          {/* Menú desplegable animado */}
+          {/* Menú desplegable animado más a la izquierda */}
           <AnimatePresence>
             {menuOpen && (
               <motion.div
-                initial={{ opacity: 0, y: -5 }}
-                animate={{ opacity: 1, y: 4 }}
-                exit={{ opacity: 0, y: -5 }}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: -180 }}
+                exit={{ opacity: 0, x: 40 }}
                 transition={{ duration: 0.2 }}
-                className="absolute right-0 mt-2 w-40 bg-black border border-purple-600 rounded-lg shadow-lg z-50 overflow-hidden"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-40 bg-black border border-purple-600 rounded-lg shadow-lg z-50 overflow-hidden"
               >
                 <button
                   onClick={handleLogout}

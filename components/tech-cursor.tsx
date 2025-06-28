@@ -22,10 +22,13 @@ export default function TechCursor() {
     }
   }, [])
 
+  // Tamaño del SVG (ajusta si cambias el SVG)
+  const CURSOR_SIZE = 32
+
   const variants = {
     default: {
-      x: mousePosition.x - 16,
-      y: mousePosition.y - 16,
+      x: mousePosition.x - CURSOR_SIZE / 2,
+      y: mousePosition.y - CURSOR_SIZE / 2,
       backgroundColor: "rgba(147, 51, 234, 0.3)",
     },
     text: {
@@ -47,7 +50,12 @@ export default function TechCursor() {
   useEffect(() => {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      if (target.tagName === "BUTTON" || target.tagName === "A" || target.closest("button") || target.closest("a")) {
+      if (
+        target.tagName === "BUTTON" ||
+        target.tagName === "A" ||
+        target.closest("button") ||
+        target.closest("a")
+      ) {
         setCursorVariant("text")
       }
     }
@@ -76,9 +84,17 @@ export default function TechCursor() {
         zIndex: 9999,
         pointerEvents: "none",
         borderRadius: "50%",
+        left: 0,
+        top: 0,
       }}
     >
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width={CURSOR_SIZE}
+        height={CURSOR_SIZE}
+        viewBox="0 0 32 32"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <circle cx="16" cy="16" r="15" stroke="rgba(147, 51, 234, 0.8)" strokeWidth="2" />
         <path
           d="M16 8V24M8 16H24"
@@ -91,4 +107,3 @@ export default function TechCursor() {
     </motion.div>
   )
 }
-

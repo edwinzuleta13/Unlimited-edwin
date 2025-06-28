@@ -435,13 +435,7 @@ useEffect(() => {
               <MagneticButton
                 className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
                 onClick={() => {
-                  const audio = new Audio("/hover.mp3");
-                  audio.volume = 0.1;
-                  audio.oncanplaythrough = () => {
-                    audio.currentTime = 0;
-                    audio.play().catch((error) => console.error("Error playing audio:", error));
-                  };
-                  scrollToSection("contacto");
+                  window.location.href = '/solicitud';
                 }}
               >
                 Contactar Ahora <ArrowRight className="ml-2" />

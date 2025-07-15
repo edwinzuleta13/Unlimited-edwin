@@ -5,32 +5,32 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/nJjeRGzaEI5q9PZvNYQS3/_buildManifest.js",
-    "static/nJjeRGzaEI5q9PZvNYQS3/_ssgManifest.js"
+    "static/TIT9Ckw5WueZXQtCHYSCD/_buildManifest.js",
+    "static/TIT9Ckw5WueZXQtCHYSCD/_ssgManifest.js"
   ],
   "rootMainFiles": [
-    "static/chunks/webpack-a118d004ab0dd29c.js",
-    "static/chunks/4bd1b696-319ced2a67e344a7.js",
-    "static/chunks/684-f13f8bbfa6ee4147.js",
+    "static/chunks/webpack-56d406765a05701c.js",
+    "static/chunks/4bd1b696-51ade1a3c02e2df4.js",
+    "static/chunks/684-f08b2fad24f6b2cf.js",
     "static/chunks/main-app-2d77c40287911294.js"
   ],
   "rootMainFilesTree": {},
   "pages": {
     "/_app": [
-      "static/chunks/webpack-a118d004ab0dd29c.js",
+      "static/chunks/webpack-56d406765a05701c.js",
       "static/chunks/framework-52147360060c60cb.js",
       "static/chunks/main-542b78a27c438bcc.js",
       "static/css/eccfb2bc0eb75982.css",
       "static/chunks/pages/_app-0e4524e23141b651.js"
     ],
     "/_error": [
-      "static/chunks/webpack-a118d004ab0dd29c.js",
+      "static/chunks/webpack-56d406765a05701c.js",
       "static/chunks/framework-52147360060c60cb.js",
       "static/chunks/main-542b78a27c438bcc.js",
       "static/chunks/pages/_error-c3c87e8c76cac752.js"
     ],
     "/signin": [
-      "static/chunks/webpack-a118d004ab0dd29c.js",
+      "static/chunks/webpack-56d406765a05701c.js",
       "static/chunks/framework-52147360060c60cb.js",
       "static/chunks/main-542b78a27c438bcc.js",
       "static/chunks/166-902ac6228d8f8e29.js",
@@ -38,7 +38,7 @@
       "static/chunks/pages/signin-ee0ec828d9178ca0.js"
     ],
     "/signup": [
-      "static/chunks/webpack-a118d004ab0dd29c.js",
+      "static/chunks/webpack-56d406765a05701c.js",
       "static/chunks/framework-52147360060c60cb.js",
       "static/chunks/main-542b78a27c438bcc.js",
       "static/chunks/166-902ac6228d8f8e29.js",
@@ -46,7 +46,7 @@
       "static/chunks/pages/signup-75d2f11e00d51826.js"
     ],
     "/solicitud": [
-      "static/chunks/webpack-a118d004ab0dd29c.js",
+      "static/chunks/webpack-56d406765a05701c.js",
       "static/chunks/framework-52147360060c60cb.js",
       "static/chunks/main-542b78a27c438bcc.js",
       "static/chunks/166-902ac6228d8f8e29.js",

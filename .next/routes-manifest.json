@@ -28,12 +28,6 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
-      "page": "/reset-password",
-      "regex": "^/reset\\-password(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/reset\\-password(?:/)?$"
-    },
-    {
       "page": "/signin",
       "regex": "^/signin(?:/)?$",
       "routeKeys": {},

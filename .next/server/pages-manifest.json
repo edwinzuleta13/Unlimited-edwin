@@ -1,9 +1,10 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/solicitud": "pages/solicitud.js",
-  "/signin": "pages/signin.js",
+  "/api/support-request/confirm": "pages/api/support-request/confirm.js",
   "/api/support-request": "pages/api/support-request.js",
-  "/api/support-request/confirm": "pages/api/support-request/confirm.js"
+  "/signin": "pages/signin.js",
+  "/signup": "pages/signup.js",
+  "/solicitud": "pages/solicitud.js",
+  "/_document": "pages/_document.js"
 }

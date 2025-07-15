@@ -1,4 +1,5 @@
 "use client"
+import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,8 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [audioReady, setAudioReady] = useState(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -57,40 +60,48 @@ export default function Home() {
   }
 
 useEffect(() => {
-  setIsLoaded(true)
-
-  const audio = new Audio("/hover.mp3")
-  audio.volume = 0.1
-
-  audio.onerror = () => {
-    console.warn("🔇 Archivo de audio /hover.mp3 no se encontró o falló al cargar.")
+  // Solo ejecuta en el cliente y si searchParams está disponible
+  if (typeof window !== "undefined" && searchParams?.get("type") === "recovery") {
+    router.replace("/reset-password" + window.location.search);
   }
+  // eslint-disable-next-line
+}, [searchParams, router]);
 
-  audio.oncanplaythrough = () => {
-    setAudioReady(true)
-  }
+  useEffect(() => {
+    setIsLoaded(true)
 
-  const playSound = () => {
-    if (audioReady) {
-      audio.currentTime = 0
-      audio.play().catch((error) => console.error("Error al reproducir el audio:", error))
+    const audio = new Audio("/hover.mp3")
+    audio.volume = 0.1
+
+    audio.onerror = () => {
+      console.warn("🔇 Archivo de audio /hover.mp3 no se encontró o falló al cargar.")
     }
-  }
 
-  const handleMouseOver = (e: MouseEvent) => {
-    if ((e.target as HTMLElement).closest("button, a")) {
-      playSound()
+    audio.oncanplaythrough = () => {
+      setAudioReady(true)
     }
-  }
 
-  document.addEventListener("mouseover", handleMouseOver)
+    const playSound = () => {
+      if (audioReady) {
+        audio.currentTime = 0
+        audio.play().catch((error) => console.error("Error al reproducir el audio:", error))
+      }
+    }
 
-  return () => {
-    document.removeEventListener("mouseover", handleMouseOver)
-    audio.pause()
-    audio.src = ""
-  }
-}, [audioReady])
+    const handleMouseOver = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest("button, a")) {
+        playSound()
+      }
+    }
+
+    document.addEventListener("mouseover", handleMouseOver)
+
+    return () => {
+      document.removeEventListener("mouseover", handleMouseOver)
+      audio.pause()
+      audio.src = ""
+    }
+  }, [audioReady])
 
 
   const handleExploreClick = () => {

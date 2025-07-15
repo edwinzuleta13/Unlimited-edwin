@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/services/supabaseClient';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export default function AuthNav() {
   const [user, setUser] = useState<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
   // Observar sesión
   useEffect(() => {
@@ -25,6 +27,14 @@ export default function AuthNav() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = window.location.origin;
+  };
+
+  const handleGoToStatus = () => {
+    router.push("/user-status");
+  };
+
+  const handleGoHome = () => {
+    router.push("/");
   };
 
   const getInitials = (email: string) => {
@@ -60,24 +70,44 @@ export default function AuthNav() {
           </button>
 
           {/* Menú desplegable animado más a la izquierda */}
-          <AnimatePresence>
-            {menuOpen && (
-              <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: -180 }}
-                exit={{ opacity: 0, x: 40 }}
-                transition={{ duration: 0.2 }}
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-40 bg-black border border-purple-600 rounded-lg shadow-lg z-50 overflow-hidden"
-              >
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-3 text-white hover:bg-purple-700 transition"
-                >
-                  Cerrar sesión
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+<AnimatePresence>
+  {menuOpen && (
+<motion.div
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -20 }}
+  transition={{ duration: 0.2 }}
+  className="absolute right-0 top-full mt-2 min-w-[180px] bg-black border border-purple-600 rounded-lg rounded-tl-lg rounded-bl-lg rounded-tr-none shadow-lg z-[9999] overflow-hidden flex flex-col gap-0"
+>
+  {[
+    {
+      onClick: handleGoToStatus,
+      label: "Estado de Usuario",
+    },
+    {
+      onClick: handleGoHome,
+      label: "Ir a inicio",
+    },
+    {
+      onClick: handleLogout,
+      label: "Cerrar sesión",
+    },
+  ].map((btn, idx) => (
+    <motion.button
+      key={btn.label}
+      onClick={btn.onClick}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ delay: 0.08 * idx, duration: 0.25 }}
+      className="text-left px-4 py-3 text-purple-200 hover:bg-purple-700 hover:text-white transition whitespace-nowrap font-bold tracking-tight text-lg"
+    >
+      {btn.label}
+    </motion.button>
+  ))}
+</motion.div>
+  )}
+</AnimatePresence>
         </div>
       )}
     </div>

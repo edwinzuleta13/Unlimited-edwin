@@ -18,7 +18,7 @@ export default function SolicitudPage() {
       </div>
 
       {/* Header igual que landing */}
-      <header className="relative z-10 w-full py-6 px-8 flex justify-end">
+      <header className="relative z-[9999] w-full py-6 px-8 flex justify-end">
         <AuthNav />
       </header>
 
@@ -27,7 +27,7 @@ export default function SolicitudPage() {
       <FloatingChatWidget />
 
       {/* Contenido principal: formulario */}
-      <div className="relative z-50 flex justify-center pt-12 px-4">
+      <div className="relative z-10 flex justify-center pt-12 px-4">
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

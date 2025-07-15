@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/services/supabaseClient";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ParticleBackground from "@/components/particle-background";
@@ -10,6 +12,11 @@ import Image from "next/image";
 
 export default function SignIn() {
   const [audioReady, setAudioReady] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetMsg, setResetMsg] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const audio = new Audio("/hover.mp3");
@@ -37,6 +44,18 @@ export default function SignIn() {
       audio.src = "";
     };
   }, [audioReady]);
+
+  // Handler para recuperación de contraseña
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetMsg("");
+    setError("");
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: "http://localhost:3000/reset-password"
+    });
+    if (error) setError("No se pudo enviar el correo de recuperación.");
+    else setResetMsg("¡Revisa tu correo para restablecer tu contraseña!");
+  };
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
@@ -79,14 +98,49 @@ export default function SignIn() {
             Iniciar Sesión
           </motion.h1>
 
-          <AuthForm type="signin" />
-
-          <p className="mt-4 text-center text-sm text-purple-300">
-            ¿No tienes una cuenta?{" "}
-            <Link href="/signup" className="text-purple-400 underline hover:text-purple-200">
-              Regístrate
-            </Link>
-          </p>
+          {showReset ? (
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={e => setResetEmail(e.target.value)}
+                placeholder="Tu correo electrónico"
+                required
+                className="w-full px-4 py-2 rounded bg-black/70 border border-purple-500 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition"
+              >
+                Enviar enlace de recuperación
+              </button>
+              {resetMsg && <div className="text-green-400 text-sm">{resetMsg}</div>}
+              {error && <div className="text-red-400 text-sm">{error}</div>}
+              <button
+                type="button"
+                onClick={() => setShowReset(false)}
+                className="mt-2 text-purple-400 hover:underline w-full"
+              >
+                Volver a iniciar sesión
+              </button>
+            </form>
+          ) : (
+            <>
+              <AuthForm type="signin" />
+              <button
+                className="mt-4 text-purple-400 hover:underline w-full"
+                onClick={() => setShowReset(true)}
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+              <p className="mt-4 text-center text-sm text-purple-300">
+                ¿No tienes una cuenta?{" "}
+                <Link href="/signup" className="text-purple-400 underline hover:text-purple-200">
+                  Regístrate
+                </Link>
+              </p>
+            </>
+          )}
         </motion.div>
       </div>
     </div>

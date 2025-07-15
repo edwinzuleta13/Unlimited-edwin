@@ -1,8 +1,8 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/api/support-request/confirm": "pages/api/support-request/confirm.js",
   "/api/support-request": "pages/api/support-request.js",
+  "/api/support-request/confirm": "pages/api/support-request/confirm.js",
   "/signin": "pages/signin.js",
   "/signup": "pages/signup.js",
   "/solicitud": "pages/solicitud.js",

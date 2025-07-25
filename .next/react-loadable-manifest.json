@@ -1,11 +1,11 @@
 {
-  "app\\page.tsx -> @/components/particle-background": {
+  "app\\MainContent.tsx -> @/components/particle-background": {
     "id": 6142,
     "files": [
       "static/chunks/142.81e4fc30fdfaf52c.js"
     ]
   },
-  "app\\page.tsx -> @/components/scene": {
+  "app\\MainContent.tsx -> @/components/scene": {
     "id": 2025,
     "files": []
   },

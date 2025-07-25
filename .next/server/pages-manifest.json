@@ -1,10 +1,11 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/api/support-request/confirm": "pages/api/support-request/confirm.js",
   "/api/support-request": "pages/api/support-request.js",
-  "/signin": "pages/signin.js",
-  "/signup": "pages/signup.js",
-  "/solicitud": "pages/solicitud.js",
-  "/_document": "pages/_document.js"
+  "/api/support-request/confirm": "pages/api/support-request/confirm.js",
+  "/signin": "pages/signin.html",
+  "/signup": "pages/signup.html",
+  "/solicitud": "pages/solicitud.html",
+  "/_document": "pages/_document.js",
+  "/404": "pages/404.html"
 }

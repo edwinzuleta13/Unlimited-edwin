@@ -50,9 +50,9 @@ export default function SignIn() {
     e.preventDefault();
     setResetMsg("");
     setError("");
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: "http://localhost:3000/reset-password"
-    });
+const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+  redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password`
+});
     if (error) setError("No se pudo enviar el correo de recuperación.");
     else setResetMsg("¡Revisa tu correo para restablecer tu contraseña!");
   };

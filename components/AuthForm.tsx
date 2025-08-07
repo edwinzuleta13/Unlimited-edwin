@@ -68,7 +68,11 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
       });
 
       if (error) {
-        setError(error.message);
+        if (error.message === "Invalid login credentials") {
+          setError("Correo o contraseña incorrectos.");
+          } else {
+      setError(error.message);
+    }
       } else {
         setSuccess('Inicio de sesión exitoso.');
         router.push('/');

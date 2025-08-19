@@ -14,7 +14,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    domains: [
+      'kubernetes.io',
+      'upload.wikimedia.org',
+      'nodejs.org',
+      'go.dev',
+      'www.docker.com',
+      'hebbkx1anhila5yf.public.blob.vercel-storage.com',
+    ],
   },
   experimental: {
     webpackBuildWorker: true,

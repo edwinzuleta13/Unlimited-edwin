@@ -1,15 +1,21 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { MessageCircle, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { createPortal } from "react-dom"
 
 export default function FloatingChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<{ text: string; sender: "user" | "bot" }[]>([])
   const [input, setInput] = useState("")
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,13 +32,15 @@ export default function FloatingChatWidget() {
     }
   }
 
-  return (
+  if (!mounted) return null
+
+  const portalContent = (
     <>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        className="fixed bottom-4 right-4 z-50"
+        className="fixed bottom-4 right-4 z-[9999]"
       >
         <Button
           onClick={() => setIsOpen(!isOpen)}
@@ -48,7 +56,7 @@ export default function FloatingChatWidget() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-20 right-4 w-80 bg-gray-900 border border-purple-500 rounded-lg shadow-lg z-50"
+            className="fixed bottom-20 right-4 w-80 bg-gray-900 border border-purple-500 rounded-lg shadow-lg z-[9999]"
           >
             <div className="p-4 border-b border-purple-500">
               <h3 className="text-lg font-semibold text-purple-300">Soporte Técnico</h3>
@@ -82,5 +90,7 @@ export default function FloatingChatWidget() {
       </AnimatePresence>
     </>
   )
+
+  return createPortal(portalContent, document.body)
 }
 

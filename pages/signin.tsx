@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/services/supabaseClient";
+import { supabase } from "@/services/supabaseClient"; // <- si aún no lo tienes, te explico abajo
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ParticleBackground from "@/components/particle-background";
@@ -18,6 +18,7 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  // 🎧 Inicializa sonido de hover
   useEffect(() => {
     const audio = new Audio("/hover.mp3");
     audio.volume = 0.1;
@@ -27,7 +28,9 @@ export default function SignIn() {
     const playSound = () => {
       if (audioReady) {
         audio.currentTime = 0;
-        audio.play().catch((error) => console.error("Error playing audio:", error));
+        audio
+          .play()
+          .catch((error) => console.error("[AUDIO ERROR] Error playing audio:", error));
       }
     };
 
@@ -45,18 +48,54 @@ export default function SignIn() {
     };
   }, [audioReady]);
 
-  // Handler para recuperación de contraseña
+  // ===============================
+  // 🔑 Recuperación de contraseña
+  // ===============================
   const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setResetMsg("");
-    setError("");
-const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-  redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password`
-});
-    if (error) setError("No se pudo enviar el correo de recuperación.");
-    else setResetMsg("¡Revisa tu correo para restablecer tu contraseña!");
-  };
+  e.preventDefault();
+  setResetMsg("");
+  setError("");
 
+  console.group("🔍 Password Reset Debug");
+  console.log("📧 Email ingresado:", resetEmail);
+  console.log("🌐 NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
+
+  if (!process.env.NEXT_PUBLIC_BASE_URL) {
+    console.error(
+      "⚠️ [CONFIG ERROR] Falta NEXT_PUBLIC_BASE_URL en el entorno (.env.local)."
+    );
+    setError("Error interno: falta configuración del servidor.");
+    console.groupEnd();
+    return;
+  }
+
+  try {
+    console.log("🚀 Enviando solicitud a Supabase...");
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password`,
+    });
+
+    if (error) {
+      console.error("❌ [SUPABASE ERROR]:", error);
+      setError(
+        error.message ||
+          "No se pudo enviar el correo de recuperación. Ver consola para más detalles."
+      );
+    } else {
+      console.log("✅ Correo de recuperación enviado correctamente a:", resetEmail);
+      setResetMsg("¡Revisa tu correo para restablecer tu contraseña!");
+    }
+  } catch (err: any) {
+    console.error("💥 [EXCEPCIÓN NO CONTROLADA]:", err);
+    setError(`Error inesperado: ${err.message || "Ver consola"}`);
+  } finally {
+    console.groupEnd();
+  }
+};
+
+  // ===============================
+  // 🎨 Render principal
+  // ===============================
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
       <div className="absolute inset-0 z-0">
@@ -103,7 +142,7 @@ const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
               <input
                 type="email"
                 value={resetEmail}
-                onChange={e => setResetEmail(e.target.value)}
+                onChange={(e) => setResetEmail(e.target.value)}
                 placeholder="Tu correo electrónico"
                 required
                 className="w-full px-4 py-2 rounded bg-black/70 border border-purple-500 focus:outline-none"

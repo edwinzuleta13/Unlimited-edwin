@@ -109,6 +109,30 @@ useEffect(() => {
     scrollToSection("servicios")
   }
 
+  // Force-set favicon from client to bypass aggressive caching in some browsers
+useEffect(() => {
+  try {
+    const href = '/favicon.png?v=' + Date.now()
+
+    const setLink = (rel: string, type?: string) => {
+      let link = document.querySelector(`link[rel='${rel}']`) as HTMLLinkElement | null
+      if (!link) {
+        link = document.createElement('link')
+        link.setAttribute('rel', rel)
+        document.head.appendChild(link)
+      }
+      link.setAttribute('href', href)
+      if (type) link.setAttribute('type', type)
+    }
+
+    setLink('icon', 'image/png')
+    setLink('shortcut icon', 'image/png')
+    setLink('apple-touch-icon', 'image/png')
+  } catch (e) {
+    console.warn('favicon injection failed', e)
+  }
+}, [])
+
   return (
     
     <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none" ref={containerRef}>
@@ -224,7 +248,7 @@ useEffect(() => {
       </section>
 
       {/* Services Section */}
-      <section id="servicios" className="py-20 px-4 bg-black/50 backdrop-blur clip-path-slant">
+      <section id="servicios" className="py-20 px-4 bg-black/50 backdrop-blur">
         <div className="container mx-auto">
           <motion.div
             className="text-center mb-16"
@@ -373,7 +397,7 @@ useEffect(() => {
             />
             <TechCard
               name="Kubernetes"
-              icon="https://kubernetes.io/images/favicon.png"
+              icon="./icons/kubernetes.svg"
               description="Orquestación de contenedores a escala"
             />
             <TechCard
@@ -393,7 +417,7 @@ useEffect(() => {
             />
             <TechCard
               name="Rust"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Rust_programming_language_black_logo.svg/1200px-Rust_programming_language_black_logo.svg.png"
+              icon="./icons/rust.svg"
               description="Sistemas de bajo nivel seguros y rápidos"
             />
             <TechCard
@@ -416,7 +440,7 @@ useEffect(() => {
       {/* CTA Section */}
 <motion.section
   id="contacto"
-  className="py-20 px-4"
+  className="pt-20 pb-24 px-8" // 🔹 padding superior e inferior separados
   initial={{ opacity: 0, y: 100 }}
   whileInView={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.8 }}
@@ -424,24 +448,24 @@ useEffect(() => {
 >
   <div className="container mx-auto">
     <div className="gradient-border">
-      <div className="bg-black/50 backdrop-blur rounded-xl p-6 md:p-12">
-        <div className="flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
+      <div className="bg-black/50 backdrop-blur rounded-xl p-12 md:p-20">
+        <div className="flex gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text text-center md:text-left">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text text-center">
               ¿Listo para transformar tu negocio?
             </h2>
-            <p className="text-lg text-purple-300 mb-6 text-center md:text-left">
+            <p className="text-lg text-purple-300 mb-6 text-center">
               Agenda una consulta gratuita con nuestros expertos y descubre cómo podemos ayudarte a alcanzar tus
               objetivos tecnológicos.
             </p>
             <motion.div
               whileTap={{ scale: 0.95 }}
-              className="w-full flex justify-center md:justify-start"
+              className="w-full flex justify-center"
             >
               <MagneticButton
                 className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
@@ -452,16 +476,6 @@ useEffect(() => {
                 Contactar Ahora <ArrowRight className="ml-2" />
               </MagneticButton>
             </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="relative h-64 md:h-full"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <Scene />
           </motion.div>
         </div>
       </div>
@@ -693,4 +707,3 @@ function SocialLink({ icon, href }: { icon: React.ReactNode; href: string }) {
     </motion.a>
   )
 }
-

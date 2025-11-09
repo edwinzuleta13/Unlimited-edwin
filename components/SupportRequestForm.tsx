@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../services/supabaseClient';
 import { Dialog } from './ui/dialog';
 import MagneticButton from './magnetic-button';
@@ -16,9 +18,43 @@ export default function SupportRequestForm() {
   const [email, setEmail] = useState('');
   const [requestType, setRequestType] = useState(REQUEST_TYPES[0]);
   const [description, setDescription] = useState('');
+  const [otherDetails, setOtherDetails] = useState('');
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
+
+  // Rellenar automáticamente el email si el usuario ya está autenticado en Supabase
+  useEffect(() => {
+    let subscription: any = null;
+
+    const fetchUser = async () => {
+      try {
+        const { data } = await supabase.auth.getUser();
+        const user = (data as any)?.user;
+        if (user?.email) setEmail(user.email);
+      } catch (err) {
+        // no bloquear si hay error
+        console.debug('No se pudo obtener el usuario en SupportRequestForm:', err);
+      }
+    };
+
+    fetchUser();
+
+    // Mantener sincronizado si cambia el estado de autenticación
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      const u = (session as any)?.user;
+      setEmail(u?.email ?? '');
+    });
+    subscription = sub?.subscription ?? sub;
+
+    return () => {
+      try {
+        subscription?.unsubscribe?.();
+      } catch (e) {
+        // ignore
+      }
+    };
+  }, []);
 
   const validateEmail = (email: string) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -29,7 +65,12 @@ export default function SupportRequestForm() {
     setError('');
     setNotLoggedIn(false);
 
-    if (!fullName || !email || !description) {
+  // La descripción del ticket siempre viene del textarea `description`.
+  // El campo `otherDetails` solo se usa para `custom_reason` cuando el usuario
+  // selecciona "Otro". Evitar duplicados: no mezclar ambos en `description`.
+  const finalDescription = description;
+
+    if (!fullName || !email || !finalDescription) {
       setError('Todos los campos son obligatorios.');
       return;
     }
@@ -41,14 +82,23 @@ export default function SupportRequestForm() {
 
     // Verifica si el usuario está autenticado
     const { data: { user } } = await supabase.auth.getUser();
+    const isOther = requestType === 'Otro' || requestType === 'OTRO';
+
     if (user) {
-      // Usuario autenticado: guarda directo en Supabase
+      // Usuario autenticado: para compatibilidad con constraint NOT NULL,
+      // si es OTRO, request_type = 'OTRO' y custom_reason = texto personalizado
+      const token = uuidv4();
+      const created_at = new Date().toISOString();
+
       const { error } = await supabase.from('support_requests').insert([
         {
+          token,
+          created_at,
           full_name: fullName,
           email,
-          request_type: requestType,
-          description,
+          request_type: isOther ? 'OTRO' : requestType,
+          custom_reason: isOther ? otherDetails : null,
+          description: finalDescription,
           user_id: user.id,
           status: 'confirmed',
         },
@@ -62,6 +112,7 @@ export default function SupportRequestForm() {
         setEmail('');
         setRequestType(REQUEST_TYPES[0]);
         setDescription('');
+        setOtherDetails('');
       }
     } else {
       // Usuario no autenticado: envía a la API para email de confirmación
@@ -69,7 +120,13 @@ export default function SupportRequestForm() {
         const response = await fetch('/api/support-request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fullName, email, requestType, description }),
+          body: JSON.stringify({
+            fullName,
+            email,
+            requestType,
+            customReason: isOther ? otherDetails : null,
+            description: finalDescription,
+          }),
         });
         setLoading(false);
         if (!response.ok) {
@@ -81,6 +138,7 @@ export default function SupportRequestForm() {
           setEmail('');
           setRequestType(REQUEST_TYPES[0]);
           setDescription('');
+          setOtherDetails('');
         }
       } catch (err) {
         setLoading(false);
@@ -127,6 +185,23 @@ export default function SupportRequestForm() {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
+            {/* Textarea adicional que solo aparece si el usuario selecciona 'Otro' */}
+            <AnimatePresence>
+              {requestType === 'Otro' && (
+                <motion.textarea
+                  layout
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                  className="mt-3 w-full border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 resize-none"
+                  value={otherDetails}
+                  onChange={e => setOtherDetails(e.target.value)}
+                  placeholder="Describe tu solicitud"
+                  rows={4}
+                />
+              )}
+            </AnimatePresence>
           </div>
         </div>
         {/* Columna derecha */}

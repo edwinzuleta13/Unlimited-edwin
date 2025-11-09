@@ -1,4 +1,5 @@
 "use client";
+import BotonConSonido from "@/components/BotonConSonido";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/services/supabaseClient";
@@ -63,13 +64,13 @@ export default function ResetPasswordContent() {
               onChange={e => setPassword(e.target.value)}
               required
             />
-            <button
+            <BotonConSonido
               type="submit"
               className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition"
               disabled={loading}
             >
               {loading ? "Cambiando..." : "Cambiar contraseña"}
-            </button>
+            </BotonConSonido>
             {msg && <div className="text-green-400 text-sm mt-4">{msg}</div>}
             {error && <div className="text-red-400 text-sm mt-4">{error}</div>}
           </form>

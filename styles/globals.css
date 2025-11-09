@@ -104,3 +104,17 @@ body {
   border-radius: 9999px;
   mix-blend-mode: difference;
 }
+
+/* Custom styling for select options inside auth forms.
+   Note: browsers limit styling of <option>, but background-color and color
+   usually work on most modern desktop browsers. Mobile/OS native pickers may
+   ignore these rules. */
+.auth-select option {
+  background-color: rgba(67, 3, 106, 0.9); /* dark purple */
+  color: #E9D5FF; /* light purple text */
+}
+.auth-select option:checked,
+.auth-select option:active {
+  background-color: rgba(99, 37, 196, 0.95);
+  color: #ffffff;
+}

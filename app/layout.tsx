@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google"
 import "./globals.css"
 import { Analytics } from "@vercel/analytics/react"
 import { Providers } from "./providers"
+import { AlertProvider, GlobalAlerts } from "@/components/alert-context"
 import type React from "react" // Added import for React
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] })
@@ -34,10 +35,14 @@ export default function RootLayout({
   <link rel="apple-touch-icon" href="/favicon.png" />
         <meta name="theme-color" content="#0f172a" />
       </head>
-      <body className={spaceGrotesk.className}>
+      <body className={`${spaceGrotesk.className} bg-background text-foreground font-sans min-h-screen`}>
         <Providers>
-          {children}
-          <Analytics />
+          <AlertProvider>
+            {children}
+            {/* Global alerts rendered here so they are visible across pages */}
+            <GlobalAlerts />
+            <Analytics />
+          </AlertProvider>
         </Providers>
       </body>
     </html>

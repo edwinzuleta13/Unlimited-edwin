@@ -1,24 +1,26 @@
 "use client";
+import BotonConSonido from "@/components/BotonConSonido";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/services/supabaseClient"; // <- si aún no lo tienes, te explico abajo
+import { supabase } from "@/services/supabaseClient";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ParticleBackground from "@/components/particle-background";
 import TechCursor from "@/components/tech-cursor";
 import FloatingChatWidget from "@/components/floating-chat-widget";
 import { AuthForm } from "@/components/AuthForm";
+import { AlertProvider, GlobalAlerts, useAlert } from "@/components/alert-context";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-export default function SignIn() {
+function SignInContent() {
   const [audioReady, setAudioReady] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetMsg, setResetMsg] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { showAlert } = useAlert();
 
-  // 🎧 Inicializa sonido de hover
   useEffect(() => {
     const audio = new Audio("/hover.mp3");
     audio.volume = 0.1;
@@ -48,54 +50,51 @@ export default function SignIn() {
     };
   }, [audioReady]);
 
-  // ===============================
-  // 🔑 Recuperación de contraseña
-  // ===============================
   const handleResetPassword = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setResetMsg("");
-  setError("");
+    e.preventDefault();
+    setResetMsg("");
+    setError("");
 
-  console.group("🔍 Password Reset Debug");
-  console.log("📧 Email ingresado:", resetEmail);
-  console.log("🌐 NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
+    console.group("🔍 Password Reset Debug");
+    console.log("📧 Email ingresado:", resetEmail);
+    console.log("🌐 NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
 
-  if (!process.env.NEXT_PUBLIC_BASE_URL) {
-    console.error(
-      "⚠️ [CONFIG ERROR] Falta NEXT_PUBLIC_BASE_URL en el entorno (.env.local)."
-    );
-    setError("Error interno: falta configuración del servidor.");
-    console.groupEnd();
-    return;
-  }
-
-  try {
-    console.log("🚀 Enviando solicitud a Supabase...");
-    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
-      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password`,
-    });
-
-    if (error) {
-      console.error("❌ [SUPABASE ERROR]:", error);
-      setError(
-        error.message ||
-          "No se pudo enviar el correo de recuperación. Ver consola para más detalles."
+    if (!process.env.NEXT_PUBLIC_BASE_URL) {
+      console.error(
+        "⚠️ [CONFIG ERROR] Falta NEXT_PUBLIC_BASE_URL en el entorno (.env.local)."
       );
-    } else {
-      console.log("✅ Correo de recuperación enviado correctamente a:", resetEmail);
-      setResetMsg("¡Revisa tu correo para restablecer tu contraseña!");
+      setError("Error interno: falta configuración del servidor.");
+      console.groupEnd();
+      return;
     }
-  } catch (err: any) {
-    console.error("💥 [EXCEPCIÓN NO CONTROLADA]:", err);
-    setError(`Error inesperado: ${err.message || "Ver consola"}`);
-  } finally {
-    console.groupEnd();
-  }
-};
 
-  // ===============================
-  // 🎨 Render principal
-  // ===============================
+    try {
+      console.log("🚀 Enviando solicitud a Supabase...");
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password`,
+      });
+
+      if (error) {
+        console.error("❌ [SUPABASE ERROR]:", error);
+        setError(
+          error.message ||
+            "No se pudo enviar el correo de recuperación. Ver consola para más detalles."
+        );
+        showAlert('error', error.message || 'No se pudo enviar el correo de recuperación.');
+      } else {
+        console.log("✅ Correo de recuperación enviado correctamente a:", resetEmail);
+        setResetMsg("¡Revisa tu correo para restablecer tu contraseña!");
+        showAlert('success', 'Correo de recuperación enviado correctamente.');
+      }
+    } catch (err: any) {
+      console.error("💥 [EXCEPCIÓN NO CONTROLADA]:", err);
+      setError(`Error inesperado: ${err.message || "Ver consola"}`);
+      showAlert('error', `Error inesperado: ${err.message || 'Ver consola'}`);
+    } finally {
+      console.groupEnd();
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
       <div className="absolute inset-0 z-0">
@@ -107,6 +106,9 @@ export default function SignIn() {
       <FloatingChatWidget />
 
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
+        <div className="absolute top-8 left-0 right-0 z-20 flex justify-center">
+          <GlobalAlerts />
+        </div>
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -147,31 +149,31 @@ export default function SignIn() {
                 required
                 className="w-full px-4 py-2 rounded bg-black/70 border border-purple-500 focus:outline-none"
               />
-              <button
+              <BotonConSonido
                 type="submit"
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition"
               >
                 Enviar enlace de recuperación
-              </button>
+              </BotonConSonido>
               {resetMsg && <div className="text-green-400 text-sm">{resetMsg}</div>}
               {error && <div className="text-red-400 text-sm">{error}</div>}
-              <button
+              <BotonConSonido
                 type="button"
                 onClick={() => setShowReset(false)}
                 className="mt-2 text-purple-400 hover:underline w-full"
               >
                 Volver a iniciar sesión
-              </button>
+              </BotonConSonido>
             </form>
           ) : (
             <>
               <AuthForm type="signin" />
-              <button
+              <BotonConSonido
                 className="mt-4 text-purple-400 hover:underline w-full"
                 onClick={() => setShowReset(true)}
               >
                 ¿Olvidaste tu contraseña?
-              </button>
+              </BotonConSonido>
               <p className="mt-4 text-center text-sm text-purple-300">
                 ¿No tienes una cuenta?{" "}
                 <Link href="/signup" className="text-purple-400 underline hover:text-purple-200">
@@ -183,5 +185,13 @@ export default function SignIn() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function SignIn() {
+  return (
+    <AlertProvider>
+      <SignInContent />
+    </AlertProvider>
   );
 }

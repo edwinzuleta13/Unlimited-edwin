@@ -5,7 +5,6 @@ export async function POST(req: Request) {
   try {
     const { email } = await req.json();
 
-    // Crea cliente Supabase con tu anon key
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -2,7 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import BotonConSonido from "@/components/BotonConSonido";
 import { useEffect, useRef, useState } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Image from "next/image"
@@ -41,6 +41,8 @@ export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [audioReady, setAudioReady] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [audioUnlocked, setAudioUnlocked] = useState(false)
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -70,44 +72,101 @@ useEffect(() => {
   useEffect(() => {
     setIsLoaded(true)
 
-    const audio = new Audio("/hover.mp3")
-    audio.volume = 0.1
+    // Comprobar si el asset de audio existe antes de crear un objeto Audio.
+    // Evita warnings si el archivo no está presente en /public.
+    let mounted = true
 
-    audio.onerror = () => {
-      console.warn("🔇 Archivo de audio /hover.mp3 no se encontró o falló al cargar.")
-    }
-
-    audio.oncanplaythrough = () => {
-      setAudioReady(true)
-    }
-
-    const playSound = () => {
-      if (audioReady) {
-        audio.currentTime = 0
-        audio.play().catch((error) => console.error("Error al reproducir el audio:", error))
+    const initAudioIfExists = async () => {
+      try {
+        const res = await fetch('/hover.mp3', { method: 'HEAD' })
+        if (!mounted) return
+        if (res.ok) {
+          audioRef.current = new Audio('/hover.mp3')
+          if (audioRef.current) {
+            audioRef.current.volume = 0.1
+            audioRef.current.oncanplaythrough = () => {
+              if (!mounted) return
+              setAudioReady(true)
+            }
+          }
+        } else {
+          console.warn('🔇 /hover.mp3 no existe (HEAD returned ' + res.status + ')')
+        }
+      } catch (err) {
+        console.warn('🔇 Error comprobando /hover.mp3:', err)
       }
     }
 
-    const handleMouseOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest("button, a")) {
+    initAudioIfExists()
+
+    const tryPlayUnlock = async () => {
+      // Intento de reproducir para "desbloquear" la política de autoplay del navegador.
+      const a = audioRef.current
+      if (!a) return
+      try {
+        await a.play()
+        a.pause()
+        a.currentTime = 0
+      } catch (err) {
+        // Ignoramos errores aquí: si falla, seguiremos esperando otra interacción válida
+      }
+    }
+
+    const markUserInteracted = (e?: Event) => {
+      setAudioUnlocked(true)
+      tryPlayUnlock()
+      // una vez desbloqueado no necesitamos estos listeners
+      document.removeEventListener('pointerdown', markUserInteracted)
+      document.removeEventListener('keydown', markUserInteracted)
+      document.removeEventListener('touchstart', markUserInteracted)
+    }
+
+
+    const playSound = () => {
+      if (!audioUnlocked) return // no reproducir hasta que usuario interactúe
+      const a = audioRef.current
+      if (a && a.readyState >= 2) {
+        a.currentTime = 0
+        a.play().catch((error) => console.error('Error al reproducir el audio:', error))
+      }
+    }
+
+    const handleClick = (e: MouseEvent) => {
+      // reproducir sonido solo si el objetivo es un botón (evita dobles con otros elementos)
+      if ((e.target as HTMLElement).closest('button')) {
         playSound()
       }
     }
 
-    document.addEventListener("mouseover", handleMouseOver)
+    // Listeners para "desbloquear" la reproducción en el primer gesto del usuario
+    document.addEventListener('pointerdown', markUserInteracted)
+    document.addEventListener('keydown', markUserInteracted)
+    document.addEventListener('touchstart', markUserInteracted)
+
+    // Escuchar clicks para reproducir sonido en botones
+    document.addEventListener('click', handleClick)
 
     return () => {
-      document.removeEventListener("mouseover", handleMouseOver)
-      audio.pause()
-      audio.src = ""
+      mounted = false
+  document.removeEventListener('click', handleClick)
+      document.removeEventListener('pointerdown', markUserInteracted)
+      document.removeEventListener('keydown', markUserInteracted)
+      document.removeEventListener('touchstart', markUserInteracted)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+        audioRef.current = null
+      }
     }
-  }, [audioReady])
+  }, [])
 
 
   const handleExploreClick = () => {
     startTransition()
     scrollToSection("servicios")
   }
+
+  // Nota: la reproducción ahora la maneja el listener global de 'click' en document
 
   // Force-set favicon from client to bypass aggressive caching in some browsers
 useEffect(() => {
@@ -167,6 +226,7 @@ useEffect(() => {
                 alt="Untitled Tech Logo"
                 fill
                 className="object-contain"
+                sizes="(max-width: 640px) 160px, (max-width: 1024px) 200px, 320px"
                 priority
               />
             </motion.div>
@@ -200,11 +260,6 @@ useEffect(() => {
           <MagneticButton
             className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
             onClick={() => {
-              if (audioReady) {
-                const audio = new Audio("/hover.mp3")
-                audio.volume = 0.1
-                audio.play().catch((error) => console.error("Error playing audio:", error))
-              }
               scrollToSection("contacto")
             }}
           >
@@ -213,11 +268,6 @@ useEffect(() => {
           <MagneticButton
             className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
             onClick={() => {
-              if (audioReady) {
-                const audio = new Audio("/hover.mp3")
-                audio.volume = 0.1
-                audio.play().catch((error) => console.error("Error playing audio:", error))
-              }
               handleExploreClick()
             }}
           >
@@ -529,24 +579,24 @@ useEffect(() => {
               <h3 className="font-bold mb-4">Servicios</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <button onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
+                  <BotonConSonido onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
                     Desarrollo Web y Móvil
-                  </button>
+                  </BotonConSonido>
                 </li>
                 <li>
-                  <button onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
+                  <BotonConSonido onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
                     CRM y ERP
-                  </button>
+                  </BotonConSonido>
                 </li>
                 <li>
-                  <button onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
+                  <BotonConSonido onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
                     Cloud Solutions
-                  </button>
+                  </BotonConSonido>
                 </li>
                 <li>
-                  <button onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
+                  <BotonConSonido onClick={() => scrollToSection("servicios")} className="hover:text-purple-400">
                     Inteligencia Artificial
-                  </button>
+                  </BotonConSonido>
                 </li>
               </ul>
             </div>
@@ -562,9 +612,9 @@ useEffect(() => {
             <div>
               <h3 className="font-bold mb-4">Contacto</h3>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>info@untitledtech.com</li>
-                <li>+1 234 567 890</li>
-                <li>Ciudad, País</li>
+                <li>Untitledtechcompany@gmail.com</li>
+                <li>+58 424-3296034</li>
+                <li>Valencia, Venezuela.</li>
               </ul>
             </div>
           </div>
@@ -672,7 +722,14 @@ function TechCard({ name, icon, description }: { name: string; icon: string; des
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="w-20 h-20 mb-4 relative">
-        <Image src={icon || "/placeholder.svg"} alt={name} width={80} height={80} className="object-contain" />
+        <Image
+          src={icon || "/placeholder.svg"}
+          alt={name}
+          width={80}
+          height={80}
+          className="object-contain"
+          style={{ height: 'auto' }}
+        />
         <AnimatePresence>
           {isHovered && (
             <motion.div

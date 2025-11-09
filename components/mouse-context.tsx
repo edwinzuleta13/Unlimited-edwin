@@ -62,7 +62,8 @@ export function MouseProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <MouseContext.Provider value={{ cursorVariant, setCursorVariant }}>
-      <div className="cursor-none">
+      {/* ensure container has non-static position so offsets are calculated correctly */}
+      <div className="cursor-none relative">
         <AnimatePresence>
           <motion.div
             className="cursor"

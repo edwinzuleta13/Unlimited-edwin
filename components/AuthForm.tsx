@@ -1,10 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // 🔁 Redirección para App Router
 import { InputField } from './InputField';
 import MagneticButton from './magnetic-button';
 import { supabase } from '@/services/supabaseClient';
+import { useAlert } from '@/components/alert-context';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
 
 type Props = {
   type: 'signin' | 'signup';
@@ -18,6 +23,19 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
   const [success, setSuccess] = useState('');
 
   const router = useRouter();
+  const { showAlert } = useAlert();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    try {
+      const a = new Audio('/hover.mp3');
+      a.volume = 0.1;
+      a.preload = 'auto';
+      audioRef.current = a;
+    } catch (err) {
+      // ignore audio init errors in environments without audio support
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,14 +51,16 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
   if (existsError) {
     console.error("Error al verificar existencia:", existsError);
     setError("Error al verificar el correo. Intenta nuevamente.");
+    showAlert('error', 'Error al verificar el correo. Intenta nuevamente.');
     return;
   }
 
   if (existsData) {
     setError("Ese correo ya está registrado. Redirigiendo a iniciar sesión...");
+    showAlert('warning', 'Ese correo ya está registrado. Te redirigimos a iniciar sesión.');
     setTimeout(() => {
       router.push('/signin');
-    }, 3000);
+    }, 2000);
     return;
   }
 
@@ -55,8 +75,10 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
 
   if (signupError) {
     setError(signupError.message);
+    showAlert('error', signupError.message || 'Error creando la cuenta.');
   } else {
     setSuccess("Cuenta creada correctamente. Revisa tu correo.");
+    showAlert('success', 'Cuenta creada correctamente. Revisa tu correo.');
   }
 }
 
@@ -68,14 +90,22 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
       });
 
       if (error) {
-        if (error.message === "Invalid login credentials") {
-          setError("Correo o contraseña incorrectos.");
+          // Map known Supabase error messages to user-friendly alerts
+          const msg = error.message || 'Error en el inicio de sesión.';
+          if (msg.includes('Invalid login credentials') || msg.includes('invalid')) {
+            setError('Correo o contraseña incorrectos.');
+            showAlert('error', 'Correo o contraseña incorrectos.');
+          } else if (msg.includes('User not found') || msg.includes('No user')) {
+            setError('Usuario no registrado.');
+            showAlert('warning', 'Usuario no registrado. Por favor regístrate.');
           } else {
-      setError(error.message);
-    }
+            setError(msg);
+            showAlert('error', msg);
+          }
       } else {
         setSuccess('Inicio de sesión exitoso.');
-        router.push('/');
+          showAlert('success', 'Inicio de sesión exitoso.');
+          router.push('/');
       }
     }
   };
@@ -96,33 +126,33 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
         label="Contraseña"
         name="password"
         type="password"
+        showToggle
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
 
       {type === 'signup' && (
         <div className="mt-4">
-          <label className="block mb-1 text-purple-300">Rol</label>
-          <div className="relative">
-            <select
+          <FormControl component="fieldset" className="w-full">
+            {/* Small title above radios */}
+            <RadioGroup
+              row
+              aria-labelledby="role-radio-group-label"
+              name="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full bg-purple-950 bg-opacity-40 border border-purple-500 text-white placeholder-purple-300 rounded-md p-3 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-400"
+              className="flex flex-row flex-wrap gap-4 w-full"
             >
-              <option disabled value="">Selecciona un rol</option>
-              <option value="usuario">Usuario</option>
-              <option value="admin">Admin</option>
-              <option value="cliente">Cliente</option>
-              <option value="socio">Socio</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-purple-300">
-              ▼
-            </div>
-          </div>
+              <FormControlLabel value="usuario" control={<Radio size="small" sx={{ color: '#7C3AED', '&.Mui-checked': { color: '#7C3AED' } }} />} label="Usuario" />
+              <FormControlLabel value="admin" control={<Radio size="small" sx={{ color: '#7C3AED', '&.Mui-checked': { color: '#7C3AED' } }} />} label="Admin" />
+              <FormControlLabel value="cliente" control={<Radio size="small" sx={{ color: '#7C3AED', '&.Mui-checked': { color: '#7C3AED' } }} />} label="Cliente" />
+              <FormControlLabel value="socio" control={<Radio size="small" sx={{ color: '#7C3AED', '&.Mui-checked': { color: '#7C3AED' } }} />} label="Socio" />
+            </RadioGroup>
+          </FormControl>
         </div>
       )}
 
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+  {/* Eliminado: error inline, ahora solo alertas globales */}
       {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
 
       <div className="mt-6 text-center">
@@ -130,9 +160,14 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
           type="submit"
           className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full"
           onClick={() => {
-            const audio = new Audio('/hover.mp3');
-            audio.volume = 0.1;
-            audio.play().catch((err) => console.error('Error playing audio:', err));
+            try {
+              if (audioRef.current) {
+                audioRef.current.currentTime = 0;
+                audioRef.current.play().catch(() => {});
+              }
+            } catch (err) {
+              // swallow play errors (user gesture required etc.)
+            }
           }}
         >
           {type === 'signup' ? 'Registrarse' : 'Entrar'}

@@ -1,4 +1,5 @@
 "use client";
+import BotonConSonido from "@/components/BotonConSonido";
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/services/supabaseClient";
@@ -120,21 +121,21 @@ export default function UserStatus() {
                         <td className="px-6 py-4">{p.request_type || "-"}</td>
                         <td className="px-6 py-4">{p.description || "-"}</td>
                         <td className="px-6 py-4 relative">
-                          <button
+                          <BotonConSonido
                             onClick={() => setOpenMenuId(openMenuId === p.id ? null : p.id)}
                             className="p-2 rounded-full hover:bg-purple-800 transition"
                             aria-label="Acciones"
                           >
                             <span className="text-2xl">⋮</span>
-                          </button>
+                          </BotonConSonido>
                           {openMenuId === p.id && (
                             <div className="absolute right-0 mt-2 w-32 bg-black border border-purple-700 rounded shadow-lg z-50">
-                              <button
+                              <BotonConSonido
                                 onClick={() => handleDelete(p.id)}
                                 className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-700 hover:text-white transition"
                               >
                                 Eliminar
-                              </button>
+                              </BotonConSonido>
                             </div>
                           )}
                         </td>

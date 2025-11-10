@@ -43,44 +43,49 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
     setSuccess('');
 
     if (type === 'signup') {
-  // Paso 1: Verificar si el correo ya existe
-  const { data: existsData, error: existsError } = await supabase.rpc('email_exists', {
-    email_input: email,
-  });
+      // Validar que el rol esté seleccionado
+      if (!role) {
+        showAlert('error', 'Debes seleccionar un rol para crear tu cuenta.');
+        return;
+      }
+      // Paso 1: Verificar si el correo ya existe
+      const { data: existsData, error: existsError } = await supabase.rpc('email_exists', {
+        email_input: email,
+      });
 
-  if (existsError) {
-    console.error("Error al verificar existencia:", existsError);
-    setError("Error al verificar el correo. Intenta nuevamente.");
-    showAlert('error', 'Error al verificar el correo. Intenta nuevamente.');
-    return;
-  }
+      if (existsError) {
+        console.error("Error al verificar existencia:", existsError);
+        setError("Error al verificar el correo. Intenta nuevamente.");
+        showAlert('error', 'Error al verificar el correo. Intenta nuevamente.');
+        return;
+      }
 
-  if (existsData) {
-    setError("Ese correo ya está registrado. Redirigiendo a iniciar sesión...");
-    showAlert('warning', 'Ese correo ya está registrado. Te redirigimos a iniciar sesión.');
-    setTimeout(() => {
-      router.push('/signin');
-    }, 2000);
-    return;
-  }
+      if (existsData) {
+        setError("Ese correo ya está registrado. Redirigiendo a iniciar sesión...");
+        showAlert('warning', 'Ese correo ya está registrado. Te redirigimos a iniciar sesión.');
+        setTimeout(() => {
+          router.push('/signin');
+        }, 2000);
+        return;
+      }
 
-  // Paso 2: Crear cuenta si el correo NO existe
-  const { error: signupError } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { role },
-    },
-  });
+      // Paso 2: Crear cuenta si el correo NO existe
+      const { error: signupError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { role },
+        },
+      });
 
-  if (signupError) {
-    setError(signupError.message);
-    showAlert('error', signupError.message || 'Error creando la cuenta.');
-  } else {
-    setSuccess("Cuenta creada correctamente. Revisa tu correo.");
-    showAlert('success', 'Cuenta creada correctamente. Revisa tu correo.');
-  }
-}
+      if (signupError) {
+        setError(signupError.message);
+        showAlert('error', signupError.message || 'Error creando la cuenta.');
+      } else {
+        setSuccess("Cuenta creada correctamente. Revisa tu correo.");
+        showAlert('success', 'Cuenta creada correctamente. Revisa tu correo.');
+      }
+    }
 
 
     if (type === 'signin') {
@@ -152,8 +157,7 @@ export const AuthForm: React.FC<Props> = ({ type }) => {
         </div>
       )}
 
-  {/* Eliminado: error inline, ahora solo alertas globales */}
-      {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
+  {/* Mensajes inline eliminados: usamos solamente las alertas globales para feedback */}
 
       <div className="mt-6 text-center">
         <MagneticButton

@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { spaceGrotesk } from '@/lib/fonts'
 import { Home } from 'lucide-react'
 import { FaRectangleXmark } from 'react-icons/fa6'
+import { GrStatusGood } from 'react-icons/gr'
 
 export default function AuthNav() {
   const [user, setUser] = useState<any>(null);
@@ -94,6 +95,7 @@ export default function AuthNav() {
                   {
                     onClick: handleGoToStatus,
                     label: "Estado de Usuario",
+                    icon: <GrStatusGood className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
                   },
                   {
                     onClick: handleGoHome,

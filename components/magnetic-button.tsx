@@ -29,8 +29,8 @@ export default function MagneticButton({
     const rect = ref.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const mouseX = window.mouseX || centerX;
-    const mouseY = window.mouseY || centerY;
+  const mouseX = (window as any).mouseX || centerX;
+  const mouseY = (window as any).mouseY || centerY;
 
     const deltaX = mouseX - centerX;
     const deltaY = mouseY - centerY;
@@ -59,6 +59,7 @@ export default function MagneticButton({
         className={className}
         onMouseEnter={() => setCursorVariant("button")}
         onMouseLeave={() => setCursorVariant("default")}
+        data-sound
         {...props}
       >
         {children}

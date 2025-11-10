@@ -1,23 +1,44 @@
 "use client";
 import BotonConSonido from "@/components/BotonConSonido";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/services/supabaseClient";
 import ParticleBackground from "@/components/particle-background";
 import TechCursor from "@/components/tech-cursor";
 import FloatingChatWidget from "@/components/floating-chat-widget";
 import AuthNav from "@/components/AuthNav";
-import Image from "next/image";
+import { AlertProvider, GlobalAlerts } from '@/components/alert-context';
+
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableBody,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+
+import { Button } from "@/components/ui/button";
+import { useAlert } from '@/components/alert-context';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function UserStatus() {
   const [peticiones, setPeticiones] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const fetchPeticiones = async () => {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         setPeticiones([]);
         setLoading(false);
@@ -28,106 +49,196 @@ export default function UserStatus() {
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
+
       setPeticiones(data || []);
       setLoading(false);
     };
     fetchPeticiones();
   }, []);
 
-  // Función para eliminar una petición
   const handleDelete = async (id: string) => {
-    await supabase.from("support_requests").delete().eq("id", id);
-    setPeticiones((prev) => prev.filter((p) => p.id !== id));
-    setOpenMenuId(null);
+    try {
+      const { error } = await supabase.from("support_requests").delete().eq("id", id);
+      if (error) {
+        console.error('Error eliminando solicitud:', error);
+        showAlert('error', 'No se pudo eliminar la solicitud. Intenta de nuevo.');
+        return;
+      }
+      setPeticiones((prev) => prev.filter((p) => p.id !== id));
+      setOpenMenuId(null);
+      showAlert('success', 'Solicitud eliminada correctamente.');
+    } catch (err) {
+      console.error('Excepción al eliminar solicitud:', err);
+      showAlert('error', 'Error al eliminar la solicitud.');
+    }
   };
 
+  // ✅ Filtrar resultados
+  const filtered = useMemo(() => {
+    if (!search.trim()) return peticiones;
+    return peticiones.filter((p) => {
+      const str = `${p.status} ${p.request_type} ${p.description}`.toLowerCase();
+      return str.includes(search.toLowerCase());
+    });
+  }, [search, peticiones]);
+
+  const headData = ["Fecha", "Hora", "Estado", "Tipo", "Descripción", ""];
+
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
+    <AlertProvider>
+      <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none">
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
         <div className="fixed inset-0 noise" />
       </div>
+
       <TechCursor />
+
+      <div className="absolute top-8 left-0 right-0 z-20 flex justify-center">
+        <GlobalAlerts />
+      </div>
       <FloatingChatWidget />
 
-      {/* Menú de usuario arriba a la derecha */}
+      {/* AuthNav */}
       <div className="fixed top-6 right-8 z-20">
         <AuthNav />
       </div>
 
-      {/* Formulario ocupa toda la pantalla, bordes cuadrados y encabezado elegante */}
-      <div className="fixed inset-0 z-10 flex items-center justify-center px-0 py-0">
-        <div className="bg-transparent backdrop-blur-[1px] w-full h-full flex flex-col border-2 border-purple-700 rounded-none shadow-2xl">
-          <div className="flex items-center gap-4 mb-10 mt-16 pl-16">
-            <div className="relative h-16 w-16">
-              <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Disen%CC%83o%20sin%20ti%CC%81tulo%20(5)-5zZ7WMmMeOTo8NMFzV3ZUFkD5fkOEW.png"
-                alt="Untitled Tech Logo"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-            <h1 className="text-4xl font-extrabold text-left text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-purple-200 to-purple-600 tracking-tight drop-shadow-lg uppercase m-0">
-              Estado de tus Peticiones
-            </h1>
+      {/* Contenido principal SIN BORDE MORADO */}
+  <div className="absolute inset-0 z-10 flex items-start justify-center p-10 overflow-auto">
+        <div className="w-full max-w-[1400px] flex flex-col gap-10">
+
+          {/* ✅ Título SIN LOGO */}
+          <h1 className="mt-20 text-4xl font-bold tracking-tight text-purple-300 drop-shadow-lg">
+            Estado de tus Peticiones
+          </h1>
+
+          {/* ✅ Barra de búsqueda */}
+          <div className="flex justify-end mb-4">
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="px-4 py-2 w-full max-w-sm bg-black/50 border border-purple-700 rounded-lg 
+              focus:outline-none focus:ring-2 focus:ring-purple-500 text-purple-200 placeholder-purple-400"
+            />
           </div>
+
           {loading ? (
-            <div className="text-center text-lg text-purple-200 flex-1 flex items-center justify-center">Cargando...</div>
-          ) : peticiones.length === 0 ? (
-            <div className="text-center text-purple-400 text-lg flex-1 flex items-center justify-center">No tienes peticiones registradas.</div>
+            <div className="text-center text-lg text-purple-200 mt-40">
+              Cargando...
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center text-purple-400 text-lg mt-40">
+              No se encontraron resultados.
+            </div>
           ) : (
-            <div className="overflow-x-auto flex-1 max-h-[calc(100vh-12rem)]">
-              <table className="min-w-full overflow-hidden shadow-lg">
-                <thead>
-                  <tr className="bg-gradient-to-r from-purple-700 to-purple-900 text-white">
-                    <th className="px-6 py-4 text-left font-semibold">Fecha</th>
-                    <th className="px-6 py-4 text-left font-semibold">Hora</th>
-                    <th className="px-6 py-4 text-left font-semibold">Estado</th>
-                    <th className="px-6 py-4 text-left font-semibold">Tipo</th>
-                    <th className="px-6 py-4 text-left font-semibold">Descripción</th>
-                    <th className="px-6 py-4 text-left font-semibold">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {peticiones.map((p, idx) => {
+            <div
+              className="overflow-auto rounded-xl shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500"
+            >
+              <Table className="text-white w-full">
+                <TableHeader>
+                  <TableRow className="bg-purple-900/40 backdrop-blur-sm">
+                    {headData.map((item, index) => (
+                      <TableHead key={index} className="py-5">
+                        <p className="text-purple-200 font-semibold text-lg">
+                          {item}
+                        </p>
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {filtered.map((p, idx) => {
                     const fecha = new Date(p.created_at);
+
                     return (
-                      <tr
+                      <TableRow
                         key={p.id}
-                        className={`${
-                          idx % 2 === 0
-                            ? "bg-black/60"
-                            : "bg-purple-950/40"
-                        } border-b border-purple-800 hover:bg-purple-800/30 transition`}
+                        className={`font-medium transition ${
+                          idx % 2 === 0 ? "bg-purple-950/40" : "bg-black/40"
+                        } hover:bg-purple-800/30`}
                       >
-                        <td className="px-6 py-4">{fecha.toLocaleDateString()}</td>
-                        <td className="px-6 py-4">{fecha.toLocaleTimeString()}</td>
-                        <td className="px-6 py-4 capitalize">
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-bold ${
-                              ["confirmed"].includes(p.status?.toLowerCase())
-                                ? "bg-green-700/80 text-green-200"
-                                : ["rechazada", "rejected"].includes(p.status?.toLowerCase())
-                                ? "bg-red-700/80 text-red-200"
-                                : ["recibida", "received"].includes(p.status?.toLowerCase())
-                                ? "bg-yellow-700/80 text-yellow-200"
-                                : "bg-purple-700/80 text-purple-200"
-                            }`}
-                          >
-                            {p.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">{p.request_type || "-"}</td>
-                        <td className="px-6 py-4">{p.description || "-"}</td>
-                        <td className="px-6 py-4 relative">
-                          <BotonConSonido
-                            onClick={() => setOpenMenuId(openMenuId === p.id ? null : p.id)}
-                            className="p-2 rounded-full hover:bg-purple-800 transition"
-                            aria-label="Acciones"
-                          >
-                            <span className="text-2xl">⋮</span>
-                          </BotonConSonido>
+                        <TableCell className="py-5">
+                          {fecha.toLocaleDateString()}
+                        </TableCell>
+
+                        <TableCell className="py-5">
+                          {fecha.toLocaleTimeString()}
+                        </TableCell>
+
+                        {/* Estado con animación ping */}
+                        <TableCell className="py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="relative inline-flex">
+                              <div
+                                className={`w-3 h-3 rounded-full ${
+                                  ["confirmed"].includes(p.status?.toLowerCase())
+                                    ? "bg-green-500"
+                                    : ["rechazada", "rejected"].includes(
+                                        p.status?.toLowerCase()
+                                      )
+                                    ? "bg-red-500"
+                                    : ["recibida", "received"].includes(
+                                        p.status?.toLowerCase()
+                                      )
+                                    ? "bg-yellow-400"
+                                    : "bg-purple-400"
+                                }`}
+                              ></div>
+                              <div
+                                className={`w-3 h-3 rounded-full absolute top-0 left-0 animate-ping ${
+                                  ["confirmed"].includes(p.status?.toLowerCase())
+                                    ? "bg-green-500"
+                                    : ["rechazada", "rejected"].includes(
+                                        p.status?.toLowerCase()
+                                      )
+                                    ? "bg-red-500"
+                                    : ["recibida", "received"].includes(
+                                        p.status?.toLowerCase()
+                                      )
+                                    ? "bg-yellow-400"
+                                    : "bg-purple-400"
+                                }`}
+                              ></div>
+                            </div>
+                            <p className="capitalize">{p.status}</p>
+                          </div>
+                        </TableCell>
+
+                        <TableCell className="py-5">{
+                          // If the request was submitted as 'OTRO' (or request_type is empty)
+                          // prefer showing the custom_reason provided by the user when available.
+                          (String(p.request_type || "").toUpperCase() === "OTRO" || !p.request_type) && p.custom_reason
+                            ? p.custom_reason
+                            : (p.request_type || "-")
+                        }</TableCell>
+                        <TableCell className="py-5">{p.description || "-"}</TableCell>
+
+                        {/* ✅ Botón con tooltip */}
+                        <TableCell className="py-5 relative">
+                          <TooltipProvider delayDuration={100}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <BotonConSonido
+                                  onClick={() =>
+                                    setOpenMenuId(openMenuId === p.id ? null : p.id)
+                                  }
+                                  className="px-4 py-2 bg-purple-700 hover:bg-purple-800 
+                                  border border-purple-500 rounded-lg text-white transition"
+                                >
+                                  Editar
+                                </BotonConSonido>
+                              </TooltipTrigger>
+
+                              <TooltipContent side="left">
+                                <p>Opciones</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+
                           {openMenuId === p.id && (
                             <div className="absolute right-0 mt-2 w-32 bg-black border border-purple-700 rounded shadow-lg z-50">
                               <BotonConSonido
@@ -138,16 +249,17 @@ export default function UserStatus() {
                               </BotonConSonido>
                             </div>
                           )}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     );
                   })}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           )}
         </div>
       </div>
     </div>
+    </AlertProvider>
   );
 }

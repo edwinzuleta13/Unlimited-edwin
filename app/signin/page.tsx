@@ -10,6 +10,7 @@ import FloatingChatWidget from "@/components/floating-chat-widget";
 import { AuthForm } from "@/components/AuthForm";
 import { AlertProvider, GlobalAlerts, useAlert } from "@/components/alert-context";
 import { motion } from "framer-motion";
+import { ArrowRight } from 'lucide-react';
 import Image from "next/image";
 
 function SignInContent() {
@@ -32,19 +33,20 @@ function SignInContent() {
         audio.currentTime = 0;
         audio
           .play()
+          .then(() => console.log('[AUDIO] Sonido reproducido (signin)'))
           .catch((error) => console.error("[AUDIO ERROR] Error playing audio:", error));
       }
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest("button, a")) {
+    const handleClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest("button, a, [role='button'], [data-sound]")) {
         playSound();
       }
     };
 
-    document.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("click", handleClick);
     return () => {
-      document.removeEventListener("mouseover", handleMouseOver);
+      document.removeEventListener("click", handleClick);
       audio.pause();
       audio.src = "";
     };
@@ -151,9 +153,10 @@ function SignInContent() {
               />
               <BotonConSonido
                 type="submit"
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition"
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition inline-flex items-center justify-center"
               >
                 Enviar enlace de recuperación
+                <ArrowRight className="ml-2 w-4 h-4" />
               </BotonConSonido>
               {resetMsg && <div className="text-green-400 text-sm">{resetMsg}</div>}
               {error && <div className="text-red-400 text-sm">{error}</div>}

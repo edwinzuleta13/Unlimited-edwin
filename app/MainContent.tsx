@@ -87,6 +87,7 @@ useEffect(() => {
             audioRef.current.oncanplaythrough = () => {
               if (!mounted) return
               setAudioReady(true)
+              console.log('[AUDIO] Audio listo para reproducir')
             }
           }
         } else {
@@ -107,13 +108,16 @@ useEffect(() => {
         await a.play()
         a.pause()
         a.currentTime = 0
+        console.log('[AUDIO] Audio desbloqueado por interacción')
       } catch (err) {
+        console.warn('[AUDIO] Falló el unlock:', err)
         // Ignoramos errores aquí: si falla, seguiremos esperando otra interacción válida
       }
     }
 
     const markUserInteracted = (e?: Event) => {
       setAudioUnlocked(true)
+      console.log('[AUDIO] Usuario interactuó, desbloqueando audio')
       tryPlayUnlock()
       // una vez desbloqueado no necesitamos estos listeners
       document.removeEventListener('pointerdown', markUserInteracted)
@@ -123,17 +127,26 @@ useEffect(() => {
 
 
     const playSound = () => {
-      if (!audioUnlocked) return // no reproducir hasta que usuario interactúe
+      if (!audioUnlocked) {
+        console.log('[AUDIO] Intento de reproducir sonido antes de unlock')
+        return // no reproducir hasta que usuario interactúe
+      }
       const a = audioRef.current
       if (a && a.readyState >= 2) {
         a.currentTime = 0
-        a.play().catch((error) => console.error('Error al reproducir el audio:', error))
+        a.play().then(() => {
+          console.log('[AUDIO] Sonido reproducido')
+        }).catch((error) => console.error('Error al reproducir el audio:', error))
+      } else {
+        console.log('[AUDIO] Audio no listo (readyState:', a?.readyState, ')')
       }
     }
 
-    const handleClick = (e: MouseEvent) => {
-      // reproducir sonido solo si el objetivo es un botón (evita dobles con otros elementos)
-      if ((e.target as HTMLElement).closest('button')) {
+    const handleInteractionTrigger = (e: MouseEvent) => {
+      // Disparador más amplio: botones reales, enlaces, elementos con role="button" o marcado con data-sound
+      const el = (e.target as HTMLElement).closest('button, a, [role="button"], [data-sound]') as HTMLElement | null
+      if (el) {
+        console.log('[AUDIO] Evento detectado en', el.tagName, el.className)
         playSound()
       }
     }
@@ -143,12 +156,14 @@ useEffect(() => {
     document.addEventListener('keydown', markUserInteracted)
     document.addEventListener('touchstart', markUserInteracted)
 
-    // Escuchar clicks para reproducir sonido en botones
-    document.addEventListener('click', handleClick)
+  // Escuchar clicks (en fase de captura) para reproducir sonido en elementos interactivos.
+  // Usamos captura para asegurarnos de atrapar el evento incluso si algún handler en la cadena
+  // llama a stopPropagation() en la fase de burbujeo.
+  document.addEventListener('click', handleInteractionTrigger, true)
 
     return () => {
       mounted = false
-  document.removeEventListener('click', handleClick)
+  document.removeEventListener('click', handleInteractionTrigger, true)
       document.removeEventListener('pointerdown', markUserInteracted)
       document.removeEventListener('keydown', markUserInteracted)
       document.removeEventListener('touchstart', markUserInteracted)

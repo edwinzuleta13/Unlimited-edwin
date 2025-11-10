@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import { Dialog } from './ui/dialog';
 import MagneticButton from './magnetic-button';
@@ -220,15 +221,20 @@ export default function SupportRequestForm() {
         <div className="md:col-span-2 flex justify-end mt-4">
           <button
             type="submit"
-            className="glow bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+            className="glow bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors inline-flex items-center"
             disabled={loading}
           >
-            {loading ? 'Enviando...' : 'Enviar solicitud'}
+            {loading ? (
+              'Enviando...'
+            ) : (
+              <>
+                Enviar solicitud
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </>
+            )}
           </button>
         </div>
-        {error && (
-          <div className="md:col-span-2 text-red-500 text-sm mt-2">{error}</div>
-        )}
+        {/* Los mensajes inline se muestran ahora vía AlertProvider/GlobalAlerts */}
       </form>
       <Dialog open={showModal} onOpenChange={setShowModal}>
         {showModal && (

@@ -16,11 +16,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { fullName, email, requestType, description, customReason } = body;
+    const { firstName, lastName, email, requestType, description, customReason, country, phone } = body;
     const isOther = String(requestType ?? '').toUpperCase() === 'OTRO';
 
-    // Validaciones: nombre, email y descripción son obligatorios.
-    if (!fullName || !email || !description) {
+    // Validaciones: nombre (nombre y apellido), email, teléfono y descripción son obligatorios.
+    if (!firstName || !lastName || !email || !description || !phone) {
       return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 });
     }
 
@@ -43,7 +43,10 @@ export async function POST(req: Request) {
     const { error: pendingError } = await supabase.from('support_requests').insert([
       {
         token,
-        full_name: fullName,
+        first_name: firstName ?? null,
+        last_name: lastName ?? null,
+        country_code: country ?? null,
+        phone_number: phone ?? null,
         email,
         // Si es OTRO guardamos request_type como NULL y ponemos la razón en custom_reason
         request_type: isOther ? null : requestType,
@@ -70,7 +73,10 @@ export async function POST(req: Request) {
         const { error: retryError } = await supabase.from('support_requests').insert([
           {
             token,
-            full_name: fullName,
+            first_name: firstName ?? null,
+            last_name: lastName ?? null,
+            country_code: country ?? null,
+            phone_number: phone ?? null,
             email,
             request_type: isOther ? 'OTRO' : requestType,
             custom_reason: isOther ? customReason : null,
@@ -96,7 +102,7 @@ export async function POST(req: Request) {
         from: process.env.SMTP_USER,
         to: email,
         subject: 'Confirma tu solicitud de soporte',
-        html: `<p>Hola ${fullName},</p>
+        html: `<p>Hola ${firstName} ${lastName},</p>
           <p>Haz clic en el siguiente enlace para confirmar tu solicitud de soporte:</p>
           <a href="${confirmUrl}">${confirmUrl}</a>
           <p>Si no solicitaste esto, ignora este correo.</p>`,

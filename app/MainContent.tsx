@@ -1,4 +1,6 @@
 "use client"
+import TrustedBySection from "@/components/TrustedBySection";
+import TechnologicalExpertise from "@/components/technological-expertise";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
 import Link from "next/link";
@@ -6,6 +8,7 @@ import BotonConSonido from "@/components/BotonConSonido";
 import { useEffect, useRef, useState } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Image from "next/image"
+import SplashScreen from "@/components/SplashScreen"
 import { Card } from "@/components/ui/card"
 import {
   Code,
@@ -22,6 +25,9 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react"
+import { FiPhone } from "react-icons/fi"
+import { SlSocialLinkedin } from "react-icons/sl"
+import { AiOutlineInstagram } from "react-icons/ai"
 import { useMouse } from "@/components/mouse-context"
 import { useTransition } from "./providers"
 import dynamic from "next/dynamic"
@@ -29,7 +35,7 @@ import MagneticButton from "@/components/magnetic-button"
 import AnimatedSVG from "@/components/animated-svg"
 import TechCursor from "@/components/tech-cursor"
 import FloatingChatWidget from "@/components/floating-chat-widget"
-import TechnologicalExpertise from "@/components/technological-expertise"
+import SolicitudModal from "../components/SolicitudModal"
 
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
 const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
@@ -40,9 +46,11 @@ export default function Home() {
   const { startTransition } = useTransition()
   const containerRef = useRef<HTMLDivElement>(null)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [showSplash, setShowSplash] = useState(true)
   const [audioReady, setAudioReady] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [audioUnlocked, setAudioUnlocked] = useState(false)
+  const [isSolicitudOpen, setIsSolicitudOpen] = useState(false)
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -207,14 +215,51 @@ useEffect(() => {
   }
 }, [])
 
+// Mostrar SplashScreen hasta que la página termine de cargar (evento window.load)
+// Mostrar SplashScreen inmediatamente y ocultarlo al finalizar carga
+useEffect(() => {
+  if (typeof window === "undefined") return
+
+  // Asegurarnos de que el splash esté visible desde el primer render
+  setShowSplash(true)
+
+  const hideSplash = () => {
+    // pequeña pausa para permitir animación de salida
+    setTimeout(() => setShowSplash(false), 800)
+  }
+
+  if (document.readyState === "complete") {
+    hideSplash()
+  } else {
+    window.addEventListener("load", hideSplash)
+  }
+
+  // Fallback por si la carga falla o tarda demasiado
+  const fallback = setTimeout(hideSplash, 6000)
+
+  return () => {
+    window.removeEventListener("load", hideSplash)
+    clearTimeout(fallback)
+  }
+}, [])
+
   return (
-    
-    <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none" ref={containerRef}>
+    <>
+      <AnimatePresence>{showSplash && <SplashScreen />}</AnimatePresence>
+
+      <div
+      ref={containerRef}
+      className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none"
+      style={{ pointerEvents: showSplash ? "none" : "auto", opacity: showSplash ? 0 : 1, transition: 'opacity 0.8s ease 0.15s' }}
+      aria-hidden={showSplash}
+    >
       <div className="absolute inset-0 z-0">
               <ParticleBackground />
               <div className="fixed inset-0 noise" />
             </div>
       <TechCursor />
+
+      
 
         <header className="relative z-10 w-full py-6 px-8 flex justify-end">
           <AuthNav />
@@ -222,12 +267,14 @@ useEffect(() => {
 
       <FloatingChatWidget />
 
+      <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4">
         <AnimatePresence>
           {isLoaded && (
             <motion.div
-              className="relative w-40 h-40 mb-8"
+              className="relative w-48 h-48 mb-8 md:w-56 md:h-56"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{
@@ -237,7 +284,7 @@ useEffect(() => {
               }}
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Disen%CC%83o%20sin%20ti%CC%81tulo%20(5)-5zZ7WMmMeOTo8NMFzV3ZUFkD5fkOEW.png"
+                src="/logo-Untitled-17.png"
                 alt="Untitled Tech Logo"
                 fill
                 className="object-contain"
@@ -462,7 +509,7 @@ useEffect(() => {
             />
             <TechCard
               name="Kubernetes"
-              icon="./icons/kubernetes.svg"
+              icon="/icons/kubernetes.svg"
               description="Orquestación de contenedores a escala"
             />
             <TechCard
@@ -482,7 +529,7 @@ useEffect(() => {
             />
             <TechCard
               name="Rust"
-              icon="./icons/rust.svg"
+              icon="/icons/rust.svg"
               description="Sistemas de bajo nivel seguros y rápidos"
             />
             <TechCard
@@ -498,6 +545,9 @@ useEffect(() => {
           </div>
         </div>
       </section>
+
+      {/* Trusted by Section */}
+      <TrustedBySection />
 
       {/* New Technological Expertise Section */}
       <TechnologicalExpertise />
@@ -535,7 +585,7 @@ useEffect(() => {
               <MagneticButton
                 className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
                 onClick={() => {
-                  window.location.href = '/solicitud';
+                  setIsSolicitudOpen(true)
                 }}
               >
                 Contactar Ahora <ArrowRight className="ml-2" />
@@ -549,38 +599,61 @@ useEffect(() => {
 </motion.section>
 
       {/* Contact Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-purple-900/20 to-transparent">
-        <div className="container mx-auto text-center">
-          <motion.h2
-            className="text-3xl md:text-5xl font-bold mb-12 gradient-text"
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Conecta con Nosotros
-          </motion.h2>
+<section className="py-20 px-4 bg-gradient-to-b from-purple-900/20 to-transparent">
+  <div className="container mx-auto text-center">
+    <motion.h2
+      className="text-3xl md:text-5xl font-bold mb-12 gradient-text"
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      Conecta con Nosotros
+    </motion.h2>
 
-          <motion.div
-            className="flex justify-center space-x-8"
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <SocialLink icon={<Phone className="w-6 h-6" />} href="tel:+1234567890" />
-            <SocialLink icon={<Linkedin className="w-6 h-6" />} href="#" />
-            <SocialLink icon={<Instagram className="w-6 h-6" />} href="#" />
-            <SocialLink icon={<Twitter className="w-6 h-6" />} href="#" />
-          </motion.div>
-        </div>
-      </section>
+    <motion.div
+      className="flex justify-center space-x-8"
+      initial={{ scale: 0.8, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      {/* Teléfono */}
+      <a
+        href="tel:+1234567890"
+        aria-label="Teléfono"
+        className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
+      >
+        <FiPhone className="w-8 h-8" />
+      </a>
+
+      {/* LinkedIn */}
+      <a
+        href="#"
+        aria-label="LinkedIn"
+        className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
+      >
+        <SlSocialLinkedin className="w-8 h-8" />
+      </a>
+
+      {/* Instagram */}
+      <a
+        href="#"
+        aria-label="Instagram"
+        className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
+      >
+        <AiOutlineInstagram className="w-8 h-8" />
+      </a>
+    </motion.div>
+  </div>
+</section>
+
 
       {/* Footer */}
       <footer className="py-8 px-4 border-t border-purple-500/20">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
+            <div className="flex flex-col items-center text-center">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Disen%CC%83o%20sin%20ti%CC%81tulo%20(5)-5zZ7WMmMeOTo8NMFzV3ZUFkD5fkOEW.png"
+                src="/logo-Untitled-10.png"
                 alt="Untitled Tech Logo"
                 width={100}
                 height={100}
@@ -639,6 +712,7 @@ useEffect(() => {
         </div>
       </footer>
     </div>
+    </>
   )
 }
 
@@ -764,16 +838,25 @@ function TechCard({ name, icon, description }: { name: string; icon: string; des
   )
 }
 
-function SocialLink({ icon, href }: { icon: React.ReactNode; href: string }) {
+function SocialLink({ icon, href, ariaLabel }: { icon: React.ReactNode; href: string; ariaLabel?: string }) {
   const { setCursorVariant } = useMouse()
 
   return (
     <motion.a
       href={href}
       whileHover={{ scale: 1.2 }}
-      className="text-purple-500 hover:text-purple-400 transition-colors"
+      className="text-purple-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400 rounded"
       onMouseEnter={() => setCursorVariant("button")}
       onMouseLeave={() => setCursorVariant("default")}
+      aria-label={ariaLabel}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        // Make Space also activate the link like a button
+        if (e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault()
+          ;(e.currentTarget as HTMLElement).click()
+        }
+      }}
     >
       {icon}
     </motion.a>

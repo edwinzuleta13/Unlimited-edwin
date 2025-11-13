@@ -6,7 +6,7 @@ import ParticleBackground from "@/components/particle-background";
 import TechCursor from "@/components/tech-cursor";
 import FloatingChatWidget from "@/components/floating-chat-widget";
 import AuthNav from "@/components/AuthNav";
-import { AlertProvider, GlobalAlerts } from '@/components/alert-context';
+import { GlobalAlerts } from '@/components/alert-context';
 
 import {
   Table,
@@ -29,6 +29,7 @@ import {
 export default function UserStatus() {
   const [peticiones, setPeticiones] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notAuth, setNotAuth] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const { showAlert } = useAlert();
@@ -42,8 +43,10 @@ export default function UserStatus() {
       if (!user) {
         setPeticiones([]);
         setLoading(false);
+        setNotAuth(true);
         return;
       }
+      setNotAuth(false);
       const { data } = await supabase
         .from("support_requests")
         .select("*")
@@ -61,15 +64,25 @@ export default function UserStatus() {
       const { error } = await supabase.from("support_requests").delete().eq("id", id);
       if (error) {
         console.error('Error eliminando solicitud:', error);
-        showAlert('error', 'No se pudo eliminar la solicitud. Intenta de nuevo.');
+        // Support both alert implementations: one accepts (severity, message) and
+        // another accepts a single object { severity, message, ... }.
+        if (typeof showAlert === 'function') {
+          // Prefer the two-argument API (severity, message) provided by the
+          // `alert-context` used in the app layout.
+          showAlert('error', 'No se pudo eliminar la solicitud. Intenta de nuevo.');
+        }
         return;
       }
       setPeticiones((prev) => prev.filter((p) => p.id !== id));
       setOpenMenuId(null);
+      if (typeof showAlert === 'function') {
       showAlert('success', 'Solicitud eliminada correctamente.');
+      }
     } catch (err) {
       console.error('Excepción al eliminar solicitud:', err);
+      if (typeof showAlert === 'function') {
       showAlert('error', 'Error al eliminar la solicitud.');
+      }
     }
   };
 
@@ -85,8 +98,7 @@ export default function UserStatus() {
   const headData = ["Fecha", "Hora", "Estado", "Tipo", "Descripción", ""];
 
   return (
-    <AlertProvider>
-      <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none">
+    <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none">
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
         <div className="fixed inset-0 noise" />
@@ -128,6 +140,24 @@ export default function UserStatus() {
           {loading ? (
             <div className="text-center text-lg text-purple-200 mt-40">
               Cargando...
+            </div>
+          ) : notAuth ? (
+            <div className="text-center text-purple-400 text-lg mt-40">
+              <p className="mb-4">Debes iniciar sesión para ver tus peticiones.</p>
+              <div className="flex justify-center gap-4">
+                <span
+                  className="cursor-pointer underline text-purple-300 hover:text-purple-500"
+                  onClick={() => (window.location.href = '/signin')}
+                >
+                  Iniciar sesión
+                </span>
+                <span
+                  className="cursor-pointer underline text-purple-300 hover:text-purple-500"
+                  onClick={() => (window.location.href = '/signup')}
+                >
+                  Registrarse
+                </span>
+              </div>
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center text-purple-400 text-lg mt-40">
@@ -259,7 +289,6 @@ export default function UserStatus() {
           )}
         </div>
       </div>
-    </div>
-    </AlertProvider>
+      </div>
   );
 }

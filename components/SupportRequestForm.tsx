@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
-import { Dialog } from './ui/dialog';
+import { COUNTRIES } from '../lib/countries';
+import { AlertProvider, GlobalAlerts, useAlert } from "@/components/alert-context";
 import MagneticButton from './magnetic-button';
 
 const REQUEST_TYPES = [
@@ -13,16 +14,23 @@ const REQUEST_TYPES = [
   'Otro',
 ];
 
+
+
 export default function SupportRequestForm() {
   const [notLoggedIn, setNotLoggedIn] = useState(false);
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [requestType, setRequestType] = useState(REQUEST_TYPES[0]);
   const [description, setDescription] = useState('');
   const [otherDetails, setOtherDetails] = useState('');
+  const [country, setCountry] = useState({ iso: 'VE', code: '+58', name: 'Venezuela' });
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
+
+  const { showAlert } = useAlert();
 
   // Rellenar automáticamente el email si el usuario ya está autenticado en Supabase
   useEffect(() => {
@@ -71,7 +79,7 @@ export default function SupportRequestForm() {
   // selecciona "Otro". Evitar duplicados: no mezclar ambos en `description`.
   const finalDescription = description;
 
-    if (!fullName || !email || !finalDescription) {
+    if (!firstName || !lastName || !email || !finalDescription || !phoneNumber) {
       setError('Todos los campos son obligatorios.');
       return;
     }
@@ -91,29 +99,65 @@ export default function SupportRequestForm() {
       const token = uuidv4();
       const created_at = new Date().toISOString();
 
-      const { error } = await supabase.from('support_requests').insert([
-        {
-          token,
-          created_at,
-          full_name: fullName,
-          email,
-          request_type: isOther ? 'OTRO' : requestType,
-          custom_reason: isOther ? otherDetails : null,
-          description: finalDescription,
-          user_id: user.id,
-          status: 'confirmed',
-        },
-      ]);
+      // Intentar insertar con campos extendidos; si la tabla no tiene esas columnas
+      // (p. ej. country_code) reintentar con un payload reducido para compatibilidad.
+      const initialRow: any = {
+        token,
+        created_at,
+        first_name: firstName,
+        last_name: lastName,
+        country_code: country.iso,
+        phone_number: `${country.code}${phoneNumber}`,
+        email,
+        request_type: isOther ? 'OTRO' : requestType,
+        custom_reason: isOther ? otherDetails : null,
+        description: finalDescription,
+        user_id: user.id,
+        status: 'confirmed',
+      };
+
+      const tryInsert = async (row: any) => {
+        const { error: insertError } = await supabase.from('support_requests').insert([row]);
+        return insertError;
+      };
+
+      let insertError = await tryInsert(initialRow);
+      if (insertError) {
+        const msg = String(insertError.message || insertError.details || '');
+        // Si el error indica columnas inexistentes, reintentar con payload compatible
+        if (/country_code|phone_number/i.test(msg)) {
+          const fallback = {
+            token,
+            created_at,
+            first_name: firstName,
+            last_name: lastName,
+            phone_number: `${country.code}${phoneNumber}`,
+            email,
+            request_type: isOther ? 'OTRO' : requestType,
+            custom_reason: isOther ? otherDetails : null,
+            description: finalDescription,
+            user_id: user.id,
+            status: 'confirmed',
+          };
+          insertError = await tryInsert(fallback);
+        }
+      }
+
       setLoading(false);
-      if (error) {
+      if (insertError) {
+        console.error('Insert error support_requests:', insertError);
         setError('Error al enviar la solicitud. Intenta de nuevo.');
       } else {
-        setShowModal(true);
-        setFullName('');
+        // Mostrar alerta global en lugar de modal
+        showAlert('success', 'Tu solicitud fue enviada correctamente. Pronto nos pondremos en contacto contigo.');
+        setFirstName('');
+        setLastName('');
         setEmail('');
         setRequestType(REQUEST_TYPES[0]);
         setDescription('');
         setOtherDetails('');
+        setPhoneNumber('');
+        setCountry({ iso: 'VE', code: '+58', name: 'Venezuela' });
       }
     } else {
       // Usuario no autenticado: envía a la API para email de confirmación
@@ -122,24 +166,30 @@ export default function SupportRequestForm() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            fullName,
+            firstName,
+            lastName,
             email,
             requestType,
             customReason: isOther ? otherDetails : null,
             description: finalDescription,
+            country: country.iso,
+            phone: `${country.code}${phoneNumber}`,
           }),
         });
         setLoading(false);
         if (!response.ok) {
           setError('Error al enviar la solicitud.');
         } else {
-          setNotLoggedIn(true);
-          setShowModal(true);
-          setFullName('');
+          // Mostrar alerta de información para usuarios no autenticados
+          showAlert('info', 'Revisa tu correo para confirmar tu solicitud. Por favor inicia sesión para mantenernos en contacto.');
+          setFirstName('');
+          setLastName('');
           setEmail('');
           setRequestType(REQUEST_TYPES[0]);
           setDescription('');
           setOtherDetails('');
+          setPhoneNumber('');
+          setCountry({ iso: 'VE', code: '+58', name: 'Venezuela' });
         }
       } catch (err) {
         setLoading(false);
@@ -150,18 +200,29 @@ export default function SupportRequestForm() {
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl mx-auto px-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl mx-auto px-4 hide-scrollbar">
         {/* Columna izquierda */}
         <div className="flex flex-col gap-6">
           <div>
-            <label className="block font-medium text-purple-200 mb-1">Nombre y Apellido</label>
+            <label className="block font-medium text-purple-200 mb-1">Nombre</label>
             <input
               type="text"
               className="w-full border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
-              value={fullName}
-              onChange={e => setFullName(e.target.value)}
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
               required
-              placeholder="Nombre y Apellido"
+              placeholder="Nombre"
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-purple-200 mb-1">Apellido</label>
+            <input
+              type="text"
+              className="w-full border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
+              required
+              placeholder="Apellido"
             />
           </div>
           <div>
@@ -186,7 +247,7 @@ export default function SupportRequestForm() {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
-            {/* Textarea adicional que solo aparece si el usuario selecciona 'Otro' */}
+
             <AnimatePresence>
               {requestType === 'Otro' && (
                 <motion.textarea
@@ -204,9 +265,35 @@ export default function SupportRequestForm() {
               )}
             </AnimatePresence>
           </div>
+
+          <div>
+            <label className="block font-medium text-purple-200 mb-1">País</label>
+            <div className="flex gap-2">
+              <select
+                className="w-1/2 border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={country.iso}
+                onChange={e => {
+                  const c = COUNTRIES.find(x => x.iso === e.target.value)
+                  if (c) setCountry(c)
+                }}
+              >
+                {COUNTRIES.map(c => (
+                  <option key={c.iso} value={c.iso}>{c.name} ({c.code})</option>
+                ))}
+              </select>
+              <input
+                type="tel"
+                className="w-1/2 border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-purple-400"
+                value={phoneNumber}
+                onChange={e => setPhoneNumber(e.target.value)}
+                placeholder="Número de teléfono"
+                required
+              />
+            </div>
+          </div>
         </div>
         {/* Columna derecha */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
           <label className="block font-medium text-purple-200 mb-1">Descripción</label>
           <textarea
             className="w-full border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 flex-1 resize-none"
@@ -219,53 +306,25 @@ export default function SupportRequestForm() {
         </div>
         {/* Botón de enviar */}
         <div className="md:col-span-2 flex justify-end mt-4">
-          <button
+          <MagneticButton
             type="submit"
-            className="glow bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors inline-flex items-center"
+            className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
             disabled={loading}
           >
             {loading ? (
-              'Enviando...'
+              <span className="inline-block">Enviando...</span>
             ) : (
               <>
                 Enviar solicitud
                 <ArrowRight className="ml-2 w-4 h-4" />
               </>
             )}
-          </button>
+          </MagneticButton>
         </div>
         {/* Los mensajes inline se muestran ahora vía AlertProvider/GlobalAlerts */}
       </form>
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        {showModal && (
-          <div className="p-6 text-center">
-            {notLoggedIn ? (
-              <>
-                <h3 className="text-lg font-bold mb-2">¡Tu solicitud ha sido enviada!</h3>
-                <p className="mb-4 text-purple-300">
-                  Revisa tu correo para confirmar tu solicitud.<br />
-                  No has iniciado sesión, por favor inicia sesión para mantenernos en contacto.
-                </p>
-                <div className="flex flex-col md:flex-row justify-center gap-4 mt-4">
-                  <MagneticButton className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-3 w-full md:w-auto">
-                    <a href="/signup">Registrarme</a>
-                  </MagneticButton>
-                  <MagneticButton className="glow bg-purple-800 hover:bg-purple-900 text-lg px-8 py-3 w-full md:w-auto">
-                    <a href="/signin">Iniciar sesión</a>
-                  </MagneticButton>
-                </div>
-              </>
-            ) : (
-              <>
-                <h3 className="text-lg font-bold mb-2">¡Gracias por tu solicitud!</h3>
-                <p className="mb-4 text-purple-300">
-                  Tu solicitud fue enviada correctamente. Pronto nos pondremos en contacto contigo.
-                </p>
-              </>
-            )}
-          </div>
-        )}
-      </Dialog>
+      {/* Global alerts renderizadas desde el contexto */}
+      <GlobalAlerts />
     </div>
   );
 }

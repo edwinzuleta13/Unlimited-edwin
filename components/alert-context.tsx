@@ -51,7 +51,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 export function GlobalAlerts() {
   const { alerts, closeAlert } = useAlert();
   return (
-    <div className="space-y-4 w-full max-w-3xl mx-auto px-4 z-50">
+    <div className="fixed top-6 left-0 right-0 z-50 flex flex-col items-center px-4 pointer-events-none">
       <AnimatePresence>
         {alerts.map((alert) => (
           <motion.div
@@ -60,6 +60,7 @@ export function GlobalAlerts() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
+            className="w-full max-w-3xl pointer-events-auto mb-4"
           >
             <Alert severity={alert.severity} className="relative pr-10">
               <div className="text-center w-full">{alert.message}</div>

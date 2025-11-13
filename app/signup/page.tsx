@@ -63,13 +63,13 @@ export default function SignUp() {
             className="bg-black/50 backdrop-blur-md p-10 rounded-xl shadow-xl border border-purple-500 max-w-md w-full"
           >
             <motion.div
-              className="relative w-32 h-32 mx-auto mb-6"
+              className="relative w-40 h-40 mx-auto mb-6 md:w-48 md:h-48"
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 260, damping: 20 }}
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Disen%CC%83o%20sin%20ti%CC%81tulo%20(5)-5zZ7WMmMeOTo8NMFzV3ZUFkD5fkOEW.png"
+                src="/logo-Untitled-17.png"
                 alt="Logo"
                 fill
                 className="object-contain"

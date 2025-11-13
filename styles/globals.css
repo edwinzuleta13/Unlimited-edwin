@@ -118,3 +118,12 @@ body {
   background-color: rgba(99, 37, 196, 0.95);
   color: #ffffff;
 }
+
+/* Utility: hide native scrollbars but keep scrolling functional */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

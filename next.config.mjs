@@ -14,13 +14,16 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: [
-      'kubernetes.io',
-      'upload.wikimedia.org',
-      'nodejs.org',
-      'go.dev',
-      'www.docker.com',
-      'hebbkx1anhila5yf.public.blob.vercel-storage.com',
+    // Permitir SVG remotos (usar con precaución) y configurar patrones de hosts remotos
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      { protocol: 'https', hostname: 'cdn.simpleicons.org', pathname: '/**' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org', pathname: '/**' },
+      { protocol: 'https', hostname: 'kubernetes.io', pathname: '/**' },
+      { protocol: 'https', hostname: 'nodejs.org', pathname: '/**' },
+      { protocol: 'https', hostname: 'go.dev', pathname: '/**' },
+      { protocol: 'https', hostname: 'www.docker.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'hebbkx1anhila5yf.public.blob.vercel-storage.com', pathname: '/**' },
     ],
   },
   experimental: {

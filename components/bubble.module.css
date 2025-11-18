@@ -1,0 +1,28 @@
+/* Simple bubble hover effect: letters lift and scale with a smooth easing and subtle shadow */
+.hoverText {
+  display: inline-block;
+  transition: transform 250ms cubic-bezier(.2,.9,.3,1), color 250ms ease, text-shadow 250ms ease;
+  transform-origin: center bottom;
+  will-change: transform, color;
+  cursor:default;
+}
+
+.hoverText:hover {
+  transform: translateY(-10px) scale(1.12);
+  color: #c7b3ff; /* lighter indigo */
+  text-shadow: 0 8px 20px rgba(124,58,237,0.18);
+}
+
+/* Optional stagger on parent hover: when hovering the whole word, each char animates with delay */
+.hoverText {
+  transition-delay: calc(var(--i) * 25ms);
+}
+
+/* If you want a continuous subtle float, uncomment below */
+@keyframes floatY {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* .hoverText { animation: floatY 3.5s ease-in-out infinite; } */

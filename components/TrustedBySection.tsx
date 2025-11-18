@@ -160,7 +160,7 @@ export default function TrustedBySection() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        Confiado por líderes de la industria
+        Nuestros Aliados
       </motion.h2>
 
       <motion.p

@@ -54,15 +54,6 @@ export default function SplashScreen() {
       </motion.div>
 
       {/* TEXTO */}
-      <motion.p
-        className="text-purple-200 font-light text-lg mt-4 tracking-widest"
-        initial={{ opacity: 0.9 }}
-        animate={{ opacity: 0.9 }}
-        transition={{ duration: 0.4 }}
-      >
-        Tech Company
-      </motion.p>
-
       <motion.span
         className="text-purple-300 mt-2 text-sm"
         initial={{ opacity: 0.9 }}

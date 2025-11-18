@@ -1,5 +1,7 @@
 "use client"
+import React from "react"
 import TrustedBySection from "@/components/TrustedBySection";
+
 import TechnologicalExpertise from "@/components/technological-expertise";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
@@ -8,6 +10,7 @@ import BotonConSonido from "@/components/BotonConSonido";
 import { useEffect, useRef, useState } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Image from "next/image"
+import AltServicesLayout from "./AltServicesLayout";
 import SplashScreen from "@/components/SplashScreen"
 import { Card } from "@/components/ui/card"
 import {
@@ -18,6 +21,7 @@ import {
   Twitter,
   Phone,
   ChevronDown,
+  ChevronUp,
   Shield,
   Cloud,
   Boxes,
@@ -28,6 +32,9 @@ import {
 import { FiPhone } from "react-icons/fi"
 import { SlSocialLinkedin } from "react-icons/sl"
 import { AiOutlineInstagram } from "react-icons/ai"
+import { FaWhatsapp } from "react-icons/fa"
+import { FaXTwitter } from "react-icons/fa6"
+import { FaTiktok } from "react-icons/fa"
 import { useMouse } from "@/components/mouse-context"
 import { useTransition } from "./providers"
 import dynamic from "next/dynamic"
@@ -36,6 +43,7 @@ import AnimatedSVG from "@/components/animated-svg"
 import TechCursor from "@/components/tech-cursor"
 import FloatingChatWidget from "@/components/floating-chat-widget"
 import SolicitudModal from "../components/SolicitudModal"
+import AnimatedButton from "@/components/AnimatedButton1";
 
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
 const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
@@ -51,8 +59,11 @@ export default function Home() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [audioUnlocked, setAudioUnlocked] = useState(false)
   const [isSolicitudOpen, setIsSolicitudOpen] = useState(false)
+  const [altReload, setAltReload] = useState(0)
+  const [servicesReload, setServicesReload] = useState(0)
   const router = useRouter();
   const searchParams = useSearchParams();
+  // carousel now uses pure CSS keyframes animation (no JS measurement required)
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -68,6 +79,11 @@ export default function Home() {
       element.scrollIntoView({ behavior: "smooth" })
     }
   }
+
+  // Toggle between default services layout and alternative one
+  const [altLayout, setAltLayout] = useState(false)
+
+  // removed JS width measurement — CSS keyframes will handle continuous scroll
 
 useEffect(() => {
   // Solo ejecuta en el cliente y si searchParams está disponible
@@ -284,7 +300,7 @@ useEffect(() => {
               }}
             >
               <Image
-                src="/logo-Untitled-17.png"
+                src="/logo-Untitled-10.png"
                 alt="Untitled Tech Logo"
                 fill
                 className="object-contain"
@@ -320,20 +336,20 @@ useEffect(() => {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <MagneticButton
-            className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
+            className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
             onClick={() => {
               scrollToSection("contacto")
             }}
           >
-            Agenda una Consulta
+            Servicios
           </MagneticButton>
           <MagneticButton
-            className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
+          className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
             onClick={() => {
               handleExploreClick()
             }}
           >
-            Conoce Nuestros Servicios
+            Contactanos
           </MagneticButton>
         </motion.div>
  
@@ -359,112 +375,249 @@ useEffect(() => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="servicios" className="py-20 px-4 bg-black/50 backdrop-blur">
-        <div className="container mx-auto">
+
+{/* services Section */}
+<AnimatePresence mode="wait" key={servicesReload}>
+  {!altLayout ? (
+    /* LAYOUT ORIGINAL */
+    <motion.section
+      key="main-services"
+      id="servicios"
+      className="py-20 px-4 bg-black/50 backdrop-blur"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="container mx-auto relative">
+        <div className="pointer-events-none absolute" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <motion.div
-            className="text-center mb-16"
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
+            key="main-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.45 }}
+            className="flex flex-col justify-start"
           >
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">Soluciones Tecnológicas Integrales</h2>
-            <p className="text-lg text-purple-300 max-w-2xl mx-auto">
-              Ofrecemos un ecosistema completo de servicios tecnológicos para impulsar la transformación digital de tu
-              empresa
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+              Soluciones Tecnológicas
+            </h2>
+            <p className="text-lg text-purple-300 max-w-sm">
+              Servicios diseñados para impulsar la transformación digital.
             </p>
+
+                <motion.div
+                  initial={{ y: 0 }}
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+                  className="mt-4 inline-flex items-center justify-center cursor-pointer"
+                  onClick={() => {
+                    setAltLayout(true)
+                    setAltReload((p) => p + 1)
+                    setServicesReload((p) => p + 1)
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Cambiar a layout alternativo"
+                >
+                  <ChevronDown className="w-8 h-8 text-purple-400" />
+                </motion.div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <ServiceCard
-              icon={<Code className="w-8 h-8" />}
-              title="Desarrollo Web y Móvil"
-              description="Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo."
-              features={["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]}
-            />
-            <ServiceCard
-              icon={<Database className="w-8 h-8" />}
-              title="CRM y ERP"
-              description="Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas."
-              features={["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]}
-            />
-            <ServiceCard
-              icon={<Cloud className="w-8 h-8" />}
-              title="Cloud Solutions"
-              description="Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad."
-              features={["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]}
-            />
-            <ServiceCard
-              icon={<Brain className="w-8 h-8" />}
-              title="Inteligencia Artificial"
-              description="Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones."
-              features={[
-                "Análisis Predictivo",
-                "Procesamiento de Lenguaje Natural",
-                "Computer Vision",
-                "Automatización Inteligente",
-              ]}
-            />
-            <ServiceCard
-              icon={<Shield className="w-8 h-8" />}
-              title="Ciberseguridad"
-              description="Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo."
-              features={[
-                "Auditorías de Seguridad",
-                "Implementación Zero Trust",
-                "Gestión de Identidades",
-                "SOC as a Service",
-              ]}
-            />
-            <ServiceCard
-              icon={<Boxes className="w-8 h-8" />}
-              title="Integración de Sistemas"
-              description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
-              features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
-            />
+          <div className="lg:col-span-2 overflow-hidden relative pt-16">
+            <motion.div
+              key="normal"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+            >
+              <style>{`
+                @keyframes services-scroll { 
+                  from { transform: translateX(0); } 
+                  to { transform: translateX(-50%); } 
+                }
+                .services-track { 
+                  will-change: transform; 
+                  display: flex; 
+                }
+                .services-track .services-group { 
+                  display: grid; 
+                  grid-template-columns: repeat(2, minmax(0,1fr)); 
+                  gap: 2rem; 
+                  min-width: 100%; 
+                }
+              `}</style>
+
+              <div className="services-viewport overflow-hidden relative">
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
+                <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
+
+                <div
+                  className="services-track"
+                  style={{ animation: `services-scroll 10s linear infinite` }}
+                >
+                  {[...Array(2)].map((_, pageIndex) => (
+                    <div key={pageIndex} className="services-group">
+                      <ServiceCard
+                        icon={<Code className="w-8 h-8" />}
+                        title="Desarrollo Web y Móvil"
+                        description="Creamos aplicaciones escalables."
+                        features={["Aplicaciones Web", "iOS/Android", "E-commerce"]}
+                        className={pageIndex === 1 ? "ml-8" : ""}
+                      />
+
+                      <ServiceCard
+                        icon={<Database className="w-8 h-8" />}
+                        title="CRM y ERP"
+                        description="Implementación de sistemas empresariales."
+                        features={["SAP", "Dynamics", "Salesforce"]}
+                      />
+
+                      <ServiceCard
+                        icon={<Cloud className="w-8 h-8" />}
+                        title="Cloud Solutions"
+                        description="Optimiza tu infraestructura."
+                        features={["AWS", "Azure", "Google Cloud"]}
+                        className={
+                          pageIndex === 0
+                            ? "mr-8"
+                            : pageIndex === 1
+                            ? "ml-8 mr-8"
+                            : "mr-8"
+                        }
+                      />
+
+                      <ServiceCard
+                        icon={<Brain className="w-8 h-8" />}
+                        title="Inteligencia Artificial"
+                        description="Soluciones inteligentes."
+                        features={["NLP", "Vision", "Predictivo"]}
+                      />
+
+                      <ServiceCard
+                        icon={<Shield className="w-8 h-8" />}
+                        title="Ciberseguridad"
+                        description="Protección avanzada."
+                        features={["Zero Trust", "SOC", "Auditorías"]}
+                      />
+
+                      <ServiceCard
+                        icon={<Boxes className="w-8 h-8" />}
+                        title="Integración de Sistemas"
+                        description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
+                        features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
+                        className={
+                          pageIndex === 0
+                            ? "mr-8"
+                            : pageIndex === 1
+                            ? "ml-8 mr-8"
+                            : "mr-8"
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </div>
+    </motion.section>
+  ) : (
+    /* LAYOUT ALTERNATIVO */
+    <motion.section
+      key={altReload}
+      id="servicios"
+      className="py-20 px-4 bg-black/50 backdrop-blur"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="container mx-auto">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ y: 50, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+            Soluciones Tecnológicas Integrales
+          </h2>
+          <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+            Ofrecemos un ecosistema completo de servicios tecnológicos para impulsar la transformación digital de tu empresa
+          </p>
+        </motion.div>
 
-      {/* Process Section */}
-      <section id="proceso" className="py-20 px-4">
-        <div className="container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <ServiceCard
+            icon={<Code className="w-8 h-8" />}
+            title="Desarrollo Web y Móvil"
+            description="Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo."
+            features={["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]}
+          />
+
+          <ServiceCard
+            icon={<Database className="w-8 h-8" />}
+            title="CRM y ERP"
+            description="Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas."
+            features={["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]}
+          />
+
+          <ServiceCard
+            icon={<Cloud className="w-8 h-8" />}
+            title="Cloud Solutions"
+            description="Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad."
+            features={["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]}
+          />
+
+          <ServiceCard
+            icon={<Brain className="w-8 h-8" />}
+            title="Inteligencia Artificial"
+            description="Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones."
+            features={["Análisis Predictivo", "Procesamiento de Lenguaje Natural", "Computer Vision", "Automatización Inteligente"]}
+          />
+
+          <ServiceCard
+            icon={<Shield className="w-8 h-8" />}
+            title="Ciberseguridad"
+            description="Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo."
+            features={["Auditorías de Seguridad", "Implementación Zero Trust", "Gestión de Identidades", "SOC as a Service"]}
+          />
+
+          <ServiceCard
+            icon={<Boxes className="w-8 h-8" />}
+            title="Integración de Sistemas"
+            description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
+            features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
+          />
+        </div>
+
+        <div className="text-center mt-10">
           <motion.div
-            className="text-center mb-16"
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
+            initial={{ y: 0 }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+            className="mt-4 inline-flex items-center justify-center cursor-pointer"
+            onClick={() => {
+              setAltLayout(false)
+              setAltReload((p) => p + 1)
+              setServicesReload((p) => p + 1)
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Volver al layout original"
           >
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">Nuestro Proceso</h2>
-            <p className="text-lg text-purple-300 max-w-2xl mx-auto">
-              Un enfoque metodológico que garantiza resultados excepcionales en cada proyecto
-            </p>
+            <ChevronUp className="w-8 h-8 text-purple-400" />
           </motion.div>
-
-          <div className="process-grid">
-            <ProcessCard
-              number="01"
-              title="Descubrimiento"
-              description="Analizamos tus necesidades y objetivos para diseñar la solución perfecta"
-            />
-            <ProcessCard
-              number="02"
-              title="Planificación"
-              description="Definimos la arquitectura y roadmap del proyecto"
-            />
-            <ProcessCard
-              number="03"
-              title="Desarrollo"
-              description="Implementamos la solución usando metodologías ágiles"
-            />
-            <ProcessCard
-              number="04"
-              title="Despliegue"
-              description="Lanzamos tu solución con un plan de adopción gradual"
-            />
-          </div>
         </div>
-      </section>
+      </div>
+    </motion.section>
+  )}
+</AnimatePresence>
+
 
       {/* Expanded Tech Stack Section */}
       <section className="py-20 px-4 bg-black/50 backdrop-blur">
@@ -546,57 +699,46 @@ useEffect(() => {
         </div>
       </section>
 
+          <motion.section
+      id="contacto"
+      className="relative z-20 w-full h-[50vh] bg-cover bg-center flex items-center"
+      style={{
+        backgroundImage: "url('/wachinton.png')",
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: '100% 100%', // Ocupa todo el ancho, menos espacio vertical
+        paddingBottom: '3rem', // Reduce el espacio inferior
+      }}
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/30"></div>
+
+      {/* Contenido */}
+      <div className="relative z-10 w-full flex justify-start px-20">
+        <div className="w-full max-w-7xl relative z-10 flex justify-left pl-56">
+          <div className="mt-6 inline-block">
+            <AnimatedButton
+              text="Text Us"
+              onClick={() => setIsSolicitudOpen(true)}
+              className="glow bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-6"
+              disabled={false}
+            />
+          </div>
+        </div>
+      </div>
+    </motion.section>
+
       {/* Trusted by Section */}
       <TrustedBySection />
 
       {/* New Technological Expertise Section */}
       <TechnologicalExpertise />
 
-      {/* CTA Section */}
-<motion.section
-  id="contacto"
-  className="pt-20 pb-24 px-8" // 🔹 padding superior e inferior separados
-  initial={{ opacity: 0, y: 100 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8 }}
-  viewport={{ once: true }}
->
-  <div className="container mx-auto">
-    <div className="gradient-border">
-      <div className="bg-black/50 backdrop-blur rounded-xl p-12 md:p-20">
-        <div className="flex gap-8 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text text-center">
-              ¿Listo para transformar tu negocio?
-            </h2>
-            <p className="text-lg text-purple-300 mb-6 text-center">
-              Agenda una consulta gratuita con nuestros expertos y descubre cómo podemos ayudarte a alcanzar tus
-              objetivos tecnológicos.
-            </p>
-            <motion.div
-              whileTap={{ scale: 0.95 }}
-              className="w-full flex justify-center"
-            >
-              <MagneticButton
-                className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
-                onClick={() => {
-                  setIsSolicitudOpen(true)
-                }}
-              >
-                Contactar Ahora <ArrowRight className="ml-2" />
-              </MagneticButton>
-            </motion.div>
-          </motion.div>
-        </div>
-      </div>
-    </div>
-  </div>
-</motion.section>
+
 
       {/* Contact Section */}
 <section className="py-20 px-4 bg-gradient-to-b from-purple-900/20 to-transparent">
@@ -616,19 +758,34 @@ useEffect(() => {
       whileInView={{ scale: 1, opacity: 1 }}
       viewport={{ once: true }}
     >
-      {/* Teléfono */}
+      {/* WhatsApp (reemplaza teléfono) */}
       <a
-        href="tel:+1234567890"
-        aria-label="Teléfono"
+        href="tel:+584243296034"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp +58 424-3296034"
         className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
       >
-        <FiPhone className="w-8 h-8" />
+        <FaWhatsapp className="w-8 h-8" />
+      </a>
+
+      {/* TikTok */}
+      <a
+        href="https://www.tiktok.com/@untitledtechco?_t=ZM-8wVCrqpCtlt&_r=1&brid=CKKLqA97M0vUTnBEFheQNQ"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="TikTok- Untitled Tech"
+        className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
+      >
+        <FaTiktok className="w-8 h-8" />
       </a>
 
       {/* LinkedIn */}
       <a
-        href="#"
-        aria-label="LinkedIn"
+        href="https://www.linkedin.com/company/untitled-tech-company"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn - Untitled Tech"
         className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
       >
         <SlSocialLinkedin className="w-8 h-8" />
@@ -636,8 +793,10 @@ useEffect(() => {
 
       {/* Instagram */}
       <a
-        href="#"
-        aria-label="Instagram"
+        href="https://www.instagram.com/untitledtechco?igsh=MWU5aHpweDZyaDJuZQ=="
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram - Untitled Tech"
         className="text-purple-500 hover:text-purple-300 transition-colors duration-300 transform hover:scale-110"
       >
         <AiOutlineInstagram className="w-8 h-8" />
@@ -648,7 +807,7 @@ useEffect(() => {
 
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t border-purple-500/20">
+      <footer className="py-8 px-4 border-t border-purple-500/20 relative z-[9999]">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="flex flex-col items-center text-center">
@@ -699,11 +858,25 @@ useEffect(() => {
             </div>
             <div>
               <h3 className="font-bold mb-4">Contacto</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Untitledtechcompany@gmail.com</li>
-                <li>+58 424-3296034</li>
-                <li>Valencia, Venezuela.</li>
-              </ul>
+             <ul className="space-y-2 text-sm text-gray-400">
+  <li>
+<a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=untitledtechcompany@gmail.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-purple-400 transition-colors underline underline-offset-2"
+>
+  untitledtechcompany@gmail.com
+</a>
+  </li>
+
+  <li>
+      +58 424-3296034
+  </li>
+
+  <li>Valencia, Venezuela. </li>
+  <li>Lima, Peru. </li>
+</ul>
             </div>
           </div>
           <div className="border-t border-purple-500/20 mt-8 pt-8 text-center text-sm text-gray-400">
@@ -721,11 +894,13 @@ function ServiceCard({
   title,
   description,
   features,
+  className,
 }: {
   icon: React.ReactNode
   title: string
   description: string
   features: string[]
+  className?: string
 }) {
   const { setCursorVariant } = useMouse()
 
@@ -734,15 +909,24 @@ function ServiceCard({
       initial={{ y: 50, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true }}
-      whileHover={{ y: -10 }}
-      onMouseEnter={() => setCursorVariant("text")}
-      onMouseLeave={() => setCursorVariant("default")}
     >
-      <Card className="p-6 bg-black/30 border-purple-500/20 hover:border-purple-500/40 transition-all group parallax-card">
-        <div className="parallax-card-content">
-          <div className="mb-4 text-purple-500 group-hover:text-purple-400 transition-colors">{icon}</div>
-          <h3 className="text-xl font-bold mb-2 group-hover:gradient-text transition-all">{title}</h3>
-          <p className="text-gray-400 group-hover:text-gray-300 transition-colors mb-4">{description}</p>
+        <Card className={`${className ? className + " " : ""}group p-6 bg-black/30 border-2 border-purple-300/40 transition-all parallax-card overflow-hidden relative`}>
+            {/* Animated gradient fill overlay (hidden -> reveal from bottom on hover) */}
+            <div className="absolute left-0 right-0 bottom-0 top-0 h-full bg-gradient-to-t from-purple-900/85 via-purple-700/60 to-transparent pointer-events-none z-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-out origin-bottom will-change-transform" />
+            {/* Decorative subtle tech-stripes that fade in on hover */}
+            <div
+              className="absolute left-0 right-0 bottom-0 top-0 pointer-events-none z-10 opacity-0 group-hover:opacity-30 transition-opacity duration-700"
+              style={{
+                backgroundImage: `repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0 6px, transparent 6px 12px)`,
+                mixBlendMode: 'overlay'
+              }}
+            />
+            {/* Subtle permanent border + glow (intensifies on hover via opacity) */}
+            <div className="pointer-events-none absolute inset-0 rounded-xl border-2 border-purple-400/30 z-20 transition-opacity duration-500 opacity-80 group-hover:opacity-100" style={{ boxShadow: '0 0 0 6px rgba(124,58,237,0.45), 0 0 28px 8px rgba(124,58,237,0.25)' }} />
+        <div className="parallax-card-content relative z-10">
+          <div className="mb-4 text-purple-400 transition-colors group-hover:text-white">{icon}</div>
+          <h3 className="text-xl font-bold mb-2 transition-all">{title}</h3>
+          <p className="text-gray-300 transition-colors mb-4">{description}</p>
           <ul className="space-y-2">
             {features.map((feature, index) => (
               <li key={index} className="flex items-center text-sm text-gray-400">
@@ -790,7 +974,7 @@ function ProcessCard({
       <div className="absolute -left-4 -top-4 text-4xl font-bold text-purple-500/20">{number}</div>
       <div className="gradient-border">
         <div className="bg-black/30 p-6 rounded-xl">
-          <h3 className="text-xl font-bold mb-2 gradient-text">{title}</h3>
+          <p className="text-lg text-purple-200 max-w-2xl mx-auto">{title}</p>
           <p className="text-gray-400">{description}</p>
         </div>
       </div>

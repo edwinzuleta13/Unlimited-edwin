@@ -12,7 +12,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
   const { showAlert } = useAlert();
   const [notLoggedIn, setNotLoggedIn] = useState(false);
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [companyActivity, setCompanyActivity] = useState("");
   const [email, setEmail] = useState("");
   const [requestType, setRequestType] = useState("Soporte técnico");
   const [description, setDescription] = useState("");
@@ -62,7 +63,7 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
 
     const finalDescription = description;
 
-    if (!firstName || !lastName || !email || !finalDescription || !phoneNumber) {
+    if (!firstName || !companyName || !companyActivity || !email || !finalDescription || !phoneNumber) {
       setError("Todos los campos son obligatorios.");
       return;
     }
@@ -88,7 +89,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
         token,
         created_at,
         first_name: firstName,
-        last_name: lastName,
+        company_name: companyName,
+        company_activity: companyActivity,
         country_code: country.iso,
         phone_number: `${country.code}${phoneNumber}`,
         email,
@@ -112,7 +114,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
             token,
             created_at,
             first_name: firstName,
-            last_name: lastName,
+            company_name: companyName,
+            company_activity: companyActivity,
             phone_number: `${country.code}${phoneNumber}`,
             email,
             request_type: isOther ? "OTRO" : requestType,
@@ -132,7 +135,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
       } else {
         showAlert("success", "Tu solicitud fue enviada correctamente. Pronto nos pondremos en contacto contigo.");
         setFirstName("");
-        setLastName("");
+        setCompanyName("");
+        setCompanyActivity("");
         setEmail("");
         setRequestType(REQUEST_TYPES[0]);
         setDescription("");
@@ -147,7 +151,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             firstName,
-            lastName,
+            companyName,
+            companyActivity,
             email,
             requestType,
             customReason: isOther ? otherDetails : null,
@@ -163,7 +168,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
           setNotLoggedIn(true);
           showAlert("info", "Revisa tu correo para confirmar tu solicitud. Por favor inicia sesión para mantenernos en contacto.");
           setFirstName("");
-          setLastName("");
+          setCompanyName("");
+          setCompanyActivity("");
           setEmail("");
           setRequestType(REQUEST_TYPES[0]);
           setDescription("");
@@ -181,7 +187,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
   useEffect(() => {
     if (!isOpen) {
       setFirstName("");
-      setLastName("");
+      setCompanyName("");
+      setCompanyActivity("");
       setEmail("");
       setRequestType(REQUEST_TYPES[0]);
       setDescription("");
@@ -249,14 +256,25 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                         />
                       </div>
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">Apellido</label>
+                        <label className="block font-medium text-purple-200 mb-1">Nombre de empresa</label>
                         <input
                           type="text"
                           className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
+                          value={companyName}
+                          onChange={(e) => setCompanyName(e.target.value)}
                           required
-                          placeholder="Apellido"
+                          placeholder="Nombre de empresa"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-medium text-purple-200 mb-1">¿A qué se dedica la empresa?</label>
+                        <input
+                          type="text"
+                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+                          value={companyActivity}
+                          onChange={(e) => setCompanyActivity(e.target.value)}
+                          required
+                          placeholder="Actividad principal de la empresa"
                         />
                       </div>
                       <div>

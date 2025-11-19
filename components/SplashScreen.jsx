@@ -23,7 +23,8 @@ export default function SplashScreen() {
 
   return (
     <motion.div
-      className="fixed inset-0 flex flex-col items-center justify-center bg-purple-900 z-50"
+      className="fixed inset-0 flex flex-col items-center justify-center z-50"
+      style={{ background: 'linear-gradient(180deg, #111014 0%, #2f2733 100%)' }}
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

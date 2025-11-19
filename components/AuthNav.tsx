@@ -10,6 +10,9 @@ import { spaceGrotesk } from '@/lib/fonts'
 import { Home } from 'lucide-react'
 import { FaRectangleXmark } from 'react-icons/fa6'
 import { GrStatusGood } from 'react-icons/gr'
+import { DrawOutlineButton } from '@/components/DrawOutlineButton';
+import styles from './AuthNav.module.css';
+import Image from 'next/image';
 
 export default function AuthNav() {
   const [user, setUser] = useState<any>(null);
@@ -54,78 +57,129 @@ export default function AuthNav() {
   };
 
   return (
-    <div className="relative flex items-center gap-4">
-      {!user ? (
-        <>
-          <Link href="/signin">
-            <button className="glow bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-lg">
-              Iniciar sesión
-            </button>
-          </Link>
-          <Link href="/signup">
-            <button className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-white px-5 py-3 rounded-lg">
-              Registrarse
-            </button>
-          </Link>
-        </>
-      ) : (
-        <div className="relative">
-          {/* Avatar redondo */}
-          <button
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className={cn(
-              "w-10 h-10 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold uppercase shadow-md focus:outline-none",
-              spaceGrotesk.className
-            )}
-          >
-            {getInitials(user.email)}
-          </button>
+    <div className="w-full flex items-center justify-between" >
+      {/* Left: Logo (fixed container height so header doesn't grow) */}
+      <div className="flex items-center h-14">
+        <Link href="/" aria-label="Inicio" className="flex items-center">
+          <Image
+            src="/logo-Untitled-24.png"
+            alt="Untitled Tech"
+            width={220}
+            height={190}
+            className="object-contain"
+          />
+        </Link>
+      </div>
 
-          {/* Menú desplegable animado */}
-          <AnimatePresence>
-            {menuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}
-                className="absolute right-0 top-full mt-2 min-w-[180px] bg-black border border-purple-600 rounded-lg rounded-tl-lg rounded-bl-lg rounded-tr-none shadow-lg z-[9999] overflow-hidden flex flex-col gap-0"
-              >
-                {[
-                  {
-                    onClick: handleGoToStatus,
-                    label: "Estado de Usuario",
-                    icon: <GrStatusGood className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
-                  },
-                  {
-                    onClick: handleGoHome,
-                    label: "Ir a inicio",
-                    icon: <Home className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
-                  },
-                  {
-                    onClick: handleLogout,
-                    label: "Cerrar sesión",
-                    icon: <FaRectangleXmark className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
-                  },
-                ].map((btn, idx) => (
-                  <motion.button
-                    key={btn.label}
-                    onClick={btn.onClick}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ delay: 0.08 * idx, duration: 0.25 }}
-                    className="text-left px-4 py-3 text-purple-200 hover:bg-purple-700 hover:text-white transition whitespace-nowrap font-bold tracking-tight text-lg flex items-center gap-2"
-                  >
-                    {btn.icon && btn.icon}
-                    {btn.label}
-                  </motion.button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+      {/* Center: texts (absolutamente centrado) */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+        <div className="flex items-center justify-center gap-6">
+          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
+            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
+              Tecnologias
+            </span>
+          </span>
+
+          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
+            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
+              Servicios
+            </span>
+          </span>
+
+          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
+            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
+              Sobre Nosotros
+            </span>
+          </span>
+
+          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
+            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
+              Contacto
+            </span>
+          </span>
+
+          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
+            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
+              Aliados
+            </span>
+          </span>
+
         </div>
-      )}
+      </div>
+
+      <div className="relative flex items-center gap-4">
+        {!user ? (
+          <>
+            <Link href="/signin">
+              <button className="glow bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-lg">
+                Iniciar sesión
+              </button>
+            </Link>
+            <Link href="/signup">
+              <button className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-white px-5 py-3 rounded-lg">
+                Registrarse
+              </button>
+            </Link>
+          </>
+        ) : (
+          <div className="relative">
+            {/* Avatar redondo */}
+            <button
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className={cn(
+                "w-10 h-10 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold uppercase shadow-md focus:outline-none",
+                spaceGrotesk.className
+              )}
+            >
+              {getInitials(user.email)}
+            </button>
+
+            {/* Menú desplegable animado */}
+            <AnimatePresence>
+              {menuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 top-full mt-2 min-w-[180px] bg-black border border-purple-600 rounded-lg rounded-tl-lg rounded-bl-lg rounded-tr-none shadow-lg z-[9999] overflow-hidden flex flex-col gap-0"
+                >
+                  {[
+                    {
+                      onClick: handleGoToStatus,
+                      label: "Estado de Usuario",
+                      icon: <GrStatusGood className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
+                    },
+                    {
+                      onClick: handleGoHome,
+                      label: "Ir a inicio",
+                      icon: <Home className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
+                    },
+                    {
+                      onClick: handleLogout,
+                      label: "Cerrar sesión",
+                      icon: <FaRectangleXmark className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
+                    },
+                  ].map((btn, idx) => (
+                    <motion.button
+                      key={btn.label}
+                      onClick={btn.onClick}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{ delay: 0.08 * idx, duration: 0.25 }}
+                      className="text-left px-4 py-3 text-purple-200 hover:bg-purple-700 hover:text-white transition whitespace-nowrap font-bold tracking-tight text-lg flex items-center gap-2"
+                    >
+                      {btn.icon && btn.icon}
+                      {btn.label}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

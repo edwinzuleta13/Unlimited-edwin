@@ -1,7 +1,8 @@
 "use client"
 import React from "react"
 import TrustedBySection from "@/components/TrustedBySection";
-
+import { Marquee, MarqueeFade, MarqueeContent, MarqueeItem } from '@/components/ui/marquee';
+import { SiGithub, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import TechnologicalExpertise from "@/components/technological-expertise";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
@@ -44,6 +45,9 @@ import TechCursor from "@/components/tech-cursor"
 import FloatingChatWidget from "@/components/floating-chat-widget"
 import SolicitudModal from "../components/SolicitudModal"
 import AnimatedButton from "@/components/AnimatedButton1";
+import HolographicCardPurpleMid from  "@/components/HolographicCardPurpleMid";
+import HolographicCardPurpleMidRect from "@/components/HolographicCardPurpleMidRect";
+
 
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
 const ParticleBackground = dynamic(() => import("@/components/particle-background"), { ssr: false })
@@ -61,8 +65,73 @@ export default function Home() {
   const [isSolicitudOpen, setIsSolicitudOpen] = useState(false)
   const [altReload, setAltReload] = useState(0)
   const [servicesReload, setServicesReload] = useState(0)
+  const [pexelsVideoUrl, setPexelsVideoUrl] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
+    // Fetch video from Pexels API for Hero background
+    useEffect(() => {
+      const fetchById = async (id: string) => {
+        try {
+          const res = await fetch(`https://api.pexels.com/videos/videos/${id}`, {
+            headers: { Authorization: process.env.NEXT_PUBLIC_PEXELS_API_KEY || "" },
+          });
+          const json = await res.json();
+          if (json && json.video_files && json.video_files[0]) {
+            setPexelsVideoUrl(json.video_files[0].link);
+            return true;
+          }
+        } catch (e) {
+          console.warn("Pexels fetch by ID failed:", e);
+        }
+        return false;
+      };
+
+      const fetchByQuery = async (query: string) => {
+        try {
+          const response = await fetch(`https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=1`, {
+            headers: {
+              Authorization: process.env.NEXT_PUBLIC_PEXELS_API_KEY || ""
+            }
+          });
+          const data = await response.json();
+          if (data.videos && data.videos[0] && data.videos[0].video_files && data.videos[0].video_files[0]) {
+            setPexelsVideoUrl(data.videos[0].video_files[0].link);
+            return true;
+          }
+        } catch (err) {
+          console.warn("No se pudo obtener el video de Pexels (search):", err);
+        }
+        return false;
+      };
+
+      (async () => {
+        // Prefer using a specific Pexels page URL (user-provided). If not set, fallback to search.
+        // You provided: https://www.pexels.com/video/point-of-view-of-a-person-riding-a-bus-5821984
+        const userPage = "https://www.pexels.com/video/point-of-view-of-a-person-riding-a-bus-5821984";
+
+        // Try to extract the numeric ID from the page URL (last dash-number)
+        const match = userPage.match(/-(\d+)(?:\/|$)/);
+        let got = false;
+        if (match) {
+          const id = match[1];
+          got = await fetchById(id);
+        }
+
+        if (!got) {
+          // Last resort: search by a descriptive query
+          await fetchByQuery("bus ride");
+        }
+      })();
+    }, []);
+
+    // Log when we receive a video URL (helpful for debugging)
+    useEffect(() => {
+      if (pexelsVideoUrl) {
+        console.log('[PEXELS] Hero video URL set:', pexelsVideoUrl)
+      } else {
+        console.log('[PEXELS] No Hero video URL yet')
+      }
+    }, [pexelsVideoUrl])
   // carousel now uses pure CSS keyframes animation (no JS measurement required)
 
   const { scrollYProgress } = useScroll({
@@ -82,6 +151,30 @@ export default function Home() {
 
   // Toggle between default services layout and alternative one
   const [altLayout, setAltLayout] = useState(false)
+
+  // Column groups for the vertical-3 layout (reused for infinite scroll)
+  const servicesColumns = [
+    [
+      { icon: <Code className="w-8 h-8" />, title: "Desarrollo Web y Móvil", description: "Creamos aplicaciones escalables.", features: ["Aplicaciones Web", "iOS/Android", "E-commerce"] },
+      { icon: <Database className="w-8 h-8" />, title: "CRM y ERP", description: "Implementación de sistemas empresariales.", features: ["SAP", "Dynamics", "Salesforce"] },
+      { icon: <Cloud className="w-8 h-8" />, title: "Cloud Solutions", description: "Optimiza tu infraestructura.", features: ["AWS", "Azure", "Google Cloud"] },
+    ],
+    [
+      { icon: <Brain className="w-8 h-8" />, title: "Inteligencia Artificial", description: "Soluciones inteligentes.", features: ["NLP", "Vision", "Predictivo"] },
+      { icon: <Shield className="w-8 h-8" />, title: "Ciberseguridad", description: "Protección avanzada.", features: ["Zero Trust", "SOC", "Auditorías"] },
+      { icon: <Boxes className="w-8 h-8" />, title: "Integración de Sistemas", description: "Integramos y automatizamos procesos.", features: ["APIs y Microservicios", "ESB", "ETL"] },
+    ],
+    [
+      { icon: <Boxes className="w-8 h-8" />, title: "E-commerce", description: "Tiendas online personalizadas.", features: ["Shopify", "WooCommerce", "Pagos"] },
+      { icon: <Brain className="w-8 h-8" />, title: "Chatbots", description: "Automatizamos atención y ventas.", features: ["WhatsApp", "Flujos", "Integración CRM"] },
+      { icon: <Database className="w-8 h-8" />, title: "CRM a Medida", description: "Plataformas internas y automatización.", features: ["Workflows", "Integraciones", "Sistemas"] },
+    ],
+    [
+      { icon: <Code className="w-8 h-8" />, title: "Aplicaciones Web", description: "Plataformas SaaS y dashboards.", features: ["SaaS", "Dashboards", "PWA"] },
+      { icon: <Code className="w-8 h-8" />, title: "Tecnologías", description: "Frameworks y stacks modernos.", features: ["React/Vue", "Node/Python", "Docker/APIs"] },
+      { icon: <Shield className="w-8 h-8" />, title: "Quality Assurance", description: "Pruebas y optimización.", features: ["Funcionales", "Rendimiento", "Seguridad"] },
+    ],
+  ]
 
   // removed JS width measurement — CSS keyframes will handle continuous scroll
 
@@ -200,9 +293,9 @@ useEffect(() => {
   }, [])
 
 
-  const handleExploreClick = () => {
+  const handleExploreClick = (id?: string) => {
     startTransition()
-    scrollToSection("servicios")
+    scrollToSection(id ?? "servicios")
   }
 
   // Nota: la reproducción ahora la maneja el listener global de 'click' en document
@@ -265,115 +358,369 @@ useEffect(() => {
 
       <div
       ref={containerRef}
-      className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none"
+      className="relative min-h-screen text-white overflow-x-hidden cursor-none"
       style={{ pointerEvents: showSplash ? "none" : "auto", opacity: showSplash ? 0 : 1, transition: 'opacity 0.8s ease 0.15s' }}
       aria-hidden={showSplash}
     >
-      <div className="absolute inset-0 z-0">
-              <ParticleBackground />
-              <div className="fixed inset-0 noise" />
-            </div>
+      {/* Fondo animado global: cubre todo el sitio desde hero hacia abajo */}
+      <div className="absolute inset-0 -z-10">
+        <ParticleBackground />
+        <div className="fixed inset-0 noise" />
+      </div>
       <TechCursor />
 
-      
+      {/* Wrapper que contiene header + hero: solo el video y overlay */}
+      <div className="relative">
+        {/* VIDEO DE FONDO (cubre header y hero) */}
+        {pexelsVideoUrl && (
+          <video
+            className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+            src={pexelsVideoUrl}
+            autoPlay
+            loop
+            muted
+            playsInline
+            crossOrigin="anonymous"
+            onLoadedData={() => console.log('[VIDEO] Header+Hero video loaded successfully:', pexelsVideoUrl)}
+            onError={(e) => console.error('[VIDEO] Header+Hero video failed to load:', pexelsVideoUrl, e)}
+          />
+        )}
 
-        <header className="relative z-10 w-full py-6 px-8 flex justify-end">
+        {/* overlay entre video y contenido (aumentada para mayor oscuridad) */}
+<div className="absolute inset-0 bg-black/80 pointer-events-none z-10" />
+
+{/* degradado extra en la parte inferior */}
+<div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-black pointer-events-none z-20" />
+
+
+        <header className="relative z-30 w-full py-6 px-8 flex justify-end">
           <AuthNav />
         </header>
 
-      <FloatingChatWidget />
+        <FloatingChatWidget />
 
-      <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
+        <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4">
-        <AnimatePresence>
-          {isLoaded && (
-            <motion.div
-              className="relative w-48 h-48 mb-8 md:w-56 md:h-56"
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20,
-              }}
-            >
-              <Image
-                src="/logo-Untitled-10.png"
-                alt="Untitled Tech Logo"
-                fill
-                className="object-contain"
-                sizes="(max-width: 640px) 160px, (max-width: 1024px) 200px, 320px"
-                priority
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Hero Section */}
 
-        <motion.h1
-          className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-        >
-          Untitled Tech Company
-        </motion.h1>
+        <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-0 -mt-6 pb-0 overflow-hidden">
+          {/* Contenido principal del Hero */}
+          <div className="relative z-30 w-full flex flex-col items-center justify-center">
+    <motion.h1
+      className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.2, duration: 0.8 }}
+    >
+      Untitled Tech Company
+    </motion.h1>
 
-        <motion.p
-          className="text-xl md:text-2xl mb-8 text-purple-300 max-w-3xl"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-        >
-          Transformamos empresas a través de soluciones tecnológicas innovadoras y personalizadas
-        </motion.p>
+    <motion.p
+      className="text-xl md:text-2xl mb-8 text-purple-300 max-w-3xl"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.4, duration: 0.8 }}
+    >
+      Transformamos empresas a través de soluciones tecnológicas innovadoras y personalizadas
+    </motion.p>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
-        >
-          <MagneticButton
-            className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
-            onClick={() => {
-              scrollToSection("contacto")
-            }}
-          >
-            Servicios
-          </MagneticButton>
-          <MagneticButton
-          className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
-            onClick={() => {
-              handleExploreClick()
-            }}
-          >
-            Contactanos
-          </MagneticButton>
-        </motion.div>
- 
-        <motion.div
-          initial={{ y: 0 }}
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-          className="absolute bottom-8"
-        >
-          <ChevronDown className="w-8 h-8 text-purple-400" />
-        </motion.div>
-      </section>
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.6, duration: 0.8 }}
+      className="flex flex-col sm:flex-row gap-4 justify-center"
+    >
+      <MagneticButton
+        className="bg-transparent border border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
+        onClick={() => scrollToSection("servicios")}
+      >
+        Servicios
+      </MagneticButton>
+      <MagneticButton
+        className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6"
+        onClick={() => handleExploreClick("contacto")}
+      >
+        Contactanos
+      </MagneticButton>
+    </motion.div>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="stats-grid">
-            <StatCard number="100+" text="Proyectos Completados" />
-            <StatCard number="50+" text="Clientes Satisfechos" />
-            <StatCard number="15+" text="Expertos en Tecnología" />
-            <StatCard number="24/7" text="Soporte Técnico" />
+    <motion.div
+      initial={{ y: 0 }}
+      animate={{ y: [0, 10, 0] }}
+      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+      className="mt-6 flex justify-center cursor-pointer"
+      onClick={() => handleExploreClick("contacto")}
+      role="button"
+      tabIndex={0}
+      aria-label="Ir a contacto"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault()
+          handleExploreClick('contacto')
+        }
+      }}
+    >
+      <ChevronDown className="w-8 h-8 text-purple-400" />
+    </motion.div>
+  </div>
+</section>
+
+  </div>
+
+{/* Stats Section */}
+<section className="relative pt-20 px-4 -mt-10 bg-transparent overflow-visible">
+
+  {/* Degradado SOLO en el padding superior (invertido literalmente) */}
+  <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-t from-black/80 to-transparent pointer-events-none z-10" />
+
+  <div className="container mx-auto relative z-20">
+    <div className="stats-grid">
+      <StatCard number="100+" text="Proyectos Completados" />
+      <StatCard number="50+" text="Clientes Satisfechos" />
+      <StatCard number="15+" text="Expertos en Tecnología" />
+      <StatCard number="24/7" text="Soporte Técnico" />
+    </div>
+  </div>
+
+</section>
+
+
+
+{/* Process Section */}
+<section id="proceso" className="py-20 px-4">
+  <div className="container mx-auto">
+    <motion.div
+      className="text-center mb-16"
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">Nuestro Proceso</h2>
+      <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+        Un enfoque metodológico que garantiza resultados excepcionales en cada proyecto
+      </p>
+    </motion.div>
+
+    {/* Responsive grid: ajusta columnas/espaciado según tu diseño */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <HolographicCardPurpleMidRect>
+        <div className="h-full flex flex-col justify-center items-center text-center">
+          <div className="flex flex-col items-center w-full">
+            <h3 className="text-xl font-semibold text-white">Descubrimiento</h3>
+            <span className="text-sm text-purple-200"></span>
           </div>
+          <p className="mt-3 text-purple-200 text-center">
+            Analizamos tus necesidades y objetivos para diseñar la solución perfecta
+          </p>
         </div>
-      </section>
+      </HolographicCardPurpleMidRect>
+
+      <HolographicCardPurpleMidRect>
+        <div className="h-full flex flex-col justify-center items-center text-center">
+          <div className="flex flex-col items-center w-full">
+            <h3 className="text-xl font-semibold text-white">Planificación</h3>
+            <span className="text-sm text-purple-200"></span>
+          </div>
+          <p className="mt-3 text-purple-200 text-center">
+            Definimos la arquitectura y roadmap del proyecto
+          </p>
+        </div>
+      </HolographicCardPurpleMidRect>
+
+      <HolographicCardPurpleMidRect>
+        <div className="h-full flex flex-col justify-center items-center text-center">
+          <div className="flex flex-col items-center w-full">
+            <h3 className="text-xl font-semibold text-white">Desarrollo</h3>
+            <span className="text-sm text-purple-200"></span>
+          </div>
+          <p className="mt-3 text-purple-200 text-center">
+            Implementamos la solución usando metodologías ágiles
+          </p>
+        </div>
+      </HolographicCardPurpleMidRect>
+
+      <HolographicCardPurpleMidRect>
+        <div className="h-full flex flex-col justify-center items-center text-center">
+          <div className="flex flex-col items-center w-full">
+            <h3 className="text-xl font-semibold text-white">Despliegue</h3>
+            <span className="text-sm text-purple-200"></span>
+          </div>
+          <p className="mt-3 text-purple-200 text-center">
+            Lanzamos tu solución con un plan de adopción gradual
+          </p>
+        </div>
+      </HolographicCardPurpleMidRect>
+    </div>
+  </div>
+</section>
+
+
+{/* Test Marquee (logos) */}
+<section className="py-20 px-4 bg-black/60 relative">
+  {/* Fondo negro con degradado hacia abajo (negro -> transparente) */}
+  <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-b from-black/80 to-transparent" />
+  <div className="container mx-auto relative z-20">
+    <motion.div
+      className="text-center mb-16"
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      <h1 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">Stack Tecnológico Avanzado</h1>
+      <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+        Dominamos las tecnologías más innovadoras para ofrecer soluciones de vanguardia
+      </p>
+    </motion.div>
+
+    {/* Marquee de logos tecnológicos */}
+    {(() => {
+      const techLogos = [
+        { name: "React", icon: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
+        { name: "Node.js", icon: "https://nodejs.org/static/images/logo.svg" },
+        { name: "Python", icon: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
+        { name: "AWS", icon: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
+        { name: "Docker", icon: "https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" },
+        { name: "Kubernetes", icon: "/icons/kubernetes.svg" },
+        { name: "TensorFlow", icon: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg" },
+        { name: "PostgreSQL", icon: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg" },
+        { name: "GraphQL", icon: "https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg" },
+        { name: "Rust", icon: "/icons/rust.svg" },
+        { name: "Vue.js", icon: "https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg" },
+        { name: "Golang", icon: "https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg" },
+      ];
+      return (
+        <Marquee
+          className="
+            w-screen
+            relative left-1/2 right-1/2
+            -ml-[50vw] -mr-[50vw]
+            overflow-hidden py-10
+          "
+        >
+          <MarqueeContent speed={40}>
+            {techLogos.map((tech) => (
+              <MarqueeItem
+                key={tech.name}
+                className="mx-12 flex flex-col items-center"
+              >
+                <img
+                  src={tech.icon}
+                  alt={tech.name}
+                  className="w-16 h-16 object-contain opacity-90 hover:opacity-100 transition"
+                />
+              </MarqueeItem>
+            ))}
+          </MarqueeContent>
+        </Marquee>
+      );
+    })()}
+  </div>
+
+  <div className="relative">
+
+  {/* === DEGRADADO DESDE LA MITAD HACIA ABAJO === */}
+  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-transparent z-30" />
+
+
+  {/* Sección donde empieza tu contenido vertical */}
+  <div className="pt-[30px] px-4 relative z-20">
+
+    {/* (Removed inner subtle top gradient — using full-section overlay instead) */}
+
+    <div className="relative z-20">
+      <div className="flex flex-col md:flex-row justify-center items-start gap-16 md:gap-24 w-full mb-[40px] max-w-5xl mx-auto">
+
+        <div className="md:w-1/2 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Frontend</h2>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">React, Vue.js, Angular:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Desarrollo de interfaces modernas, reactivas y escalables, con experiencia en componentes reutilizables y arquitectura frontend avanzada.
+          </p>
+        </div>
+
+        <div className="md:w-1/2 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Backend</h2>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">React, Vue.js, Angular:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Desarrollo de servidores y APIs eficientes y seguros, adaptados a necesidades de alto rendimiento y escalabilidad.
+          </p>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">Golang:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Creación de microservicios concurrentes y de alto desempeño para sistemas críticos.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    {/* Nueva fila */}
+    <div className="pt-6 px-4">
+      <div className="flex flex-col md:flex-row justify-center items-start gap-16 md:gap-24 w-full mb-[40px] max-w-5xl mx-auto">
+
+        <div className="md:w-1/2 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Bases de Datos</h2>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">PostgreSQL, MySQL, MongoDB:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Diseño de bases de datos relacionales y no relacionales, optimizadas para consultas rápidas y gestión eficiente de datos.
+          </p>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">Firebase y Redis:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Soluciones en tiempo real y cacheo para mejorar rendimiento y experiencia de usuario.
+          </p>
+        </div>
+
+        <div className="md:w-1/2 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Inteligencia Artificial y Machine Learning</h2>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">TensorFlow y Python:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Integración de modelos de aprendizaje automático y deep learning para análisis predictivo, visión por computadora y NLP.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    {/* Tercera fila */}
+    <div className="pt-2 px-4">
+      <div className="flex flex-col md:flex-row justify-center items-start gap-16 md:gap-24 w-full mb-[40px] max-w-5xl mx-auto">
+
+        <div className="md:w-1/2 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Infraestructura y Cloud</h2>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">AWS, Google Cloud, Azure:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Arquitectura en la nube escalable, segura y eficiente.
+          </p>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">Docker y Kubernetes:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Contenerización y orquestación para despliegues consistentes.
+          </p>
+        </div>
+
+        <div className="md:w-1/2 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold gradient-text">APIs y Comunicación</h2>
+          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">GraphQL y REST APIs:</h3>
+          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
+            Desarrollo de APIs flexibles y eficientes.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    {/* Texto final */}
+    <div className="mt-6 px-4 pt-10">
+      <div className="max-w-3xl mx-auto text-center">
+        <h4 className="text-lg md:text-2xl font-semibold text-purple-300">
+          Muchas más tecnologías líderes aplicadas para ofrecer soluciones completas, innovadoras y escalables.
+        </h4>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
 
 
 {/* services Section */}
@@ -381,325 +728,261 @@ useEffect(() => {
   {!altLayout ? (
     /* LAYOUT ORIGINAL */
     <motion.section
-      key="main-services"
-      id="servicios"
-      className="py-20 px-4 bg-black/50 backdrop-blur"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="container mx-auto relative">
-        <div className="pointer-events-none absolute" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          <motion.div
-            key="main-title"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.45 }}
-            className="flex flex-col justify-start"
-          >
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
-              Soluciones Tecnológicas
-            </h2>
-            <p className="text-lg text-purple-300 max-w-sm">
-              Servicios diseñados para impulsar la transformación digital.
-            </p>
+  key="main-services"
+  id="servicios"
+  className="py-20 px-4 bg-black/50 backdrop-blur"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.4 }}
+>
+  <div className="container mx-auto relative">
+    <div className="pointer-events-none absolute" />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <motion.div
+        key="main-title"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.45 }}
+        className="flex flex-col justify-start"
+      >
+        <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+          Soluciones Tecnológicas
+        </h2>
+        <p className="text-lg text-purple-300 max-w-sm">
+          Servicios diseñados para impulsar la transformación digital.
+        </p>
 
-                <motion.div
-                  initial={{ y: 0 }}
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-                  className="mt-4 inline-flex items-center justify-center cursor-pointer"
-                  onClick={() => {
-                    setAltLayout(true)
-                    setAltReload((p) => p + 1)
-                    setServicesReload((p) => p + 1)
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Cambiar a layout alternativo"
-                >
-                  <ChevronDown className="w-8 h-8 text-purple-400" />
-                </motion.div>
-          </motion.div>
+        <motion.div
+          initial={{ y: 0 }}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.96, rotate: -4 }}
+          className="mt-4 inline-flex items-center justify-center cursor-pointer"
+          onClick={() => {
+            setAltLayout(true)
+            setAltReload((p) => p + 1)
+            setServicesReload((p) => p + 1)
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Cambiar a layout alternativo"
+        >
+          <ChevronDown className="w-8 h-8 text-purple-400" />
+        </motion.div>
+      </motion.div>
 
-          <div className="lg:col-span-2 overflow-hidden relative pt-16">
-            <motion.div
-              key="normal"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
-            >
-              <style>{`
-                @keyframes services-scroll { 
-                  from { transform: translateX(0); } 
-                  to { transform: translateX(-50%); } 
-                }
-                .services-track { 
-                  will-change: transform; 
-                  display: flex; 
-                }
-                .services-track .services-group { 
-                  display: grid; 
-                  grid-template-columns: repeat(2, minmax(0,1fr)); 
-                  gap: 2rem; 
-                  min-width: 100%; 
-                }
-              `}</style>
+      <div className="lg:col-span-2 overflow-hidden relative pt-16">
+        <motion.div
+          key="normal"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+        >
+          <div className="relative w-full">
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
 
-              <div className="services-viewport overflow-hidden relative">
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
-                <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
-
-                <div
-                  className="services-track"
-                  style={{ animation: `services-scroll 10s linear infinite` }}
-                >
-                  {[...Array(2)].map((_, pageIndex) => (
-                    <div key={pageIndex} className="services-group">
-                      <ServiceCard
-                        icon={<Code className="w-8 h-8" />}
-                        title="Desarrollo Web y Móvil"
-                        description="Creamos aplicaciones escalables."
-                        features={["Aplicaciones Web", "iOS/Android", "E-commerce"]}
-                        className={pageIndex === 1 ? "ml-8" : ""}
-                      />
-
-                      <ServiceCard
-                        icon={<Database className="w-8 h-8" />}
-                        title="CRM y ERP"
-                        description="Implementación de sistemas empresariales."
-                        features={["SAP", "Dynamics", "Salesforce"]}
-                      />
-
-                      <ServiceCard
-                        icon={<Cloud className="w-8 h-8" />}
-                        title="Cloud Solutions"
-                        description="Optimiza tu infraestructura."
-                        features={["AWS", "Azure", "Google Cloud"]}
-                        className={
-                          pageIndex === 0
-                            ? "mr-8"
-                            : pageIndex === 1
-                            ? "ml-8 mr-8"
-                            : "mr-8"
-                        }
-                      />
-
-                      <ServiceCard
-                        icon={<Brain className="w-8 h-8" />}
-                        title="Inteligencia Artificial"
-                        description="Soluciones inteligentes."
-                        features={["NLP", "Vision", "Predictivo"]}
-                      />
-
-                      <ServiceCard
-                        icon={<Shield className="w-8 h-8" />}
-                        title="Ciberseguridad"
-                        description="Protección avanzada."
-                        features={["Zero Trust", "SOC", "Auditorías"]}
-                      />
-
-                      <ServiceCard
-                        icon={<Boxes className="w-8 h-8" />}
-                        title="Integración de Sistemas"
-                        description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
-                        features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
-                        className={
-                          pageIndex === 0
-                            ? "mr-8"
-                            : pageIndex === 1
-                            ? "ml-8 mr-8"
-                            : "mr-8"
-                        }
-                      />
-                    </div>
+            {/* Contenedor del Marquee con scroll oculto */}
+            <div className="w-full overflow-x-auto hide-scrollbar">
+              <Marquee className="w-full">
+                <MarqueeContent speed={30} pauseOnHover={true} autoFill={true} gradient={false}>
+                  {servicesColumns.map((column, colIdx) => (
+                    <MarqueeItem key={`marquee-col-${colIdx}`} className="mx-6 flex-shrink-0">
+                      <div className="flex flex-col gap-8">
+                        {column.map((card, idx) => (
+                          <ServiceCard
+                            key={`${card.title}-${idx}-${colIdx}`}
+                            icon={card.icon}
+                            title={card.title}
+                            description={card.description}
+                            features={card.features}
+                          />
+                        ))}
+                      </div>
+                    </MarqueeItem>
                   ))}
-                </div>
-              </div>
-            </motion.div>
+                </MarqueeContent>
+              </Marquee>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </div>
+  </div>
+</motion.section>
+
   ) : (
     /* LAYOUT ALTERNATIVO */
-    <motion.section
-      key={altReload}
-      id="servicios"
-      className="py-20 px-4 bg-black/50 backdrop-blur"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
+<motion.section
+  key={altReload}
+  id="servicios"
+  className="py-20 px-4 bg-black/50 backdrop-blur"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.4 }}
+>
+  <div className="container mx-auto">
+    <motion.div
+      className="text-center mb-16"
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true }}
     >
-      <div className="container mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ y: 50, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
-            Soluciones Tecnológicas Integrales
-          </h2>
-          <p className="text-lg text-purple-300 max-w-2xl mx-auto">
-            Ofrecemos un ecosistema completo de servicios tecnológicos para impulsar la transformación digital de tu empresa
-          </p>
-        </motion.div>
+      <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+        Soluciones Tecnológicas Integrales
+      </h2>
+      <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+        Ofrecemos un ecosistema completo de servicios tecnológicos para impulsar la transformación digital de tu empresa
+      </p>
+    </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <ServiceCard
-            icon={<Code className="w-8 h-8" />}
-            title="Desarrollo Web y Móvil"
-            description="Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo."
-            features={["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]}
-          />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* EXISTENTES */}
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Code className="w-8 h-8" />}
+          title="Desarrollo Web y Móvil"
+          description="Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo."
+          features={["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]}
+        />
+      </motion.div>
 
-          <ServiceCard
-            icon={<Database className="w-8 h-8" />}
-            title="CRM y ERP"
-            description="Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas."
-            features={["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]}
-          />
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Database className="w-8 h-8" />}
+          title="CRM y ERP"
+          description="Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas."
+          features={["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]}
+        />
+      </motion.div>
 
-          <ServiceCard
-            icon={<Cloud className="w-8 h-8" />}
-            title="Cloud Solutions"
-            description="Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad."
-            features={["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]}
-          />
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Cloud className="w-8 h-8" />}
+          title="Cloud Solutions"
+          description="Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad."
+          features={["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]}
+        />
+      </motion.div>
 
-          <ServiceCard
-            icon={<Brain className="w-8 h-8" />}
-            title="Inteligencia Artificial"
-            description="Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones."
-            features={["Análisis Predictivo", "Procesamiento de Lenguaje Natural", "Computer Vision", "Automatización Inteligente"]}
-          />
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Brain className="w-8 h-8" />}
+          title="Inteligencia Artificial"
+          description="Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones."
+          features={["Análisis Predictivo", "Procesamiento de Lenguaje Natural", "Computer Vision", "Automatización Inteligente"]}
+        />
+      </motion.div>
 
-          <ServiceCard
-            icon={<Shield className="w-8 h-8" />}
-            title="Ciberseguridad"
-            description="Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo."
-            features={["Auditorías de Seguridad", "Implementación Zero Trust", "Gestión de Identidades", "SOC as a Service"]}
-          />
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Shield className="w-8 h-8" />}
+          title="Ciberseguridad"
+          description="Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo."
+          features={["Auditorías de Seguridad", "Implementación Zero Trust", "Gestión de Identidades", "SOC as a Service"]}
+        />
+      </motion.div>
 
-          <ServiceCard
-            icon={<Boxes className="w-8 h-8" />}
-            title="Integración de Sistemas"
-            description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
-            features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
-          />
-        </div>
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Boxes className="w-8 h-8" />}
+          title="Integración de Sistemas"
+          description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
+          features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
+        />
+      </motion.div>
 
-        <div className="text-center mt-10">
-          <motion.div
-            initial={{ y: 0 }}
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-            className="mt-4 inline-flex items-center justify-center cursor-pointer"
-            onClick={() => {
-              setAltLayout(false)
-              setAltReload((p) => p + 1)
-              setServicesReload((p) => p + 1)
-            }}
-            role="button"
-            tabIndex={0}
-            aria-label="Volver al layout original"
-          >
-            <ChevronUp className="w-8 h-8 text-purple-400" />
-          </motion.div>
-        </div>
-      </div>
-    </motion.section>
+      {/* NUEVAS SERVICECARDS AÑADIDAS */}
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Boxes className="w-8 h-8" />}
+          title="E-commerce"
+          description="Tiendas online personalizadas y optimizadas para convertir más ventas."
+          features={["Shopify", "WooCommerce", "Pagos y Logística", "Automatización"]}
+        />
+      </motion.div>
+
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Brain className="w-8 h-8" />}
+          title="Chatbots y Automatizaciones"
+          description="Automatizamos flujos de atención y ventas con chatbots inteligentes."
+          features={["WhatsApp", "Instagram", "Flujos Automatizados", "Integración con CRM"]}
+        />
+      </motion.div>
+
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Database className="w-8 h-8" />}
+          title="CRM y Soluciones a Medida"
+          description="Automatización avanzada y plataformas internas hechas a medida del negocio."
+          features={["Workflows", "Sistemas Internos", "Integraciones", "Optimización"]}
+        />
+      </motion.div>
+
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Code className="w-8 h-8" />}
+          title="Aplicaciones Web"
+          description="Plataformas web tipo SaaS, dashboards y sistemas empresariales."
+          features={["SaaS", "ERP", "Dashboards", "PWA"]}
+        />
+      </motion.div>
+
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Code className="w-8 h-8" />}
+          title="Tecnologías"
+          description="Expertos en los lenguajes y frameworks más modernos."
+          features={["React / Vue / Angular", "Node / Python / PHP", "SQL / NoSQL", "Docker / APIs"]}
+        />
+      </motion.div>
+
+      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <ServiceCard
+          icon={<Shield className="w-8 h-8" />}
+          title="Quality Assurance (QA)"
+          description="Aseguramos calidad, rendimiento y seguridad en todos los proyectos."
+          features={["Pruebas Funcionales", "Usabilidad", "Seguridad", "Optimización"]}
+        />
+      </motion.div>
+    </div>
+
+    <div className="text-center mt-10">
+      <motion.div
+        initial={{ y: 0 }}
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.96, rotate: 4 }}
+        className="mt-4 inline-flex items-center justify-center cursor-pointer"
+        onClick={() => {
+          setAltLayout(false)
+          setAltReload((p) => p + 1)
+          setServicesReload((p) => p + 1)
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Volver al layout original"
+      >
+        <ChevronUp className="w-8 h-8 text-purple-400" />
+      </motion.div>
+    </div>
+  </div>
+</motion.section>
+
   )}
 </AnimatePresence>
 
 
-      {/* Expanded Tech Stack Section */}
-      <section className="py-20 px-4 bg-black/50 backdrop-blur">
-        <div className="container mx-auto">
-          <motion.div
-            className="text-center mb-16"
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">Stack Tecnológico Avanzado</h2>
-            <p className="text-lg text-purple-300 max-w-2xl mx-auto">
-              Dominamos las tecnologías más innovadoras para ofrecer soluciones de vanguardia
-            </p>
-          </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <TechCard
-              name="React"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"
-              description="Desarrollo de interfaces modernas y reactivas"
-            />
-            <TechCard
-              name="Node.js"
-              icon="https://nodejs.org/static/images/logo.svg"
-              description="Backend escalable y de alto rendimiento"
-            />
-            <TechCard
-              name="Python"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"
-              description="IA, análisis de datos y automatización"
-            />
-            <TechCard
-              name="AWS"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1200px-Amazon_Web_Services_Logo.svg.png"
-              description="Infraestructura cloud robusta y flexible"
-            />
-            <TechCard
-              name="Docker"
-              icon="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png"
-              description="Contenedorización para despliegues consistentes"
-            />
-            <TechCard
-              name="Kubernetes"
-              icon="/icons/kubernetes.svg"
-              description="Orquestación de contenedores a escala"
-            />
-            <TechCard
-              name="TensorFlow"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Tensorflow_logo.svg/1200px-Tensorflow_logo.svg.png"
-              description="Modelos de aprendizaje profundo avanzados"
-            />
-            <TechCard
-              name="PostgreSQL"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png"
-              description="Base de datos relacional de alto rendimiento"
-            />
-            <TechCard
-              name="GraphQL"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/GraphQL_Logo.svg/1200px-GraphQL_Logo.svg.png"
-              description="APIs flexibles y eficientes"
-            />
-            <TechCard
-              name="Rust"
-              icon="/icons/rust.svg"
-              description="Sistemas de bajo nivel seguros y rápidos"
-            />
-            <TechCard
-              name="Vue.js"
-              icon="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Vue.js_Logo_2.svg/1200px-Vue.js_Logo_2.svg.png"
-              description="Frameworks frontend progresivos"
-            />
-            <TechCard
-              name="Golang"
-              icon="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg"
-              description="Microservicios concurrentes y eficientes"
-            />
-          </div>
-        </div>
-      </section>
-
-          <motion.section
+     {/* Contac secction */}
+    <motion.section
       id="contacto"
       className="relative z-20 w-full h-[50vh] bg-cover bg-center flex items-center"
       style={{
@@ -717,26 +1000,28 @@ useEffect(() => {
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/30"></div>
 
-      {/* Contenido */}
-      <div className="relative z-10 w-full flex justify-start px-20">
-        <div className="w-full max-w-7xl relative z-10 flex justify-left pl-56">
-          <div className="mt-6 inline-block">
-            <AnimatedButton
-              text="Text Us"
-              onClick={() => setIsSolicitudOpen(true)}
-              className="glow bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-6"
-              disabled={false}
-            />
-          </div>
+      {/* Contenido - botón centrado */}
+      <div className="relative z-10 w-full flex items-center justify-center px-4">
+        <div className="inline-block">
+          <AnimatedButton
+            text="Contactanos"
+            onClick={() => setIsSolicitudOpen(true)}
+            className="glow bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-6"
+            disabled={false}
+          />
         </div>
       </div>
     </motion.section>
+
+    
 
       {/* Trusted by Section */}
       <TrustedBySection />
 
       {/* New Technological Expertise Section */}
       <TechnologicalExpertise />
+
+      
 
 
 
@@ -910,7 +1195,7 @@ function ServiceCard({
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true }}
     >
-        <Card className={`${className ? className + " " : ""}group p-6 bg-black/30 border-2 border-purple-300/40 transition-all parallax-card overflow-hidden relative`}>
+        <Card className={`${className ? className + " " : ""}group p-8 bg-black/30 border-2 border-purple-300/40 transition-all parallax-card overflow-hidden relative`}>
             {/* Animated gradient fill overlay (hidden -> reveal from bottom on hover) */}
             <div className="absolute left-0 right-0 bottom-0 top-0 h-full bg-gradient-to-t from-purple-900/85 via-purple-700/60 to-transparent pointer-events-none z-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-out origin-bottom will-change-transform" />
             {/* Decorative subtle tech-stripes that fade in on hover */}
@@ -1044,5 +1329,31 @@ function SocialLink({ icon, href, ariaLabel }: { icon: React.ReactNode; href: st
     >
       {icon}
     </motion.a>
+  )
+}
+
+// Simple test marquee component (logos)
+const logos = [
+  { name: 'GitHub', icon: SiGithub },
+  { name: 'Facebook', icon: SiFacebook },
+  { name: 'Google', icon: SiGoogle },
+];
+
+function TestMarquee() {
+  return (
+    <div className="w-full bg-black/20 py-8">
+      <Marquee>
+        <MarqueeFade side="left" />
+        <MarqueeFade side="right" />
+
+        <MarqueeContent speed={40}>
+          {logos.map((l) => (
+            <MarqueeItem key={l.name} className="mx-12">
+              <l.icon className="w-12 h-12 text-purple-400" />
+            </MarqueeItem>
+          ))}
+        </MarqueeContent>
+      </Marquee>
+    </div>
   )
 }

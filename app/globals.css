@@ -1,3 +1,11 @@
+/* Oculta la barra de scroll horizontal y vertical en todos los navegadores modernos */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -180,4 +188,3 @@
 .glow {
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
 }
-

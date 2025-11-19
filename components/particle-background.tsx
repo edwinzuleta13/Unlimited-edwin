@@ -145,7 +145,7 @@ export default function ParticleBackground() {
   return (
     <motion.canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10"
+      className="fixed inset-0 -z-10 bg-black"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}

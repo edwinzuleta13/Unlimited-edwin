@@ -1,4 +1,7 @@
+
 "use client";
+
+import MultiActionAreaCard from "@/components/MultiActionAreaCard";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +14,7 @@ interface Testimonial {
   name: string;
   role: string;
   company: string;
+  image?: string;
 }
 
 
@@ -32,6 +36,7 @@ const testimonials: Testimonial[] = [
     name: "Jane Doe",
     role: "Head of Engineering",
     company: "TechFlow",
+    image: "/logo-Untitled-10.png",
   },
   {
     quote:
@@ -39,6 +44,7 @@ const testimonials: Testimonial[] = [
     name: "Carlos Ramírez",
     role: "CTO",
     company: "CloudNova",
+    image: "/logo-Untitled-26.png",
   },
   {
     quote:
@@ -46,6 +52,7 @@ const testimonials: Testimonial[] = [
     name: "María González",
     role: "Product Manager",
     company: "Finnect",
+    image: "/logo-Untitled-10.png",
   },
   {
     quote:
@@ -53,6 +60,7 @@ const testimonials: Testimonial[] = [
     name: "Luis Fernández",
     role: "Director de Tecnología",
     company: "RetailPro",
+    image: "/logo-Untitled-26.png",
   },
   {
     quote:
@@ -60,6 +68,7 @@ const testimonials: Testimonial[] = [
     name: "Ana Silva",
     role: "Head of Cloud",
     company: "DataWorks",
+    image: "/logo-Untitled-10.png",
   },
   {
     quote:
@@ -67,6 +76,7 @@ const testimonials: Testimonial[] = [
     name: "Diego Martínez",
     role: "CTO",
     company: "HealthAxis",
+    image: "/logo-Untitled-26.png",
   },
   {
     quote:
@@ -74,6 +84,7 @@ const testimonials: Testimonial[] = [
     name: "Sofía López",
     role: "CEO",
     company: "MarketHive",
+    image: "/logo-Untitled-10.png",
   },
   {
     quote:
@@ -81,6 +92,7 @@ const testimonials: Testimonial[] = [
     name: "Andrés Torres",
     role: "Engineering Manager",
     company: "BrightEdge",
+    image: "/logo-Untitled-26.png",
   },
   {
     quote:
@@ -88,6 +100,7 @@ const testimonials: Testimonial[] = [
     name: "Lucía Hernández",
     role: "VP of Product",
     company: "InnovaTech",
+    image: "/logo-Untitled-10.png",
   },
   {
     quote:
@@ -95,6 +108,7 @@ const testimonials: Testimonial[] = [
     name: "Felipe Vargas",
     role: "COO",
     company: "Nextify",
+    image: "/logo-Untitled-26.png",
   },
   {
     quote:
@@ -102,6 +116,7 @@ const testimonials: Testimonial[] = [
     name: "Paula Jiménez",
     role: "CTO",
     company: "Medilogic",
+    image: "/logo-Untitled-10.png",
   },
   {
     quote:
@@ -109,6 +124,7 @@ const testimonials: Testimonial[] = [
     name: "Miguel Soto",
     role: "Director de Tecnología",
     company: "OmniDev",
+    image: "/logo-Untitled-26.png",
   },
 ];
 
@@ -121,12 +137,11 @@ const testimonials: Testimonial[] = [
 export default function TrustedBySection() {
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
-  const itemsPerPage = 4;
+  const itemsPerPage = 3;
   const totalPages = Math.ceil(testimonials.length / itemsPerPage);
 
   const nextPage = () => setPage((prev) => (prev + 1) % totalPages);
-  const prevPage = () =>
-    setPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
+  const prevPage = () => setPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
 
   // 🔁 Auto-slide cada 6 segundos
   useEffect(() => {
@@ -140,7 +155,7 @@ export default function TrustedBySection() {
   const start = page * itemsPerPage;
   const visibleTestimonials = testimonials.slice(start, start + itemsPerPage);
 
-  // Animación vertical tipo "slide"
+  // Animación grupal de página
   const slideVariants = {
     initial: { opacity: 0, y: 50 },
     animate: { opacity: 1, y: 0 },
@@ -212,49 +227,57 @@ export default function TrustedBySection() {
         ))}
       </motion.div>
 
-      {/* Testimonios (solo 4 visibles) */}
-      <div className="relative max-w-5xl mx-auto overflow-hidden">
-        <AnimatePresence mode="wait">
+      {/* Grid de tarjetas MultiActionAreaCard animadas por página */}
+      <div className="mt-8 min-h-[420px] flex flex-col items-center justify-center w-full">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={page}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center"
+            style={{ maxWidth: 1320 }}
             variants={slideVariants}
             initial="initial"
             animate="animate"
             exit="exit"
             transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {visibleTestimonials.map((t, i) => (
-              <motion.div key={i} whileHover={{ y: -6 }} transition={{ duration: 0.2 }}>
-                <Card className="p-6 bg-black/30 border-purple-500/20 hover:border-purple-500/40 transition-all group rounded-2xl">
-                  <p className="italic mb-4 text-gray-300">“{t.quote}”</p>
-                  <h3 className="text-xl font-bold mb-2 group-hover:gradient-text transition-all">
-                    {t.name}
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    {t.role} — {t.company}
-                  </p>
-                </Card>
+              <motion.div
+                key={t.name + t.company}
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <MultiActionAreaCard
+                  title={t.name}
+                  description={`“${t.quote}”`}
+                  image={t.image || "/logo-Untitled-26.png"}
+                  alt={`${t.role} — ${t.company}`}
+                  maxWidth={420}
+                  imageHeight={140}
+                  imageFit="contain"
+                  bgColor="rgba(124,58,237,0.12)"
+                />
               </motion.div>
             ))}
           </motion.div>
         </AnimatePresence>
-
-        {/* Flechas de navegación */}
-        <div className="flex justify-center items-center gap-6 mt-10">
+        {/* Controles de paginación centrados */}
+        <div className="flex justify-center gap-4 mt-8">
           <button
+            className="p-2 rounded-full bg-purple-900/30 hover:bg-purple-700/60 transition"
             onClick={prevPage}
-            className="p-2 rounded-full bg-purple-700/30 hover:bg-purple-700/50 transition"
-            aria-label="Ver anteriores"
+            aria-label="Anterior"
           >
-            <ChevronUp className="w-6 h-6 text-purple-300" />
+            <ChevronUp className="w-5 h-5" />
           </button>
+          <span className="text-purple-200 text-sm mt-2">
+            {page + 1} / {totalPages}
+          </span>
           <button
+            className="p-2 rounded-full bg-purple-900/30 hover:bg-purple-700/60 transition"
             onClick={nextPage}
-            className="p-2 rounded-full bg-purple-700/30 hover:bg-purple-700/50 transition"
-            aria-label="Ver siguientes"
+            aria-label="Siguiente"
           >
-            <ChevronDown className="w-6 h-6 text-purple-300" />
+            <ChevronDown className="w-5 h-5" />
           </button>
         </div>
       </div>

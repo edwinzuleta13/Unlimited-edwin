@@ -47,6 +47,7 @@ import SolicitudModal from "../components/SolicitudModal"
 import AnimatedButton from "@/components/AnimatedButton1";
 import HolographicCardPurpleMid from  "@/components/HolographicCardPurpleMid";
 import HolographicCardPurpleMidRect from "@/components/HolographicCardPurpleMidRect";
+import MultiActionAreaCard from '@/components/MultiActionAreaCard'
 
 
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
@@ -68,68 +69,55 @@ export default function Home() {
   const [pexelsVideoUrl, setPexelsVideoUrl] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
-    // Fetch video from Pexels API for Hero background
+    // Fetch video URL from our server API (`/api/pexels-media`) which hides the Pexels key
     useEffect(() => {
-      const fetchById = async (id: string) => {
-        try {
-          const res = await fetch(`https://api.pexels.com/videos/videos/${id}`, {
-            headers: { Authorization: process.env.NEXT_PUBLIC_PEXELS_API_KEY || "" },
-          });
-          const json = await res.json();
-          if (json && json.video_files && json.video_files[0]) {
-            setPexelsVideoUrl(json.video_files[0].link);
-            return true;
-          }
-        } catch (e) {
-          console.warn("Pexels fetch by ID failed:", e);
-        }
-        return false;
-      };
+      // If you have a Pexels page URL, extract its numeric ID (e.g. ...-5821984)
+      const userPage = "https://www.pexels.com/video/point-of-view-of-a-person-riding-a-bus-5821984";
+      const match = userPage.match(/-(\d+)(?:\/|$)/);
 
-      const fetchByQuery = async (query: string) => {
+      const fetchServerMedia = async () => {
         try {
-          const response = await fetch(`https://api.pexels.com/videos/search?query=${encodeURIComponent(query)}&per_page=1`, {
-            headers: {
-              Authorization: process.env.NEXT_PUBLIC_PEXELS_API_KEY || ""
-            }
-          });
-          const data = await response.json();
-          if (data.videos && data.videos[0] && data.videos[0].video_files && data.videos[0].video_files[0]) {
-            setPexelsVideoUrl(data.videos[0].video_files[0].link);
-            return true;
+          let endpoint = '/api/pexels-media?type=video';
+
+          if (match) {
+            // If we extracted an ID, request the server to fetch by ID
+            endpoint = `/api/pexels-media?id=${encodeURIComponent(match[1])}&type=video`;
+            console.log('[PEXELS] Requesting server media by id:', match[1]);
+          } else {
+            // Otherwise use a query fallback
+            const q = 'bus ride';
+            endpoint = `/api/pexels-media?query=${encodeURIComponent(q)}&type=video&per_page=1`;
+            console.log('[PEXELS] Requesting server media by query:', q);
+          }
+
+          const res = await fetch(endpoint);
+          if (!res.ok) {
+            const body = await res.text().catch(() => '<no body>');
+            console.error('[PEXELS] /api/pexels-media error', res.status, body);
+            return;
+          }
+
+          const json = await res.json();
+          if (json && json.url) {
+            setPexelsVideoUrl(json.url);
+            console.log('[PEXELS] Hero video URL set (from server):', json.url);
+          } else {
+            console.warn('[PEXELS] /api/pexels-media returned no URL', json);
           }
         } catch (err) {
-          console.warn("No se pudo obtener el video de Pexels (search):", err);
+          console.error('[PEXELS] Error fetching /api/pexels-media:', err);
         }
-        return false;
       };
 
-      (async () => {
-        // Prefer using a specific Pexels page URL (user-provided). If not set, fallback to search.
-        // You provided: https://www.pexels.com/video/point-of-view-of-a-person-riding-a-bus-5821984
-        const userPage = "https://www.pexels.com/video/point-of-view-of-a-person-riding-a-bus-5821984";
-
-        // Try to extract the numeric ID from the page URL (last dash-number)
-        const match = userPage.match(/-(\d+)(?:\/|$)/);
-        let got = false;
-        if (match) {
-          const id = match[1];
-          got = await fetchById(id);
-        }
-
-        if (!got) {
-          // Last resort: search by a descriptive query
-          await fetchByQuery("bus ride");
-        }
-      })();
+      fetchServerMedia();
     }, []);
 
     // Log when we receive a video URL (helpful for debugging)
     useEffect(() => {
       if (pexelsVideoUrl) {
-        console.log('[PEXELS] Hero video URL set:', pexelsVideoUrl)
+        console.log('[PEXELS] pexelsVideoUrl state updated:', pexelsVideoUrl)
       } else {
-        console.log('[PEXELS] No Hero video URL yet')
+        console.log('[PEXELS] pexelsVideoUrl is empty')
       }
     }, [pexelsVideoUrl])
   // carousel now uses pure CSS keyframes animation (no JS measurement required)
@@ -481,8 +469,8 @@ useEffect(() => {
       <StatCard number="24/7" text="Soporte Técnico" />
     </div>
   </div>
-
 </section>
+
 
 
 

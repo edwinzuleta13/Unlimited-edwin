@@ -5,12 +5,11 @@ import { supabase } from '@/services/supabaseClient';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils'
-import { spaceGrotesk } from '@/lib/fonts'
-import { Home } from 'lucide-react'
-import { FaRectangleXmark } from 'react-icons/fa6'
-import { GrStatusGood } from 'react-icons/gr'
-import { DrawOutlineButton } from '@/components/DrawOutlineButton';
+import { cn } from '@/lib/utils';
+import { spaceGrotesk } from '@/lib/fonts';
+import { Home } from 'lucide-react';
+import { FaRectangleXmark } from 'react-icons/fa6';
+import { GrStatusGood } from 'react-icons/gr';
 import styles from './AuthNav.module.css';
 import Image from 'next/image';
 
@@ -19,7 +18,6 @@ export default function AuthNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
-  // Observar sesión
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
 
@@ -30,9 +28,7 @@ export default function AuthNav() {
     return () => {
       try {
         listener.subscription.unsubscribe();
-      } catch (e) {
-        // ignore
-      }
+      } catch (e) {}
     };
   }, []);
 
@@ -41,13 +37,8 @@ export default function AuthNav() {
     window.location.href = window.location.origin;
   };
 
-  const handleGoToStatus = () => {
-    router.push("/user-status");
-  };
-
-  const handleGoHome = () => {
-    router.push("/");
-  };
+  const handleGoToStatus = () => router.push("/user-status");
+  const handleGoHome = () => router.push("/");
 
   const getInitials = (email: string) => {
     const namePart = email.split('@')[0];
@@ -57,8 +48,8 @@ export default function AuthNav() {
   };
 
   return (
-    <div className="w-full flex items-center justify-between" >
-      {/* Left: Logo (fixed container height so header doesn't grow) */}
+    <div className="w-full flex items-center justify-between flex-wrap md:flex-nowrap p-2 md:p-0">
+      {/* Left: Logo */}
       <div className="flex items-center h-14">
         <Link href="/" aria-label="Inicio" className="flex items-center">
           <Image
@@ -71,43 +62,24 @@ export default function AuthNav() {
         </Link>
       </div>
 
-      {/* Center: texts (absolutamente centrado) */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-        <div className="flex items-center justify-center gap-6">
-          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
-            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
-              Tecnologias
+      {/* Center: texts (solo en desktop) */}
+      <div className="hidden md:flex flex-wrap justify-center gap-6 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+        {["Tecnologias", "Servicios", "Sobre Nosotros", "Contacto", "Aliados"].map((text) => (
+          <span
+            key={text}
+            className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}
+          >
+            <span
+              className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}
+            >
+              {text}
             </span>
           </span>
-
-          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
-            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
-              Servicios
-            </span>
-          </span>
-
-          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
-            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
-              Sobre Nosotros
-            </span>
-          </span>
-
-          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
-            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
-              Contacto
-            </span>
-          </span>
-
-          <span className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}>
-            <span className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}>
-              Aliados
-            </span>
-          </span>
-
-        </div>
+        ))}
       </div>
 
-      <div className="relative flex items-center gap-4">
+      {/* Right: User / Auth buttons */}
+      <div className="relative flex items-center gap-4 mt-2 md:mt-0">
         {!user ? (
           <>
             <Link href="/signin">
@@ -123,7 +95,6 @@ export default function AuthNav() {
           </>
         ) : (
           <div className="relative">
-            {/* Avatar redondo */}
             <button
               onClick={() => setMenuOpen((prev) => !prev)}
               className={cn(
@@ -134,7 +105,6 @@ export default function AuthNav() {
               {getInitials(user.email)}
             </button>
 
-            {/* Menú desplegable animado */}
             <AnimatePresence>
               {menuOpen && (
                 <motion.div
@@ -145,21 +115,9 @@ export default function AuthNav() {
                   className="absolute right-0 top-full mt-2 min-w-[180px] bg-black border border-purple-600 rounded-lg rounded-tl-lg rounded-bl-lg rounded-tr-none shadow-lg z-[9999] overflow-hidden flex flex-col gap-0"
                 >
                   {[
-                    {
-                      onClick: handleGoToStatus,
-                      label: "Estado de Usuario",
-                      icon: <GrStatusGood className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
-                    },
-                    {
-                      onClick: handleGoHome,
-                      label: "Ir a inicio",
-                      icon: <Home className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
-                    },
-                    {
-                      onClick: handleLogout,
-                      label: "Cerrar sesión",
-                      icon: <FaRectangleXmark className="inline-block mr-2 w-5 h-5 align-text-bottom" />,
-                    },
+                    { onClick: handleGoToStatus, label: "Estado de Usuario", icon: <GrStatusGood className="inline-block mr-2 w-5 h-5 align-text-bottom" /> },
+                    { onClick: handleGoHome, label: "Ir a inicio", icon: <Home className="inline-block mr-2 w-5 h-5 align-text-bottom" /> },
+                    { onClick: handleLogout, label: "Cerrar sesión", icon: <FaRectangleXmark className="inline-block mr-2 w-5 h-5 align-text-bottom" /> },
                   ].map((btn, idx) => (
                     <motion.button
                       key={btn.label}
@@ -170,7 +128,7 @@ export default function AuthNav() {
                       transition={{ delay: 0.08 * idx, duration: 0.25 }}
                       className="text-left px-4 py-3 text-purple-200 hover:bg-purple-700 hover:text-white transition whitespace-nowrap font-bold tracking-tight text-lg flex items-center gap-2"
                     >
-                      {btn.icon && btn.icon}
+                      {btn.icon}
                       {btn.label}
                     </motion.button>
                   ))}

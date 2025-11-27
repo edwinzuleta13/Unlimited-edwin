@@ -24,6 +24,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'go.dev', pathname: '/**' },
       { protocol: 'https', hostname: 'www.docker.com', pathname: '/**' },
       { protocol: 'https', hostname: 'hebbkx1anhila5yf.public.blob.vercel-storage.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'tmnjhjfayezmqkzjtqgn.supabase.co', pathname: '/**' },
     ],
   },
   experimental: {

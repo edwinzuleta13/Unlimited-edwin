@@ -1,17 +1,15 @@
 "use client"
-import React from "react"
+import * as React from "react"
 import TrustedBySection from "@/components/TrustedBySection";
 import { Marquee, MarqueeFade, MarqueeContent, MarqueeItem } from '@/components/ui/marquee';
 import { SiGithub, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import TechnologicalExpertise from "@/components/technological-expertise";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
-import Link from "next/link";
 import BotonConSonido from "@/components/BotonConSonido";
 import { useEffect, useRef, useState } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-import AltServicesLayout from "./AltServicesLayout";
 import SplashScreen from "@/components/SplashScreen"
 import { Card } from "@/components/ui/card"
 import {
@@ -30,11 +28,9 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react"
-import { FiPhone } from "react-icons/fi"
 import { SlSocialLinkedin } from "react-icons/sl"
 import { AiOutlineInstagram } from "react-icons/ai"
 import { FaWhatsapp } from "react-icons/fa"
-import { FaXTwitter } from "react-icons/fa6"
 import { FaTiktok } from "react-icons/fa"
 import { useMouse } from "@/components/mouse-context"
 import { useTransition } from "./providers"
@@ -45,9 +41,7 @@ import TechCursor from "@/components/tech-cursor"
 import FloatingChatWidget from "@/components/floating-chat-widget"
 import SolicitudModal from "../components/SolicitudModal"
 import AnimatedButton from "@/components/AnimatedButton1";
-import HolographicCardPurpleMid from  "@/components/HolographicCardPurpleMid";
 import HolographicCardPurpleMidRect from "@/components/HolographicCardPurpleMidRect";
-import MultiActionAreaCard from '@/components/MultiActionAreaCard'
 
 
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
@@ -541,6 +535,58 @@ useEffect(() => {
     </div>
   </div>
 </section>
+{/*
+<section className="py-20 px-4 bg-purple-400/30 relative inset-0 bg-gradient-to-b from-black to-transparent pointer-events-none">
+  
+  <h1 className="text-3xl md:text-6xl font-bold mb-6 gradient-text text-center">
+    SOBRE NOSOTROS
+  </h1>
+
+  <p className="text-3xl md:text-2xl font-bold mb-6 gradient-text text-center pb-6">
+    Innovación y Excelencia en Tecnología
+  </p>
+
+  <div className="p-4 relative z-20">
+    <div className="max-w-6xl max-h-6xl ml-auto mr-0 text-purple-300 mb-12 bg-purple-900/90 rounded-md flex flex-row items-center justify-end gap-6 pl-6">
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <p className="text-lg text-center mb-2">
+          <strong className="text-white font-semibold">Nuestra Misión</strong>
+        </p>
+        <p className="text-lg text-center">
+          En Untitled Tech Company, somos un equipo apasionado por la tecnología y la innovación. Nuestra misión es transformar negocios a través de soluciones tecnológicas personalizadas que impulsan el crecimiento y la eficiencia.
+        </p>
+      </div>
+
+      <img 
+        src="https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/oficina.jpg"
+        alt="oficina"
+        className="w-80 h-80 object-cover rounded-tr-md rounded-br-md"
+      />
+    </div>
+  </div>
+
+  <div className="p-4 mr-auto ml-0 relative z-20 ">
+    <div className="max-w-6xl max-h-6xr pr-6 mr-0 text-purple-300 mb-12 bg-purple-900/90 rounded-md flex flex-row items-center justify-start gap-6 transition-colors duration-300 hover:bg-purple-700/60 hover:scale-105 hover:shadow-lg ">
+      
+      <img 
+        src="https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/oficina.jpg"
+        alt="oficina"
+        className="w-80 h-80 object-cover rounded-tl-md rounded-bl-md"
+      />
+
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <p className="text-lg text-center mb-2">
+          <h2 className="text-white font-semibold">Nuestra Visión</h2>
+        </p>
+        <p className="text-lg text-center">
+          En Untitled Tech Company, somos un equipo apasionado por la tecnología y la innovación. Nuestra misión es transformar negocios a través de soluciones tecnológicas personalizadas que impulsan el crecimiento y la eficiencia.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</section>
+*/}
 
 
 {/* Test Marquee (logos) */}
@@ -762,7 +808,7 @@ useEffect(() => {
         </motion.div>
       </motion.div>
 
-      <div className="lg:col-span-2 overflow-hidden relative pt-16">
+      <div className="lg:col-span-2 overflow-hidden relative pt-16  hide-scrollbar">
         <motion.div
           key="normal"
           initial={{ opacity: 0, y: 15 }}
@@ -770,17 +816,17 @@ useEffect(() => {
           exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.45, ease: "easeOut" }}
         >
-          <div className="relative w-full">
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
+          <div className="relative w-full hide-scrollbar">
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20  hide-scrollbar" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20  hide-scrollbar" />
 
             {/* Contenedor del Marquee con scroll oculto */}
             <div className="w-full overflow-x-auto hide-scrollbar">
-              <Marquee className="w-full">
+              <Marquee className="w-full  hide-scrollbar">
                 <MarqueeContent speed={30} pauseOnHover={true} autoFill={true} gradient={false}>
                   {servicesColumns.map((column, colIdx) => (
-                    <MarqueeItem key={`marquee-col-${colIdx}`} className="mx-6 flex-shrink-0">
-                      <div className="flex flex-col gap-8">
+                    <MarqueeItem key={`marquee-col-${colIdx}`} className="mx-6 flex-shrink-0  hide-scrollbar">
+                      <div className="flex flex-col gap-8  hide-scrollbar">
                         {column.map((card, idx) => (
                           <ServiceCard
                             key={`${card.title}-${idx}-${colIdx}`}

@@ -1,12 +1,8 @@
-
 "use client";
 
 import MultiActionAreaCard from "@/components/MultiActionAreaCard";
-
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
-import { Card } from "@/components/ui/card";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface Testimonial {
@@ -15,124 +11,181 @@ interface Testimonial {
   role: string;
   company: string;
   image?: string;
+  cardWidth?: number;
+  imageHeight?: number;
+  imageFit?: "cover" | "contain" | "fill";
+  imageBorderRadius?: string | number;
+  cardPadding?: number;       // padding general del Card
+  cardPaddingTop?: number;    // padding top del Card
+  hoverColor?: string;
+  imagePaddingTop?: number;   // margen superior de la imagen
+  imagePadding?: number;      // padding general alrededor de la imagen
+  textColorHover?: string;
 }
 
-
-const logos = [
-  "https://cdn.simpleicons.org/google/4285F4",   // Google blue
-  "https://cdn.simpleicons.org/meta/0467DF",     // Meta blue
-  "https://cdn.simpleicons.org/airbnb/FF5A5F",   // Airbnb coral
-  "https://cdn.simpleicons.org/openai/412991",   // OpenAI purple
-  "https://cdn.simpleicons.org/stripe/008CDD",   // Stripe blue
-  "https://cdn.simpleicons.org/nvidia/76B900",   // NVIDIA green
-  "https://cdn.simpleicons.org/shopify/95BF47",  // Shopify green
-  "https://cdn.simpleicons.org/slack/4A154B",    // Slack purple
-];
-
 const testimonials: Testimonial[] = [
+
   {
     quote:
-      "Truelogic has been instrumental in scaling our development team efficiently. Their talent pool is impressive!",
-    name: "Jane Doe",
+      "Anas Accounting nos ayudó a optimizar nuestros procesos internos mediante soluciones tecnológicas inteligentes y un enfoque totalmente orientado a resultados.",
+    name: "Anas Acounding",
     role: "Head of Engineering",
     company: "TechFlow",
-    image: "/logo-Untitled-10.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/ANAS%20ACCOUNTING%20SERV%20LOGO%20(2).png",
+    cardWidth: 500,
+    imageHeight: 225,
+    imageFit: "contain",
+    imageBorderRadius: 0,
+    hoverColor: "#ffffff",
+    textColorHover: "#000000",
+    imagePadding: 2,
+    imagePaddingTop: 6,
   },
   {
     quote:
-      "They seamlessly integrated with our processes and delivered exceptional quality every sprint.",
-    name: "Carlos Ramírez",
+      "DAKA logró modernizar su infraestructura digital gracias a nuestra integración ágil y soporte continuo, potenciando su innovación en la nube.",
+    name: "DAKA",
     role: "CTO",
     company: "CloudNova",
-    image: "/logo-Untitled-26.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/daka-logo.png",
+    cardWidth: 420,
+    imageHeight: 200,
+    imageFit: "cover",
+    imagePaddingTop: 16,
+    imageBorderRadius: 12,
+    cardPaddingTop: 28,
+    hoverColor: "#f7ef14",
+    textColorHover: "#0224bd",
   },
   {
     quote:
-      "El equipo de Truelogic transformó nuestro producto en meses; su entrega y responsabilidad fueron ejemplares.",
-    name: "María González",
+      "Extra Ganga consiguió un sistema más eficiente para la gestión de productos y ventas, impulsando su capacidad de respuesta en el sector retail.",
+    name: "Extra ganga",
     role: "Product Manager",
     company: "Finnect",
-    image: "/logo-Untitled-10.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/extra_ganga_logo.jpeg",
+    cardWidth: 400,
+    imageHeight: 220,
+    imageFit: "cover",
+    imagePadding: 16,
+    hoverColor: "#015438",
+    textColorHover: "#FF4500",
   },
   {
     quote:
-      "Excelente comunicación y control de calidad. Superaron nuestras expectativas en tiempo y alcance.",
-    name: "Luis Fernández",
+      "KAOZ confió en nosotros para digitalizar procesos y mejorar la calidad tecnológica de sus operaciones, logrando un salto significativo en eficiencia.",
+    name: "KAOZ",
     role: "Director de Tecnología",
     company: "RetailPro",
-    image: "/logo-Untitled-26.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/KAOZ.png",
+    imageHeight: 240,
+    cardWidth: 400,
+    imageFit: "contain",
+    imageBorderRadius: 0,
+    hoverColor: "#ffffff",
+    textColorHover: "#000000",
   },
   {
     quote:
-      "Su experiencia en cloud y arquitectura nos permitió escalar sin dolores de cabeza.",
-    name: "Ana Silva",
+      "Keyton escaló sus servicios en la nube sin interrupciones, implementando soluciones estables y confiables desarrolladas a la medida.",
+    name: "KEYTON",
     role: "Head of Cloud",
     company: "DataWorks",
-    image: "/logo-Untitled-10.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/keyton_logo.png",
+    imageHeight: 260,
+    cardWidth: 400,
+    imageFit: "contain",
+    imageBorderRadius: 0,
+    hoverColor: "#adacac",
+    textColorHover: "#000000",
   },
   {
     quote:
-      "Profesionales y proactivos: resolvieron problemas complejos con soluciones limpias.",
-    name: "Diego Martínez",
+      "Rental Deluxe optimizó su plataforma digital y mejoró la experiencia de sus usuarios gracias a la arquitectura escalable que implementamos.",
+    name: "Rental Deluxe",
     role: "CTO",
     company: "HealthAxis",
-    image: "/logo-Untitled-26.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
+    imageHeight: 230,
+    cardWidth: 400,
+    imageFit: "cover",
+    imageBorderRadius: 0,
+    cardPaddingTop: 40,
+    hoverColor: "#938376",
+    textColorHover: "#ffffff"
   },
   {
     quote:
-      "La colaboración fue fluida y el resultado final superó ampliamente nuestras expectativas.",
-    name: "Sofía López",
+      "Reys Smart logró automatizar tareas clave y fortalecer su presencia digital con herramientas modernas y un desarrollo impecable.",
+    name: "Reys Smart",
     role: "CEO",
     company: "MarketHive",
-    image: "/logo-Untitled-10.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-reys-smart-01.jpg",
+    imageHeight: 230,
+    imageFit: "cover",
+    imageBorderRadius: 0,
+    cardWidth: 400,
+    hoverColor: "#ffffff",
+    textColorHover: "#06892E",
   },
   {
     quote:
-      "El soporte continuo y la calidad del código fueron excepcionales durante todo el proyecto.",
-    name: "Andrés Torres",
+      "Piper incrementó la estabilidad y calidad de su plataforma gracias a nuestras prácticas de ingeniería y un soporte técnico altamente especializado.",
+    name: "Piper",
     role: "Engineering Manager",
     company: "BrightEdge",
-    image: "/logo-Untitled-26.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/piper_logo.png",
+    imageHeight: 230,
+    imageFit: "cover",
+    imageBorderRadius: 0,
+    cardWidth: 400,
+    imagePaddingTop: 16,
+    hoverColor: "#ffffff",
+    textColorHover: "#bd0000",
   },
   {
     quote:
-      "Un equipo confiable y altamente calificado, fueron un socio estratégico clave.",
+      "InnovaTech aceleró su desarrollo de producto con soluciones eficientes y un acompañamiento técnico de primer nivel durante todo el ciclo.",
     name: "Lucía Hernández",
     role: "VP of Product",
     company: "InnovaTech",
-    image: "/logo-Untitled-10.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/yenfit.png",
+    imageHeight: 180,
+    imageFit: "contain",
+    imageBorderRadius: 0,
+    cardWidth: 400,
+    imagePaddingTop: 16,
+    cardPaddingTop: 20,
+    hoverColor: "#949494",
+    textColorHover: "#ffffff",
   },
   {
     quote:
-      "Logramos reducir costos y acelerar nuestro roadmap gracias a su talento.",
-    name: "Felipe Vargas",
+      "You Space escaló su plataforma con un enfoque más robusto y seguro, reduciendo costos operativos y mejorando su tiempo de entrega.",
+    name: "You Space",
     role: "COO",
     company: "Nextify",
-    image: "/logo-Untitled-26.png",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/you_space_logo.png",
+    imageHeight: 230,
+    imageFit: "cover",
+    imageBorderRadius: 0,
+    cardWidth: 400,
+    cardPaddingTop: 16,
+    hoverColor: "#235888",
+    textColorHover: "#ffffff",
   },
-  {
-    quote:
-      "La comunicación fue clara y efectiva. Recomiendo totalmente su servicio.",
-    name: "Paula Jiménez",
-    role: "CTO",
-    company: "Medilogic",
-    image: "/logo-Untitled-10.png",
-  },
-  {
-    quote:
-      "Sus ingenieros se integraron perfectamente a nuestro stack y cultura de trabajo.",
-    name: "Miguel Soto",
-    role: "Director de Tecnología",
-    company: "OmniDev",
-    image: "/logo-Untitled-26.png",
-  },
-];
+]
 
-<style jsx>{`
-  .hover\\:filter-purple:hover {
-    filter: hue-rotate(270deg) saturate(2) brightness(1.3);
-  }
-`}</style>
 
 export default function TrustedBySection() {
   const [page, setPage] = useState(0);
@@ -140,22 +193,18 @@ export default function TrustedBySection() {
   const itemsPerPage = 3;
   const totalPages = Math.ceil(testimonials.length / itemsPerPage);
 
-  const nextPage = () => setPage((prev) => (prev + 1) % totalPages);
-  const prevPage = () => setPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
+  const nextPage = () => setPage((p) => (p + 1) % totalPages);
+  const prevPage = () => setPage((p) => (p === 0 ? totalPages - 1 : p - 1));
 
-  // 🔁 Auto-slide cada 6 segundos
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(() => {
-      nextPage();
-    }, 6000);
+    const timer = setInterval(nextPage, 6000);
     return () => clearInterval(timer);
   }, [paused, totalPages]);
 
   const start = page * itemsPerPage;
-  const visibleTestimonials = testimonials.slice(start, start + itemsPerPage);
+  const visible = testimonials.slice(start, start + itemsPerPage);
 
-  // Animación grupal de página
   const slideVariants = {
     initial: { opacity: 0, y: 50 },
     animate: { opacity: 1, y: 0 },
@@ -168,7 +217,6 @@ export default function TrustedBySection() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Título */}
       <motion.h2
         className="text-3xl md:text-5xl font-bold mb-6 gradient-text"
         initial={{ opacity: 0, y: 40 }}
@@ -184,55 +232,18 @@ export default function TrustedBySection() {
         whileInView={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        Desde startups hasta empresas Fortune 500 — más de 20 años entregando
-        resultados.
+        Desde startups hasta empresas Fortune 500 — más de 20 años entregando resultados.
       </motion.p>
 
-      {/* Logos (doble capa para overlay morado en hover) */}
-      <motion.div
-        className="flex flex-wrap justify-center gap-8 mb-16"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        {logos.map((logo, i) => (
-          <motion.div
-            key={i}
-            className="w-28 h-14 relative group transition-all duration-300 opacity-80 hover:opacity-100"
-            whileHover={{ scale: 1.08 }}
-          >
-            {/* Logo original */}
-            <Image
-              src={logo}
-              alt={`Logo ${i}`}
-              width={112}
-              height={56}
-              unoptimized
-              className="object-contain w-full h-full transition-all duration-500 group-hover:opacity-0"
-            />
-
-            {/* Capa morada que aparece al hover */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
-              <Image
-                src={logo}
-                alt={`Logo ${i}`}
-                width={112}
-                height={56}
-                unoptimized
-                className="object-contain w-full h-full"
-                style={{ filter: "brightness(0) saturate(100%) invert(51%) sepia(91%) saturate(7474%) hue-rotate(259deg) brightness(96%) contrast(103%)" }}
-              />
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Grid de tarjetas MultiActionAreaCard animadas por página */}
       <div className="mt-8 min-h-[420px] flex flex-col items-center justify-center w-full">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={page}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center"
+            className={`grid gap-8 justify-items-center ${
+              visible.length === 1
+                ? "grid-cols-1 justify-center"
+                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            }`}
             style={{ maxWidth: 1320 }}
             variants={slideVariants}
             initial="initial"
@@ -240,27 +251,37 @@ export default function TrustedBySection() {
             exit="exit"
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
-            {visibleTestimonials.map((t, i) => (
+            {visible.map((t) => (
               <motion.div
                 key={t.name + t.company}
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <MultiActionAreaCard
-                  title={t.name}
-                  description={`“${t.quote}”`}
-                  image={t.image || "/logo-Untitled-26.png"}
-                  alt={`${t.role} — ${t.company}`}
-                  maxWidth={420}
-                  imageHeight={140}
-                  imageFit="contain"
-                  bgColor="rgba(124,58,237,0.12)"
-                />
+<MultiActionAreaCard
+  title={t.name}
+  description={`“${t.quote}”`}
+  image={t.image || "/logo-Untitled-26.png"}
+  alt={`${t.role} — ${t.company}`}
+  maxWidth={t.cardWidth || 420}
+  imageHeight={t.imageHeight || 140}
+  imageFit={t.imageFit || "contain"}
+  imageBorderRadius={t.imageBorderRadius || 0}
+  imagePaddingTop={t.imagePaddingTop || 0}
+  imagePadding={t.imagePadding || 0}
+  className=""
+  titleClassName="text-xl font-semibold text-white"
+  descriptionClassName="mt-3 text-purple-200 text-center"
+  bgColor="rgba(124,58,237,0.12)"
+  hoverColor={t.hoverColor || "rgba(133,77,255,0.85)"}
+  textColorHover={t.textColorHover || "#FFE600"}  // <<===== hover text color
+  innerPadding={t.cardPadding ?? 16}
+  innerPaddingTop={t.cardPaddingTop ?? t.cardPadding ?? 16}
+/>
               </motion.div>
             ))}
           </motion.div>
         </AnimatePresence>
-        {/* Controles de paginación centrados */}
+
         <div className="flex justify-center gap-4 mt-8">
           <button
             className="p-2 rounded-full bg-purple-900/30 hover:bg-purple-700/60 transition"
@@ -269,9 +290,7 @@ export default function TrustedBySection() {
           >
             <ChevronUp className="w-5 h-5" />
           </button>
-          <span className="text-purple-200 text-sm mt-2">
-            {page + 1} / {totalPages}
-          </span>
+
           <button
             className="p-2 rounded-full bg-purple-900/30 hover:bg-purple-700/60 transition"
             onClick={nextPage}

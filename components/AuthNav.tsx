@@ -53,11 +53,11 @@ export default function AuthNav() {
       <div className="flex items-center h-14">
         <Link href="/" aria-label="Inicio" className="flex items-center">
           <Image
-            src="/logo-Untitled-24.png"
+            src="/logo-Untitled-10.png"
             alt="Untitled Tech"
-            width={220}
-            height={190}
-            className="object-contain"
+            width={120}
+            height={120}
+            className="object-contain "
           />
         </Link>
       </div>

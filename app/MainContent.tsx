@@ -42,6 +42,7 @@ import FloatingChatWidget from "@/components/floating-chat-widget"
 import SolicitudModal from "../components/SolicitudModal"
 import AnimatedButton from "@/components/AnimatedButton1";
 import HolographicCardPurpleMidRect from "@/components/HolographicCardPurpleMidRect";
+import PartnershipPlans from "@/components/PartnershipPlans";
 
 
 const Scene = dynamic(() => import("@/components/scene"), { ssr: false })
@@ -134,30 +135,81 @@ export default function Home() {
   // Toggle between default services layout and alternative one
   const [altLayout, setAltLayout] = useState(false)
 
-  // Column groups for the vertical-3 layout (reused for infinite scroll)
-  const servicesColumns = [
-    [
-      { icon: <Code className="w-8 h-8" />, title: "Desarrollo Web y Móvil", description: "Creamos aplicaciones escalables.", features: ["Aplicaciones Web", "iOS/Android", "E-commerce"] },
-      { icon: <Database className="w-8 h-8" />, title: "CRM y ERP", description: "Implementación de sistemas empresariales.", features: ["SAP", "Dynamics", "Salesforce"] },
-      { icon: <Cloud className="w-8 h-8" />, title: "Cloud Solutions", description: "Optimiza tu infraestructura.", features: ["AWS", "Azure", "Google Cloud"] },
-    ],
-    [
-      { icon: <Brain className="w-8 h-8" />, title: "Inteligencia Artificial", description: "Soluciones inteligentes.", features: ["NLP", "Vision", "Predictivo"] },
-      { icon: <Shield className="w-8 h-8" />, title: "Ciberseguridad", description: "Protección avanzada.", features: ["Zero Trust", "SOC", "Auditorías"] },
-      { icon: <Boxes className="w-8 h-8" />, title: "Integración de Sistemas", description: "Integramos y automatizamos procesos.", features: ["APIs y Microservicios", "ESB", "ETL"] },
-    ],
-    [
-      { icon: <Boxes className="w-8 h-8" />, title: "E-commerce", description: "Tiendas online personalizadas.", features: ["Shopify", "WooCommerce", "Pagos"] },
-      { icon: <Brain className="w-8 h-8" />, title: "Chatbots", description: "Automatizamos atención y ventas.", features: ["WhatsApp", "Flujos", "Integración CRM"] },
-      { icon: <Database className="w-8 h-8" />, title: "CRM a Medida", description: "Plataformas internas y automatización.", features: ["Workflows", "Integraciones", "Sistemas"] },
-    ],
-    [
-      { icon: <Code className="w-8 h-8" />, title: "Aplicaciones Web", description: "Plataformas SaaS y dashboards.", features: ["SaaS", "Dashboards", "PWA"] },
-      { icon: <Code className="w-8 h-8" />, title: "Tecnologías", description: "Frameworks y stacks modernos.", features: ["React/Vue", "Node/Python", "Docker/APIs"] },
-      { icon: <Shield className="w-8 h-8" />, title: "Quality Assurance", description: "Pruebas y optimización.", features: ["Funcionales", "Rendimiento", "Seguridad"] },
-    ],
-  ]
-
+ // 1️⃣ Crear array de cards
+const allCards = [
+  {
+    title: "Desarrollo Web y Móvil",
+    icon: <Code className="w-8 h-8" />,
+    description: "Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo.",
+    features: ["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]
+  },
+  {
+    title: "CRM y ERP",
+    icon: <Database className="w-8 h-8" />,
+    description: "Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas.",
+    features: ["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]
+  },
+  {
+    title: "Cloud Solutions",
+    icon: <Cloud className="w-8 h-8" />,
+    description: "Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad.",
+    features: ["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]
+  },
+  {
+    title: "Inteligencia Artificial",
+    icon: <Brain className="w-8 h-8" />,
+    description: "Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones.",
+    features: ["Análisis Predictivo", "Procesamiento de Lenguaje Natural", "Computer Vision", "Automatización Inteligente"]
+  },
+  {
+    title: "Ciberseguridad",
+    icon: <Shield className="w-8 h-8" />,
+    description: "Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo.",
+    features: ["Auditorías de Seguridad", "Implementación Zero Trust", "Gestión de Identidades", "SOC as a Service"]
+  },
+  {
+    title: "Integración de Sistemas",
+    icon: <Boxes className="w-8 h-8" />,
+    description: "Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados.",
+    features: ["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]
+  },
+  {
+    title: "E-commerce",
+    icon: <Boxes className="w-8 h-8" />,
+    description: "Tiendas online personalizadas y optimizadas para convertir más ventas.",
+    features: ["Shopify", "WooCommerce", "Pagos y Logística", "Automatización"]
+  },
+  {
+    title: "Chatbots y Automatizaciones",
+    icon: <Brain className="w-8 h-8" />,
+    description: "Automatizamos flujos de atención y ventas con chatbots inteligentes.",
+    features: ["WhatsApp", "Instagram", "Flujos Automatizados", "Integración con CRM"]
+  },
+  {
+    title: "CRM y Soluciones a Medida",
+    icon: <Database className="w-8 h-8" />,
+    description: "Automatización avanzada y plataformas internas hechas a medida del negocio.",
+    features: ["Workflows", "Sistemas Internos", "Integraciones", "Optimización"]
+  },
+  {
+    title: "Aplicaciones Web",
+    icon: <Code className="w-8 h-8" />,
+    description: "Plataformas web tipo SaaS, dashboards y sistemas empresariales.",
+    features: ["SaaS", "ERP", "Dashboards", "PWA"]
+  },
+  {
+    title: "Tecnologías",
+    icon: <Code className="w-8 h-8" />,
+    description: "Expertos en los lenguajes y frameworks más modernos.",
+    features: ["React / Vue / Angular", "Node / Python / PHP", "SQL / NoSQL", "Docker / APIs"]
+  },
+  {
+    title: "Quality Assurance (QA)",
+    icon: <Shield className="w-8 h-8" />,
+    description: "Aseguramos calidad, rendimiento y seguridad en todos los proyectos.",
+    features: ["Pruebas Funcionales", "Usabilidad", "Seguridad", "Optimización"]
+  }
+];
   // removed JS width measurement — CSS keyframes will handle continuous scroll
 
 useEffect(() => {
@@ -535,78 +587,43 @@ useEffect(() => {
     </div>
   </div>
 </section>
-{/*
-<section className="py-20 px-4 bg-purple-400/30 relative inset-0 bg-gradient-to-b from-black to-transparent pointer-events-none">
-  
-  <h1 className="text-3xl md:text-6xl font-bold mb-6 gradient-text text-center">
-    SOBRE NOSOTROS
-  </h1>
 
-  <p className="text-3xl md:text-2xl font-bold mb-6 gradient-text text-center pb-6">
-    Innovación y Excelencia en Tecnología
-  </p>
 
-  <div className="p-4 relative z-20">
-    <div className="max-w-6xl max-h-6xl ml-auto mr-0 text-purple-300 mb-12 bg-purple-900/90 rounded-md flex flex-row items-center justify-end gap-6 pl-6">
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <p className="text-lg text-center mb-2">
-          <strong className="text-white font-semibold">Nuestra Misión</strong>
-        </p>
-        <p className="text-lg text-center">
-          En Untitled Tech Company, somos un equipo apasionado por la tecnología y la innovación. Nuestra misión es transformar negocios a través de soluciones tecnológicas personalizadas que impulsan el crecimiento y la eficiencia.
-        </p>
-      </div>
 
-      <img 
-        src="https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/oficina.jpg"
-        alt="oficina"
-        className="w-80 h-80 object-cover rounded-tr-md rounded-br-md"
-      />
-    </div>
-  </div>
 
-  <div className="p-4 mr-auto ml-0 relative z-20 ">
-    <div className="max-w-6xl max-h-6xr pr-6 mr-0 text-purple-300 mb-12 bg-purple-900/90 rounded-md flex flex-row items-center justify-start gap-6 transition-colors duration-300 hover:bg-purple-700/60 hover:scale-105 hover:shadow-lg ">
-      
-      <img 
-        src="https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/oficina.jpg"
-        alt="oficina"
-        className="w-80 h-80 object-cover rounded-tl-md rounded-bl-md"
-      />
 
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <p className="text-lg text-center mb-2">
-          <h2 className="text-white font-semibold">Nuestra Visión</h2>
-        </p>
-        <p className="text-lg text-center">
-          En Untitled Tech Company, somos un equipo apasionado por la tecnología y la innovación. Nuestra misión es transformar negocios a través de soluciones tecnológicas personalizadas que impulsan el crecimiento y la eficiencia.
-        </p>
-      </div>
-    </div>
-  </div>
-
+{/*About us secction*/}
+<section>
+      <PartnershipPlans />
 </section>
-*/}
+
+
 
 
 {/* Test Marquee (logos) */}
 <section className="py-20 px-4 bg-black/60 relative">
-  {/* Fondo negro con degradado hacia abajo (negro -> transparente) */}
+
+  {/* Fondo negro con degradado */}
   <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-b from-black/80 to-transparent" />
+
   <div className="container mx-auto relative z-20">
+
+    {/* Texto superior */}
     <motion.div
       className="text-center mb-16"
       initial={{ y: 50, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true }}
     >
-      <h1 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">Stack Tecnológico Avanzado</h1>
+      <h1 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+        Stack Tecnológico Avanzado
+      </h1>
       <p className="text-lg text-purple-300 max-w-2xl mx-auto">
         Dominamos las tecnologías más innovadoras para ofrecer soluciones de vanguardia
       </p>
     </motion.div>
 
-    {/* Marquee de logos tecnológicos */}
+    {/* === MARQUEE === */}
     {(() => {
       const techLogos = [
         { name: "React", icon: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
@@ -622,6 +639,10 @@ useEffect(() => {
         { name: "Vue.js", icon: "https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg" },
         { name: "Golang", icon: "https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg" },
       ];
+
+      // NOTA: Asume que Marquee, MarqueeContent y MarqueeItem son componentes definidos que
+      // internamente pueden o no usar motion.div. Los dejo como estaban ya que Marquee
+      // suele manejar su propia animación.
       return (
         <Marquee
           className="
@@ -633,10 +654,7 @@ useEffect(() => {
         >
           <MarqueeContent speed={40}>
             {techLogos.map((tech) => (
-              <MarqueeItem
-                key={tech.name}
-                className="mx-12 flex flex-col items-center"
-              >
+              <MarqueeItem key={tech.name} className="mx-12 flex flex-col items-center">
                 <img
                   src={tech.icon}
                   alt={tech.name}
@@ -648,370 +666,392 @@ useEffect(() => {
         </Marquee>
       );
     })()}
+
   </div>
 
+  {/* === CONTENIDO COMPLETO ORGANIZADO === */}
   <div className="relative">
 
-  {/* === DEGRADADO DESDE LA MITAD HACIA ABAJO === */}
-  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-transparent z-30" />
+    {/* Degradado inferior */}
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-transparent z-30" />
 
+    {/* GRID DE TARJETAS */}
+<div className="pt-[40px] px-4 relative z-20">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
 
-  {/* Sección donde empieza tu contenido vertical */}
-  <div className="pt-[30px] px-4 relative z-20">
+    {/* CARD 1: Frontend */}
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="
+        group relative bg-white/10 backdrop-blur-xl 
+        p-7 rounded-2xl shadow-xl border border-purple-500/20 
+        transition-all duration-500 
+        hover:bg-white/20 
+        hover:scale-[1.03] 
+        hover:shadow-purple-500/20 
+        hover:border-purple-500/30
+        hover:-translate-y-1
+      "
+    >
+      <div
+        className="
+          absolute inset-0 rounded-2xl 
+          bg-gradient-to-br from-purple-500/10 to-purple-800/10 
+          opacity-0 group-hover:opacity-100 
+          blur-xl transition-all duration-700
+        "
+      />
 
-    {/* (Removed inner subtle top gradient — using full-section overlay instead) */}
+      <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">
+        Frontend
+      </h2>
 
-    <div className="relative z-20">
-      <div className="flex flex-col md:flex-row justify-center items-start gap-16 md:gap-24 w-full mb-[40px] max-w-5xl mx-auto">
+      <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">
+        React, Vue.js, Angular
+      </h3>
 
-        <div className="md:w-1/2 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Frontend</h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">React, Vue.js, Angular:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Desarrollo de interfaces modernas, reactivas y escalables, con experiencia en componentes reutilizables y arquitectura frontend avanzada.
-          </p>
-        </div>
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Desarrollo de interfaces modernas y escalables, con componentes reutilizables y arquitectura avanzada.
+      </p>
+    </motion.div>
 
-        <div className="md:w-1/2 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Backend</h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">React, Vue.js, Angular:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Desarrollo de servidores y APIs eficientes y seguros, adaptados a necesidades de alto rendimiento y escalabilidad.
-          </p>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">Golang:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Creación de microservicios concurrentes y de alto desempeño para sistemas críticos.
-          </p>
-        </div>
+    {/* CARD 2: Backend */}
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="
+        group relative bg-white/10 backdrop-blur-xl 
+        p-7 rounded-2xl shadow-xl border border-purple-500/20 
+        transition-all duration-500 
+        hover:bg-white/20 
+        hover:scale-[1.03] 
+        hover:shadow-purple-500/20 
+        hover:border-purple-500/30
+        hover:-translate-y-1
+      "
+    >
+      <div
+        className="
+          absolute inset-0 rounded-2xl 
+          bg-gradient-to-br from-purple-500/10 to-purple-800/10 
+          opacity-0 group-hover:opacity-100 
+          blur-xl transition-all duration-700
+        "
+      />
 
-      </div>
-    </div>
+      <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">
+        Backend
+      </h2>
 
-    {/* Nueva fila */}
-    <div className="pt-6 px-4">
-      <div className="flex flex-col md:flex-row justify-center items-start gap-16 md:gap-24 w-full mb-[40px] max-w-5xl mx-auto">
+      <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">
+        Node.js, Express, Nest.js
+      </h3>
 
-        <div className="md:w-1/2 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Bases de Datos</h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">PostgreSQL, MySQL, MongoDB:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Diseño de bases de datos relacionales y no relacionales, optimizadas para consultas rápidas y gestión eficiente de datos.
-          </p>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">Firebase y Redis:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Soluciones en tiempo real y cacheo para mejorar rendimiento y experiencia de usuario.
-          </p>
-        </div>
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Desarrollo de servidores y APIs eficientes y seguras, optimizadas para alto rendimiento.
+      </p>
 
-        <div className="md:w-1/2 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Inteligencia Artificial y Machine Learning</h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">TensorFlow y Python:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Integración de modelos de aprendizaje automático y deep learning para análisis predictivo, visión por computadora y NLP.
-          </p>
-        </div>
+      <h3 className="text-xl font-semibold text-purple-300 mt-4 text-center">
+        Golang
+      </h3>
 
-      </div>
-    </div>
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Microservicios concurrentes y de alto desempeño.
+      </p>
+    </motion.div>
 
-    {/* Tercera fila */}
-    <div className="pt-2 px-4">
-      <div className="flex flex-col md:flex-row justify-center items-start gap-16 md:gap-24 w-full mb-[40px] max-w-5xl mx-auto">
+    {/* CARD 3: Bases de Datos */}
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="
+        group relative bg-white/10 backdrop-blur-xl 
+        p-7 rounded-2xl shadow-xl border border-purple-500/20 
+        transition-all duration-500 
+        hover:bg-white/20 
+        hover:scale-[1.03] 
+        hover:shadow-purple-500/20 
+        hover:border-purple-500/30
+        hover:-translate-y-1
+      "
+    >
+      <div
+        className="
+          absolute inset-0 rounded-2xl 
+          bg-gradient-to-br from-purple-500/10 to-purple-800/10 
+          opacity-0 group-hover:opacity-100 
+          blur-xl transition-all duration-700
+        "
+      />
 
-        <div className="md:w-1/2 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold gradient-text">Infraestructura y Cloud</h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">AWS, Google Cloud, Azure:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Arquitectura en la nube escalable, segura y eficiente.
-          </p>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">Docker y Kubernetes:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Contenerización y orquestación para despliegues consistentes.
-          </p>
-        </div>
+      <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">
+        Bases de Datos
+      </h2>
 
-        <div className="md:w-1/2 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold gradient-text">APIs y Comunicación</h2>
-          <h3 className="text-2xl md:text-3xl font-semibold text-purple-300 mt-4">GraphQL y REST APIs:</h3>
-          <p className="text-lg text-purple-300 max-w-2xl mt-4 mx-auto">
-            Desarrollo de APIs flexibles y eficientes.
-          </p>
-        </div>
+      <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">
+        PostgreSQL, MySQL, MongoDB
+      </h3>
 
-      </div>
-    </div>
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Diseño de bases relacionales y no relacionales optimizadas para consultas rápidas.
+      </p>
+
+      <h3 className="text-xl font-semibold text-purple-300 mt-4 text-center">
+        Firebase & Redis
+      </h3>
+
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Soluciones en tiempo real y caching de alto rendimiento.
+      </p>
+    </motion.div>
+
+    {/* CARD 4: IA y ML */}
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="
+        group relative bg-white/10 backdrop-blur-xl 
+        p-7 rounded-2xl shadow-xl border border-purple-500/20 
+        transition-all duration-500 
+        hover:bg-white/20 
+        hover:scale-[1.03] 
+        hover:shadow-purple-500/20 
+        hover:border-purple-500/30
+        hover:-translate-y-1
+      "
+    >
+      <div
+        className="
+          absolute inset-0 rounded-2xl 
+          bg-gradient-to-br from-purple-500/10 to-purple-800/10 
+          opacity-0 group-hover:opacity-100 
+          blur-xl transition-all duration-700
+        "
+      />
+
+      <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">
+        IA y ML
+      </h2>
+
+      <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">
+        TensorFlow, PyTorch, Python
+      </h3>
+
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Modelos de deep learning para visión por computadora, NLP y análisis predictivo.
+      </p>
+    </motion.div>
+
+    {/* CARD 5: Infraestructura y Cloud */}
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="
+        group relative bg-white/10 backdrop-blur-xl 
+        p-7 rounded-2xl shadow-xl border border-purple-500/20 
+        transition-all duration-500 
+        hover:bg-white/20 
+        hover:scale-[1.03] 
+        hover:shadow-purple-500/20 
+        hover:border-purple-500/30
+        hover:-translate-y-1
+      "
+    >
+      <div
+        className="
+          absolute inset-0 rounded-2xl 
+          bg-gradient-to-br from-purple-500/10 to-purple-800/10 
+          opacity-0 group-hover:opacity-100 
+          blur-xl transition-all duration-700
+        "
+      />
+
+      <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">
+        Infraestructura y Cloud
+      </h2>
+
+      <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">
+        AWS, Google Cloud, Azure
+      </h3>
+
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Arquitectura escalable y segura en la nube.
+      </p>
+
+      <h3 className="text-xl font-semibold text-purple-300 mt-4 text-center">
+        Docker & Kubernetes
+      </h3>
+
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Contenedores y orquestación profesional.
+      </p>
+    </motion.div>
+
+    {/* CARD 6: APIs y Comunicación */}
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="
+        group relative bg-white/10 backdrop-blur-xl 
+        p-7 rounded-2xl shadow-xl border border-purple-500/20 
+        transition-all duration-500 
+        hover:bg-white/20 
+        hover:scale-[1.03] 
+        hover:shadow-purple-500/20 
+        hover:border-purple-500/30
+        hover:-translate-y-1
+      "
+    >
+      <div
+        className="
+          absolute inset-0 rounded-2xl 
+          bg-gradient-to-br from-purple-500/10 to-purple-800/10 
+          opacity-0 group-hover:opacity-100 
+          blur-xl transition-all duration-700
+        "
+      />
+
+      <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">
+        APIs y Comunicación
+      </h2>
+
+      <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">
+        GraphQL & REST
+      </h3>
+
+      <p className="mt-3 text-purple-100/80 text-center leading-relaxed">
+        Creación de APIs flexibles, rápidas y bien documentadas.
+      </p>
+    </motion.div>
+
+  </div>
+</div>
+
 
     {/* Texto final */}
-    <div className="mt-6 px-4 pt-10">
+    <motion.div
+      className="mt-6 px-4 pt-10"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.5, duration: 1 }}
+    >
       <div className="max-w-3xl mx-auto text-center">
         <h4 className="text-lg md:text-2xl font-semibold text-purple-300">
           Muchas más tecnologías líderes aplicadas para ofrecer soluciones completas, innovadoras y escalables.
         </h4>
       </div>
-    </div>
+    </motion.div>
 
   </div>
 
-</div>
 </section>
 
 
 
-{/* services Section */}
-<AnimatePresence mode="wait" key={servicesReload}>
-  {!altLayout ? (
-    /* LAYOUT ORIGINAL */
-    <motion.section
-  key="main-services"
-  id="servicios"
-  className="py-20 px-4 bg-black/50 backdrop-blur"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  exit={{ opacity: 0 }}
-  transition={{ duration: 0.4 }}
->
-  <div className="container mx-auto relative">
-    <div className="pointer-events-none absolute" />
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<AnimatePresence mode="wait">
+  <motion.section
+    id="servicios"
+    className="py-20 px-4 bg-black/50 backdrop-blur"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.4 }}
+  >
+    <div className="container mx-auto relative">
+
+      {/* TITULO CENTRADO */}
       <motion.div
-        key="main-title"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.45 }}
-        className="flex flex-col justify-start"
+        className="text-center mb-12"
       >
-        <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+        <h2 className="text-3xl md:text-5xl font-bold mb-4 gradient-text">
           Soluciones Tecnológicas
         </h2>
-        <p className="text-lg text-purple-300 max-w-sm">
+        <p className="text-lg text-purple-300 max-w-2xl mx-auto">
           Servicios diseñados para impulsar la transformación digital.
         </p>
-
-        <motion.div
-          initial={{ y: 0 }}
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.96, rotate: -4 }}
-          className="mt-4 inline-flex items-center justify-center cursor-pointer"
-          onClick={() => {
-            setAltLayout(true)
-            setAltReload((p) => p + 1)
-            setServicesReload((p) => p + 1)
-          }}
-          role="button"
-          tabIndex={0}
-          aria-label="Cambiar a layout alternativo"
-        >
-          <ChevronDown className="w-8 h-8 text-purple-400" />
-        </motion.div>
       </motion.div>
 
-      <div className="lg:col-span-2 overflow-hidden relative pt-16  hide-scrollbar">
+      {/* MARQUEE CON DOS COLUMNAS */}
+      <div className="overflow-hidden relative pt-10 hide-scrollbar">
         <motion.div
-          key="normal"
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.45, ease: "easeOut" }}
         >
           <div className="relative w-full hide-scrollbar">
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20  hide-scrollbar" />
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20  hide-scrollbar" />
 
-            {/* Contenedor del Marquee con scroll oculto */}
-            <div className="w-full overflow-x-auto hide-scrollbar">
-              <Marquee className="w-full  hide-scrollbar">
-                <MarqueeContent speed={30} pauseOnHover={true} autoFill={true} gradient={false}>
-                  {servicesColumns.map((column, colIdx) => (
-                    <MarqueeItem key={`marquee-col-${colIdx}`} className="mx-6 flex-shrink-0  hide-scrollbar">
-                      <div className="flex flex-col gap-8  hide-scrollbar">
-                        {column.map((card, idx) => (
-                          <ServiceCard
-                            key={`${card.title}-${idx}-${colIdx}`}
-                            icon={card.icon}
-                            title={card.title}
-                            description={card.description}
-                            features={card.features}
-                          />
-                        ))}
-                      </div>
-                    </MarqueeItem>
-                  ))}
-                </MarqueeContent>
-              </Marquee>
-            </div>
+            {/* Degradados laterales */}
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
+
+            {/* Scroll horizontal con MarqueeContent / MarqueeItem */}
+            <Marquee className="w-full hide-scrollbar">
+              <MarqueeContent speed={30} pauseOnHover={true} autoFill={true} gradient={false}>
+                {((allCards || []).reduce((rows, card, index) => {
+                  if (index % 2 === 0) {
+                    // @ts-ignore
+                    rows.push([card]);
+                  } else {
+                    // @ts-ignore
+                    if (rows.length > 0) rows[rows.length - 1].push(card);
+                    // @ts-ignore
+                    else rows.push([card]);
+                  }
+                  return rows;
+                  
+                }, [])).map((pair, idx) => (
+                  <MarqueeItem key={idx} className="mx-6 flex flex-col gap-6 hide-scrollbar">
+                     {/* @ts-ignore */}
+                    {Array.isArray(pair) && pair.map((card, i) => (
+                      <motion.div
+                        key={i}
+                        whileHover={{ y: -6, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        className="w-96"
+                      >
+                        <ServiceCard
+                          icon={card.icon}
+                          title={card.title}
+                          description={card.description}
+                          features={card.features}
+                          className="w-auto h-auto"
+                        />
+                      </motion.div>
+                    ))}
+                  </MarqueeItem>
+                ))}
+              </MarqueeContent>
+            </Marquee>
+
           </div>
         </motion.div>
       </div>
     </div>
-  </div>
-</motion.section>
-
-  ) : (
-    /* LAYOUT ALTERNATIVO */
-<motion.section
-  key={altReload}
-  id="servicios"
-  className="py-20 px-4 bg-black/50 backdrop-blur"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  exit={{ opacity: 0 }}
-  transition={{ duration: 0.4 }}
->
-  <div className="container mx-auto">
-    <motion.div
-      className="text-center mb-16"
-      initial={{ y: 50, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true }}
-    >
-      <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
-        Soluciones Tecnológicas Integrales
-      </h2>
-      <p className="text-lg text-purple-300 max-w-2xl mx-auto">
-        Ofrecemos un ecosistema completo de servicios tecnológicos para impulsar la transformación digital de tu empresa
-      </p>
-    </motion.div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {/* EXISTENTES */}
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Code className="w-8 h-8" />}
-          title="Desarrollo Web y Móvil"
-          description="Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo."
-          features={["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Database className="w-8 h-8" />}
-          title="CRM y ERP"
-          description="Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas."
-          features={["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Cloud className="w-8 h-8" />}
-          title="Cloud Solutions"
-          description="Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad."
-          features={["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Brain className="w-8 h-8" />}
-          title="Inteligencia Artificial"
-          description="Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones."
-          features={["Análisis Predictivo", "Procesamiento de Lenguaje Natural", "Computer Vision", "Automatización Inteligente"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Shield className="w-8 h-8" />}
-          title="Ciberseguridad"
-          description="Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo."
-          features={["Auditorías de Seguridad", "Implementación Zero Trust", "Gestión de Identidades", "SOC as a Service"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Boxes className="w-8 h-8" />}
-          title="Integración de Sistemas"
-          description="Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados."
-          features={["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]}
-        />
-      </motion.div>
-
-      {/* NUEVAS SERVICECARDS AÑADIDAS */}
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Boxes className="w-8 h-8" />}
-          title="E-commerce"
-          description="Tiendas online personalizadas y optimizadas para convertir más ventas."
-          features={["Shopify", "WooCommerce", "Pagos y Logística", "Automatización"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Brain className="w-8 h-8" />}
-          title="Chatbots y Automatizaciones"
-          description="Automatizamos flujos de atención y ventas con chatbots inteligentes."
-          features={["WhatsApp", "Instagram", "Flujos Automatizados", "Integración con CRM"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Database className="w-8 h-8" />}
-          title="CRM y Soluciones a Medida"
-          description="Automatización avanzada y plataformas internas hechas a medida del negocio."
-          features={["Workflows", "Sistemas Internos", "Integraciones", "Optimización"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Code className="w-8 h-8" />}
-          title="Aplicaciones Web"
-          description="Plataformas web tipo SaaS, dashboards y sistemas empresariales."
-          features={["SaaS", "ERP", "Dashboards", "PWA"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Code className="w-8 h-8" />}
-          title="Tecnologías"
-          description="Expertos en los lenguajes y frameworks más modernos."
-          features={["React / Vue / Angular", "Node / Python / PHP", "SQL / NoSQL", "Docker / APIs"]}
-        />
-      </motion.div>
-
-      <motion.div whileHover={{ y: -6, scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-        <ServiceCard
-          icon={<Shield className="w-8 h-8" />}
-          title="Quality Assurance (QA)"
-          description="Aseguramos calidad, rendimiento y seguridad en todos los proyectos."
-          features={["Pruebas Funcionales", "Usabilidad", "Seguridad", "Optimización"]}
-        />
-      </motion.div>
-    </div>
-
-    <div className="text-center mt-10">
-      <motion.div
-        initial={{ y: 0 }}
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.96, rotate: 4 }}
-        className="mt-4 inline-flex items-center justify-center cursor-pointer"
-        onClick={() => {
-          setAltLayout(false)
-          setAltReload((p) => p + 1)
-          setServicesReload((p) => p + 1)
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Volver al layout original"
-      >
-        <ChevronUp className="w-8 h-8 text-purple-400" />
-      </motion.div>
-    </div>
-  </div>
-</motion.section>
-
-  )}
+  </motion.section>
 </AnimatePresence>
+
+
+
+
 
 
 

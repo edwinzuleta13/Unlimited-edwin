@@ -34,7 +34,7 @@ const testimonials: Testimonial[] = [
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/ANAS%20ACCOUNTING%20SERV%20LOGO%20(2).png",
     cardWidth: 500,
-    imageHeight: 225,
+    imageHeight: 190,
     imageFit: "contain",
     imageBorderRadius: 0,
     hoverColor: "#ffffff",
@@ -51,7 +51,7 @@ const testimonials: Testimonial[] = [
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/daka-logo.png",
     cardWidth: 420,
-    imageHeight: 200,
+    imageHeight: 190,
     imageFit: "cover",
     imagePaddingTop: 16,
     imageBorderRadius: 12,
@@ -68,7 +68,7 @@ const testimonials: Testimonial[] = [
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/extra_ganga_logo.jpeg",
     cardWidth: 400,
-    imageHeight: 220,
+    imageHeight: 190,
     imageFit: "cover",
     imagePadding: 16,
     hoverColor: "#015438",
@@ -82,7 +82,7 @@ const testimonials: Testimonial[] = [
     company: "RetailPro",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/KAOZ.png",
-    imageHeight: 240,
+    imageHeight: 190,
     cardWidth: 400,
     imageFit: "contain",
     imageBorderRadius: 0,
@@ -97,7 +97,7 @@ const testimonials: Testimonial[] = [
     company: "DataWorks",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/keyton_logo.png",
-    imageHeight: 260,
+    imageHeight: 190,
     cardWidth: 400,
     imageFit: "contain",
     imageBorderRadius: 0,
@@ -112,7 +112,7 @@ const testimonials: Testimonial[] = [
     company: "HealthAxis",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
-    imageHeight: 230,
+    imageHeight: 190,
     cardWidth: 400,
     imageFit: "cover",
     imageBorderRadius: 0,
@@ -128,7 +128,7 @@ const testimonials: Testimonial[] = [
     company: "MarketHive",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-reys-smart-01.jpg",
-    imageHeight: 230,
+    imageHeight: 190,
     imageFit: "cover",
     imageBorderRadius: 0,
     cardWidth: 400,
@@ -143,7 +143,7 @@ const testimonials: Testimonial[] = [
     company: "BrightEdge",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/piper_logo.png",
-    imageHeight: 230,
+    imageHeight: 190,
     imageFit: "cover",
     imageBorderRadius: 0,
     cardWidth: 400,
@@ -154,12 +154,12 @@ const testimonials: Testimonial[] = [
   {
     quote:
       "InnovaTech aceleró su desarrollo de producto con soluciones eficientes y un acompañamiento técnico de primer nivel durante todo el ciclo.",
-    name: "Lucía Hernández",
+    name: "YenFit",
     role: "VP of Product",
     company: "InnovaTech",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/yenfit.png",
-    imageHeight: 180,
+    imageHeight: 190,
     imageFit: "contain",
     imageBorderRadius: 0,
     cardWidth: 400,
@@ -176,7 +176,7 @@ const testimonials: Testimonial[] = [
     company: "Nextify",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/you_space_logo.png",
-    imageHeight: 230,
+    imageHeight: 190,
     imageFit: "cover",
     imageBorderRadius: 0,
     cardWidth: 400,

@@ -112,11 +112,11 @@ const testimonials: Testimonial[] = [
     company: "HealthAxis",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
-    imageHeight: 190,
-    cardWidth: 400,
+    imageHeight: 215,
+    cardWidth: 500,
     imageFit: "cover",
     imageBorderRadius: 0,
-    cardPaddingTop: 40,
+    cardPaddingTop: 20,
     hoverColor: "#938376",
     textColorHover: "#ffffff"
   },

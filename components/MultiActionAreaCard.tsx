@@ -32,6 +32,7 @@ export interface MultiActionAreaCardProps {
   innerPaddingTop?: number | string;
   circular?: boolean;
   textColorHover?: string; // <<---- NUEVO
+  href?: string; // <<---- URL para redirección
 }
 
 const MultiActionAreaCard: React.FC<MultiActionAreaCardProps> = ({
@@ -59,8 +60,8 @@ const MultiActionAreaCard: React.FC<MultiActionAreaCardProps> = ({
   innerPaddingTop,
   textColorHover,
   circular = false, // <- aquí lo desestructuramos y le damos default false
+  href, // <- URL para redirección
 }) => {
-
   const [remoteImage, setRemoteImage] = useState<string | null>(null);
   const [loadingRemote, setLoadingRemote] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -113,47 +114,71 @@ const MultiActionAreaCard: React.FC<MultiActionAreaCardProps> = ({
       sx={{
         maxWidth,
         backgroundColor: isHovered
-          ? hoverColor || bgColor
+          ? hoverColor || "rgba(147,51,234,0.2)"
           : bgColor || "rgba(124,58,237,0.12)",
         position: "relative",
         overflow: "hidden",
         borderRadius: 4,
-        border: "2px solid #9167F1",
+        border: isHovered
+          ? "2px solid #A855F7"
+          : "2px solid #9167F1",
         boxShadow: isHovered
-          ? "0 0 26px 6px #A47BFF80"
-          : "0 0 12px 2px #9167F180",
-        transform: isHovered ? "scale(1.03)" : "scale(1)",
+          ? "0 0 40px 8px rgba(168,85,247,0.6), 0 20px 40px -10px rgba(147,51,234,0.4)"
+          : "0 0 12px 2px rgba(145,103,241,0.5), 0 8px 16px -4px rgba(124,58,237,0.3)",
+        transform: isHovered ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
         transition:
-          "transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
+          "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
         cursor: "pointer",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: isHovered
+            ? "linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(147,51,234,0.05) 100%)"
+            : "transparent",
+          opacity: isHovered ? 1 : 0,
+          transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: "none",
+          zIndex: 0,
+        },
         ...sx,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardActionArea style={{ position: "relative", zIndex: 1 }}>
-<div
-  style={{
-    position: "relative",
-    width: "100%",
-    height: typeof imageHeight === "number" ? `${imageHeight}px` : imageHeight,
-    overflow: "hidden", // necesario para recortar
-    padding: typeof imagePadding === "number" ? `${imagePadding}px` : imagePadding,
-    marginTop: typeof imagePaddingTop === "number" ? `${imagePaddingTop}px` : imagePaddingTop,
-    borderRadius: circular ? "50%" : imageBorderRadius ?? 0, // redondeo total si es circular
-    aspectRatio: circular ? "1 / 1" : undefined, // fuerza cuadrado si es circular
-  }}
->
-  <Image
-    src={usedImage}
-    alt={alt}
-    fill
-    priority
-    style={{
-      objectFit: imageFit,
-    }}
-  />
-</div>
+      <CardActionArea
+        style={{ position: "relative", zIndex: 1 }}
+        onClick={() => {
+          if (href) {
+            window.open(href, '_blank', 'noopener,noreferrer');
+          }
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: typeof imageHeight === "number" ? `${imageHeight}px` : imageHeight,
+            overflow: "hidden", // necesario para recortar
+            padding: typeof imagePadding === "number" ? `${imagePadding}px` : imagePadding,
+            marginTop: typeof imagePaddingTop === "number" ? `${imagePaddingTop}px` : imagePaddingTop,
+            borderRadius: circular ? "50%" : imageBorderRadius ?? 0, // redondeo total si es circular
+            aspectRatio: circular ? "1 / 1" : undefined, // fuerza cuadrado si es circular
+          }}
+        >
+          <Image
+            src={usedImage}
+            alt={alt}
+            fill
+            priority
+            style={{
+              objectFit: imageFit,
+            }}
+          />
+        </div>
 
         <CardContent
           style={{

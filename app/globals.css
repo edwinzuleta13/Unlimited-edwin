@@ -2,9 +2,27 @@
 .hide-scrollbar {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
+  overflow: hidden !important;
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome/Safari/Webkit */
+}
+
+/* Ocultar scrollbar en componentes de marquee */
+.rfm-marquee-container,
+.rfm-marquee,
+.rfm-initial-child-container,
+.rfm-child {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow: hidden !important;
+}
+
+.rfm-marquee-container::-webkit-scrollbar,
+.rfm-marquee::-webkit-scrollbar,
+.rfm-initial-child-container::-webkit-scrollbar,
+.rfm-child::-webkit-scrollbar {
+  display: none !important;
 }
 @tailwind base;
 @tailwind components;

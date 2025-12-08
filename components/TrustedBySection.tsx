@@ -21,6 +21,7 @@ interface Testimonial {
   imagePaddingTop?: number;   // margen superior de la imagen
   imagePadding?: number;      // padding general alrededor de la imagen
   textColorHover?: string;
+  href?: string;              // URL para redirección
 }
 
 const testimonials: Testimonial[] = [
@@ -41,6 +42,7 @@ const testimonials: Testimonial[] = [
     textColorHover: "#000000",
     imagePadding: 2,
     imagePaddingTop: 6,
+    href: "https://anasaccounting.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -58,6 +60,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 28,
     hoverColor: "#f7ef14",
     textColorHover: "#0224bd",
+    href: "https://cloudnova.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -73,6 +76,7 @@ const testimonials: Testimonial[] = [
     imagePadding: 16,
     hoverColor: "#015438",
     textColorHover: "#FF4500",
+    href: "https://finnect.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -88,6 +92,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#ffffff",
     textColorHover: "#000000",
+    href: "https://retailpro.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -103,6 +108,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#adacac",
     textColorHover: "#000000",
+    href: "https://dataworks.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -118,9 +124,10 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     cardPaddingTop: 20,
     hoverColor: "#938376",
-    textColorHover: "#ffffff"
+    textColorHover: "#ffffff",
+    href: "https://youtube.com/", // <<== URL para redirección
   },
-  {
+  { 
     quote:
       "Reys Smart logró automatizar tareas clave y fortalecer su presencia digital con herramientas modernas y un desarrollo impecable.",
     name: "Reys Smart",
@@ -134,6 +141,7 @@ const testimonials: Testimonial[] = [
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#06892E",
+    href: "https://markethive.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -150,13 +158,14 @@ const testimonials: Testimonial[] = [
     imagePaddingTop: 16,
     hoverColor: "#ffffff",
     textColorHover: "#bd0000",
+    href: "https://brightedge.com/", // <<== URL para redirección
   },
   {
     quote:
-      "InnovaTech aceleró su desarrollo de producto con soluciones eficientes y un acompañamiento técnico de primer nivel durante todo el ciclo.",
+      "Untitled Tech aceleró su desarrollo de producto con soluciones eficientes y un acompañamiento técnico de primer nivel durante todo el ciclo.",
     name: "YenFit",
     role: "VP of Product",
-    company: "InnovaTech",
+    company: "Untitled Tech",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/yenfit.png",
     imageHeight: 190,
@@ -167,6 +176,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 20,
     hoverColor: "#949494",
     textColorHover: "#ffffff",
+    href: "https://yenfit.com/", // <<== URL para redirección
   },
   {
     quote:
@@ -183,6 +193,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 16,
     hoverColor: "#235888",
     textColorHover: "#ffffff",
+    href: "https://nextify.com/", // <<== URL para redirección
   },
 ]
 
@@ -239,11 +250,10 @@ export default function TrustedBySection() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={page}
-            className={`grid gap-8 justify-items-center ${
-              visible.length === 1
-                ? "grid-cols-1 justify-center"
-                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            }`}
+            className={`grid gap-8 justify-items-center ${visible.length === 1
+              ? "grid-cols-1 justify-center"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              }`}
             style={{ maxWidth: 1320 }}
             variants={slideVariants}
             initial="initial"
@@ -257,26 +267,27 @@ export default function TrustedBySection() {
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-<MultiActionAreaCard
-  title={t.name}
-  description={`“${t.quote}”`}
-  image={t.image || "/logo-Untitled-26.png"}
-  alt={`${t.role} — ${t.company}`}
-  maxWidth={t.cardWidth || 420}
-  imageHeight={t.imageHeight || 140}
-  imageFit={t.imageFit || "contain"}
-  imageBorderRadius={t.imageBorderRadius || 0}
-  imagePaddingTop={t.imagePaddingTop || 0}
-  imagePadding={t.imagePadding || 0}
-  className=""
-  titleClassName="text-xl font-semibold text-white"
-  descriptionClassName="mt-3 text-purple-200 text-center"
-  bgColor="rgba(124,58,237,0.12)"
-  hoverColor={t.hoverColor || "rgba(133,77,255,0.85)"}
-  textColorHover={t.textColorHover || "#FFE600"}  // <<===== hover text color
-  innerPadding={t.cardPadding ?? 16}
-  innerPaddingTop={t.cardPaddingTop ?? t.cardPadding ?? 16}
-/>
+                <MultiActionAreaCard
+                  title={t.name}
+                  description={`“${t.quote}”`}
+                  image={t.image || "/logo-Untitled-26.png"}
+                  alt={`${t.role} — ${t.company}`}
+                  maxWidth={t.cardWidth || 420}
+                  imageHeight={t.imageHeight || 140}
+                  imageFit={t.imageFit || "contain"}
+                  imageBorderRadius={t.imageBorderRadius || 0}
+                  imagePaddingTop={t.imagePaddingTop || 0}
+                  imagePadding={t.imagePadding || 0}
+                  className=""
+                  titleClassName="text-xl font-semibold text-white"
+                  descriptionClassName="mt-3 text-purple-200 text-center"
+                  bgColor="rgba(124,58,237,0.12)"
+                  hoverColor={t.hoverColor || "rgba(133,77,255,0.85)"}
+                  textColorHover={t.textColorHover || "#FFE600"}  // <<===== hover text color
+                  innerPadding={t.cardPadding ?? 16}
+                  innerPaddingTop={t.cardPaddingTop ?? t.cardPadding ?? 16}
+                  href={t.href}  // <<== URL para redirección
+                />
               </motion.div>
             ))}
           </motion.div>

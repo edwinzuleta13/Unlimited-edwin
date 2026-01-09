@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { Providers } from "./providers"
 import { AlertProvider, GlobalAlerts } from "@/components/alert-context"
 import type React from "react" // Added import for React
+import ViewportSwitcher from "@/components/ViewportSwitcher"
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] })
 
@@ -30,12 +31,14 @@ export default function RootLayout({
     <html lang="es" className="dark scroll-smooth" suppressHydrationWarning>
       <head>
         {/* Manual favicon links to force browser load */}
-  <link rel="icon" href="/favicon.png" />
-  <link rel="shortcut icon" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0f172a" />
       </head>
       <body className={`${spaceGrotesk.className} bg-background text-foreground font-sans min-h-screen`}>
+        <ViewportSwitcher />
         <Providers>
           <AlertProvider>
             {children}

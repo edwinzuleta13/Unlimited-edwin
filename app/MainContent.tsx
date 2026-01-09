@@ -1,32 +1,28 @@
 "use client"
 import * as React from "react"
 import TrustedBySection from "@/components/TrustedBySection";
-import { Marquee, MarqueeFade, MarqueeContent, MarqueeItem } from '@/components/ui/marquee';
+
 import { SiGithub, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
+import { ServiceMarquee } from "@/components/ServiceMarquee";
+import { Marquee, MarqueeContent, MarqueeItem, MarqueeFade } from "@/components/ui/marquee";
 import TechnologicalExpertise from "@/components/technological-expertise";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthNav from '@/components/AuthNav';
 import BotonConSonido from "@/components/BotonConSonido";
-import { useEffect, useRef, useState } from "react"
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { useEffect, useRef, useState, useMemo } from "react"
+import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion"
 import Image from "next/image"
 import SplashScreen from "@/components/SplashScreen"
 import { Card } from "@/components/ui/card"
 import {
   Code,
   Database,
-  Linkedin,
-  Instagram,
-  Twitter,
-  Phone,
   ChevronDown,
-  ChevronUp,
   Shield,
   Cloud,
   Boxes,
   Brain,
-  CheckCircle,
-  ArrowRight,
+
 } from "lucide-react"
 import { SlSocialLinkedin } from "react-icons/sl"
 import { AiOutlineInstagram } from "react-icons/ai"
@@ -61,9 +57,11 @@ export default function Home() {
   const [isSolicitudOpen, setIsSolicitudOpen] = useState(false)
   const [altReload, setAltReload] = useState(0)
   const [servicesReload, setServicesReload] = useState(0)
+
   const [pexelsVideoUrl, setPexelsVideoUrl] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
+
   // Fetch video URL from our server API (`/api/pexels-media`) which hides the Pexels key
   useEffect(() => {
     // If you have a Pexels page URL, extract its numeric ID (e.g. ...-5821984)
@@ -132,85 +130,17 @@ export default function Home() {
     }
   }
 
+
+
+
   // Toggle between default services layout and alternative one
   const [altLayout, setAltLayout] = useState(false)
 
-  // 1️⃣ Crear array de cards
-  const allCards = [
-    {
-      title: "Desarrollo Web y Móvil",
-      icon: <Code className="w-8 h-8" />,
-      description: "Creamos aplicaciones web y móviles escalables utilizando las últimas tecnologías y mejores prácticas de desarrollo.",
-      features: ["Aplicaciones Web Progresivas", "Apps iOS y Android", "Portales Empresariales", "E-commerce"]
-    },
-    {
-      title: "CRM y ERP",
-      icon: <Database className="w-8 h-8" />,
-      description: "Implementamos y personalizamos sistemas de gestión empresarial adaptados a tus necesidades específicas.",
-      features: ["Salesforce", "SAP", "Microsoft Dynamics", "Sistemas Personalizados"]
-    },
-    {
-      title: "Cloud Solutions",
-      icon: <Cloud className="w-8 h-8" />,
-      description: "Modernizamos tu infraestructura con soluciones cloud que optimizan costos y mejoran la escalabilidad.",
-      features: ["AWS", "Azure", "Google Cloud", "Arquitectura Cloud Native"]
-    },
-    {
-      title: "Inteligencia Artificial",
-      icon: <Brain className="w-8 h-8" />,
-      description: "Implementamos soluciones de IA y Machine Learning para optimizar procesos y tomar mejores decisiones.",
-      features: ["Análisis Predictivo", "Procesamiento de Lenguaje Natural", "Computer Vision", "Automatización Inteligente"]
-    },
-    {
-      title: "Ciberseguridad",
-      icon: <Shield className="w-8 h-8" />,
-      description: "Protegemos tus activos digitales con soluciones de seguridad avanzadas y cumplimiento normativo.",
-      features: ["Auditorías de Seguridad", "Implementación Zero Trust", "Gestión de Identidades", "SOC as a Service"]
-    },
-    {
-      title: "Integración de Sistemas",
-      icon: <Boxes className="w-8 h-8" />,
-      description: "Conectamos tus sistemas y aplicaciones para crear flujos de trabajo eficientes y automatizados.",
-      features: ["APIs y Microservicios", "ESB", "ETL", "Automatización de Procesos"]
-    },
-    {
-      title: "E-commerce",
-      icon: <Boxes className="w-8 h-8" />,
-      description: "Tiendas online personalizadas y optimizadas para convertir más ventas.",
-      features: ["Shopify", "WooCommerce", "Pagos y Logística", "Automatización"]
-    },
-    {
-      title: "Chatbots y Automatizaciones",
-      icon: <Brain className="w-8 h-8" />,
-      description: "Automatizamos flujos de atención y ventas con chatbots inteligentes.",
-      features: ["WhatsApp", "Instagram", "Flujos Automatizados", "Integración con CRM"]
-    },
-    {
-      title: "CRM y Soluciones a Medida",
-      icon: <Database className="w-8 h-8" />,
-      description: "Automatización avanzada y plataformas internas hechas a medida del negocio.",
-      features: ["Workflows", "Sistemas Internos", "Integraciones", "Optimización"]
-    },
-    {
-      title: "Aplicaciones Web",
-      icon: <Code className="w-8 h-8" />,
-      description: "Plataformas web tipo SaaS, dashboards y sistemas empresariales.",
-      features: ["SaaS", "ERP", "Dashboards", "PWA"]
-    },
-    {
-      title: "Tecnologías",
-      icon: <Code className="w-8 h-8" />,
-      description: "Expertos en los lenguajes y frameworks más modernos.",
-      features: ["React / Vue / Angular", "Node / Python / PHP", "SQL / NoSQL", "Docker / APIs"]
-    },
-    {
-      title: "Quality Assurance (QA)",
-      icon: <Shield className="w-8 h-8" />,
-      description: "Aseguramos calidad, rendimiento y seguridad en todos los proyectos.",
-      features: ["Pruebas Funcionales", "Usabilidad", "Seguridad", "Optimización"]
-    }
-  ];
-  // removed JS width measurement — CSS keyframes will handle continuous scroll
+
+
+
+
+
 
   useEffect(() => {
     // Solo ejecuta en el cliente y si searchParams está disponible
@@ -588,12 +518,8 @@ export default function Home() {
           </div>
         </section>
 
-
-
-
-
         {/*About us secction*/}
-        <section>
+        <section id="sobre-nosotros">
           <PartnershipPlans />
         </section>
 
@@ -601,7 +527,7 @@ export default function Home() {
 
 
         {/* Test Marquee (logos) */}
-        <section className="py-20 px-4 bg-black/60 relative">
+        <section id="tecnologias" className="py-20 px-4 bg-black/60 relative">
 
           {/* Fondo negro con degradado */}
           <div className="absolute inset-0 pointer-events-none z-0 bg-gradient-to-b from-black/80 to-transparent" />
@@ -652,7 +578,7 @@ export default function Home() {
             overflow-hidden py-10
           "
                 >
-                  <MarqueeContent speed={40}>
+                  <MarqueeContent speed={80}>
                     {techLogos.map((tech) => (
                       <MarqueeItem key={tech.name} className="mx-12 flex flex-col items-center">
                         <img
@@ -1009,60 +935,14 @@ export default function Home() {
                   transition={{ duration: 0.45, ease: "easeOut" }}
                 >
                   <div className="relative w-full hide-scrollbar">
-
-                    {/* Degradados laterales */}
-                    <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
-                    <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
-
-                    {/* Scroll horizontal con MarqueeContent / MarqueeItem */}
-                    <Marquee className="w-full hide-scrollbar">
-                      <MarqueeContent speed={30} pauseOnHover={true} autoFill={true} gradient={false}>
-                        {((allCards || []).reduce((rows, card, index) => {
-                          if (index % 2 === 0) {
-                            // @ts-ignore
-                            rows.push([card]);
-                          } else {
-                            // @ts-ignore
-                            if (rows.length > 0) rows[rows.length - 1].push(card);
-                            // @ts-ignore
-                            else rows.push([card]);
-                          }
-                          return rows;
-
-                        }, [])).map((pair, idx) => (
-                          <MarqueeItem key={idx} className="mx-6 pt-10 flex flex-col gap-6 hide-scrollbar">
-                            {/* @ts-ignore */}
-                            {Array.isArray(pair) && pair.map((card, i) => (
-                              <motion.div
-                                key={i}
-                                whileHover={{ y: -8 }}
-                                whileTap={{ scale: 1 }}
-                                transition={{
-                                  duration: 0.8,
-                                  ease: [0.4, 0, 0.2, 1]
-                                }}
-                                className="w-96"
-                              >
-                                <ServiceCard
-                                  icon={card.icon}
-                                  title={card.title}
-                                  description={card.description}
-                                  features={card.features}
-                                  className="w-auto h-auto"
-                                />
-                              </motion.div>
-                            ))}
-                          </MarqueeItem>
-                        ))}
-                      </MarqueeContent>
-                    </Marquee>
-
+                    <ServiceMarquee />
                   </div>
                 </motion.div>
               </div>
             </div>
           </motion.section>
         </AnimatePresence>
+
 
 
         {/* Contac secction */}
@@ -1100,7 +980,9 @@ export default function Home() {
 
 
         {/* Trusted by Section */}
-        <TrustedBySection />
+        <section id="aliados">
+          <TrustedBySection />
+        </section>
 
         {/* New Technological Expertise Section */}
         <TechnologicalExpertise />
@@ -1258,76 +1140,7 @@ export default function Home() {
   )
 }
 
-function ServiceCard({
-  icon,
-  title,
-  description,
-  features,
-  className,
-}: {
-  icon: React.ReactNode
-  title: string
-  description: string
-  features: string[]
-  className?: string
-}) {
-  const { setCursorVariant } = useMouse()
 
-  return (
-    <motion.div
-      initial={{ y: 50, opacity: 0 }}
-      whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true }}
-    >
-      <Card
-        className={`${className ? className + " " : ""}group p-8 bg-black/30 border-2 border-purple-300/40 overflow-hidden relative hover:bg-purple-900/25 hover:border-purple-400/60`}
-        style={{
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}
-      >
-        {/* Dynamic animated purple gradient on hover */}
-        <div
-          className="absolute inset-0 pointer-events-none z-0 opacity-0 group-hover:opacity-100"
-          style={{
-            background: 'linear-gradient(45deg, rgba(101, 0, 195, 0.85) 0%, rgba(147,51,234,0.5) 25%, rgba(168,85,247,0.6) 50%, rgba(147,51,234,0.5) 75%, rgba(168,85,247,0.6) 100%)',
-            backgroundSize: '200% 200%',
-            animation: 'gradientShift 3s ease infinite',
-            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        />
-        <style jsx>{`
-          @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}</style>
-
-        {/* Enhanced purple glow on hover */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-xl z-20 opacity-0 group-hover:opacity-100"
-          style={{
-            boxShadow: '0 0 40px 8px rgba(168,85,247,0.5), 0 20px 40px -10px rgba(147,51,234,0.3)',
-            transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        />
-        <div className="parallax-card-content relative z-10">
-          <div className="mb-4 text-purple-400 transition-colors group-hover:text-white">{icon}</div>
-          <h3 className="text-xl font-bold mb-2 transition-all">{title}</h3>
-          <p className="text-gray-300 transition-colors mb-4">{description}</p>
-          <ul className="space-y-2">
-            {features.map((feature, index) => (
-              <li key={index} className="flex items-center text-sm text-gray-400">
-                <CheckCircle className="w-4 h-4 mr-2 text-purple-500" />
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Card>
-    </motion.div>
-  )
-}
 
 function StatCard({ number, text }: { number: string; text: string }) {
   return (

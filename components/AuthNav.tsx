@@ -28,7 +28,7 @@ export default function AuthNav() {
     return () => {
       try {
         listener.subscription.unsubscribe();
-      } catch (e) {}
+      } catch (e) { }
     };
   }, []);
 
@@ -39,6 +39,25 @@ export default function AuthNav() {
 
   const handleGoToStatus = () => router.push("/user-status");
   const handleGoHome = () => router.push("/");
+
+  // Mapping de textos del menú a IDs de secciones
+  const sectionMap: Record<string, string> = {
+    "Tecnologias": "tecnologias",
+    "Servicios": "servicios",
+    "Sobre Nosotros": "sobre-nosotros",
+    "Contacto": "contacto",
+    "Aliados": "aliados"
+  };
+
+  const scrollToSection = (text: string) => {
+    const sectionId = sectionMap[text];
+    if (sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   const getInitials = (email: string) => {
     const namePart = email.split('@')[0];
@@ -67,7 +86,8 @@ export default function AuthNav() {
         {["Tecnologias", "Servicios", "Sobre Nosotros", "Contacto", "Aliados"].map((text) => (
           <span
             key={text}
-            className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 ${styles['underline-anim']}`}
+            onClick={() => scrollToSection(text)}
+            className={`text-lg md:text-xl text-gray-200 transition-transform duration-200 transform hover:scale-110 cursor-pointer ${styles['underline-anim']}`}
           >
             <span
               className={`inline-block px-3 py-1.5 rounded-sm transition-colors hover:text-purple-400 ${styles['text-glow']}`}

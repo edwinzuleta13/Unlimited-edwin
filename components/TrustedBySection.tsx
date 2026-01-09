@@ -28,7 +28,7 @@ const testimonials: Testimonial[] = [
 
   {
     quote:
-      "Anas Accounting nos ayudó a optimizar nuestros procesos internos mediante soluciones tecnológicas inteligentes y un enfoque totalmente orientado a resultados.",
+      "Anas Accounting es una plataforma digital especializada en la reserva y gestión de citas. Transformamos la organización interna de los negocios mediante herramientas automáticas que eliminan los errores de agenda y mejoran la experiencia del cliente.",
     name: "Anas Acounding",
     role: "Head of Engineering",
     company: "TechFlow",
@@ -60,7 +60,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 28,
     hoverColor: "#f7ef14",
     textColorHover: "#0224bd",
-    href: "https://cloudnova.com/", // <<== URL para redirección
+    href: "https://tiendasdaka.com", // <<== URL para redirección
   },
   {
     quote:
@@ -76,7 +76,7 @@ const testimonials: Testimonial[] = [
     imagePadding: 16,
     hoverColor: "#015438",
     textColorHover: "#FF4500",
-    href: "https://finnect.com/", // <<== URL para redirección
+    href: "https://www.instagram.com/extragangave/?hl=es", // <<== URL para redirección
   },
   {
     quote:
@@ -92,7 +92,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#ffffff",
     textColorHover: "#000000",
-    href: "https://retailpro.com/", // <<== URL para redirección
+    href: "https://www.instagram.com/kaos.vzla?igsh=eWxrNmEyZXI0NzM2", // <<== URL para redirección
   },
   {
     quote:
@@ -108,24 +108,24 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#adacac",
     textColorHover: "#000000",
-    href: "https://dataworks.com/", // <<== URL para redirección
+    href: "https://keyton.com.ve", // <<== URL para redirección
   },
   {
     quote:
-      "Rental Deluxe optimizó su plataforma digital y mejoró la experiencia de sus usuarios gracias a la arquitectura escalable que implementamos.",
+      "Rental Deluxe es una plataforma de alquiler vacacional que combina tecnología de vanguardia para ofrecer reservas rápidas y seguras en casas y hoteles, optimizando la experiencia de viaje de sus usuarios.",
     name: "Rental Deluxe",
     role: "CTO",
     company: "HealthAxis",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
     imageHeight: 215,
-    cardWidth: 500,
+    cardWidth: 450,
     imageFit: "cover",
     imageBorderRadius: 0,
     cardPaddingTop: 20,
     hoverColor: "#938376",
     textColorHover: "#ffffff",
-    href: "https://youtube.com/", // <<== URL para redirección
+    href: "https://somosrentaldeluxe.com", // <<== URL para redirección
   },
   { 
     quote:
@@ -135,35 +135,34 @@ const testimonials: Testimonial[] = [
     company: "MarketHive",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-reys-smart-01.jpg",
-    imageHeight: 190,
+    imageHeight: 210,
     imageFit: "cover",
     imageBorderRadius: 0,
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#06892E",
-    href: "https://markethive.com/", // <<== URL para redirección
+    href: "https://reysmartsolution.com", // <<== URL para redirección
   },
   {
     quote:
       "Piper incrementó la estabilidad y calidad de su plataforma gracias a nuestras prácticas de ingeniería y un soporte técnico altamente especializado.",
-    name: "Piper",
+    name: "Piter",
     role: "Engineering Manager",
     company: "BrightEdge",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/piper_logo.png",
-    imageHeight: 190,
+    imageHeight: 220,
     imageFit: "cover",
-    imageBorderRadius: 0,
+    imagePaddingTop: 10,
     cardWidth: 400,
-    imagePaddingTop: 16,
     hoverColor: "#ffffff",
     textColorHover: "#bd0000",
-    href: "https://brightedge.com/", // <<== URL para redirección
+    href: "https://www.instagram.com/panpiterve/", // <<== URL para redirección
   },
   {
     quote:
-      "Untitled Tech aceleró su desarrollo de producto con soluciones eficientes y un acompañamiento técnico de primer nivel durante todo el ciclo.",
-    name: "YenFit",
+      "Yenfit transformó su modelo de ventas mediante una plataforma digital que aceleró su crecimiento comercial y permitió una operación escalable.",
+    name: "yenfit",
     role: "VP of Product",
     company: "Untitled Tech",
     image:
@@ -176,7 +175,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 20,
     hoverColor: "#949494",
     textColorHover: "#ffffff",
-    href: "https://yenfit.com/", // <<== URL para redirección
+    href: "https://www.yenfit.shop", // <<== URL para redirección
   },
   {
     quote:
@@ -193,7 +192,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 16,
     hoverColor: "#235888",
     textColorHover: "#ffffff",
-    href: "https://nextify.com/", // <<== URL para redirección
+    href: "", // <<== URL para redirección
   },
 ]
 

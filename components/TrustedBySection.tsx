@@ -76,7 +76,7 @@ const testimonials: Testimonial[] = [
     imagePadding: 16,
     hoverColor: "#015438",
     textColorHover: "#FF4500",
-    href: "https://www.instagram.com/extragangave/?hl=es", // <<== URL para redirección
+    href: "", // <<== URL para redirección
   },
   {
     quote:
@@ -92,7 +92,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#ffffff",
     textColorHover: "#000000",
-    href: "https://www.instagram.com/kaos.vzla?igsh=eWxrNmEyZXI0NzM2", // <<== URL para redirección
+    href: "", // <<== URL para redirección
   },
   {
     quote:

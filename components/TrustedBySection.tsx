@@ -157,7 +157,7 @@ const testimonials: Testimonial[] = [
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#bd0000",
-    href: "https://www.instagram.com/panpiterve/", // <<== URL para redirección
+    href: "https://piter.com.ve", // <<== URL para redirección
   },
   {
     quote:

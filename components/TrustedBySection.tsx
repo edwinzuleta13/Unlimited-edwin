@@ -28,10 +28,10 @@ const testimonials: Testimonial[] = [
 
   {
     quote:
-      "Anas Accounting es una plataforma digital especializada en la reserva y gestión de citas. Transformamos la organización interna de los negocios mediante herramientas automáticas que eliminan los errores de agenda y mejoran la experiencia del cliente.",
-    name: "Anas Acounding",
-    role: "Head of Engineering",
-    company: "TechFlow",
+      "Ana's Accounting es una plataforma digital especializada en la reserva y gestión de citas. Transformamos la organización interna de los negocios mediante herramientas automáticas que eliminan los errores de agenda y mejoran la experiencia del cliente.",
+    name: "Ana's Accounting",
+    role: "CEO",
+    company: "Ana's Accounting",
     image:
       "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/ANAS%20ACCOUNTING%20SERV%20LOGO%20(2).png",
     cardWidth: 500,
@@ -76,7 +76,7 @@ const testimonials: Testimonial[] = [
     imagePadding: 16,
     hoverColor: "#015438",
     textColorHover: "#FF4500",
-    href: "https://www.instagram.com/extragangave/?hl=es", // <<== URL para redirección
+    href: "", // <<== URL para redirección
   },
   {
     quote:
@@ -92,7 +92,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#ffffff",
     textColorHover: "#000000",
-    href: "https://www.instagram.com/kaos.vzla?igsh=eWxrNmEyZXI0NzM2", // <<== URL para redirección
+    href: "", // <<== URL para redirección
   },
   {
     quote:
@@ -157,7 +157,7 @@ const testimonials: Testimonial[] = [
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#bd0000",
-    href: "https://www.instagram.com/panpiterve/", // <<== URL para redirección
+    href: "https://piter.com.ve/", // <<== URL para redirección
   },
   {
     quote:

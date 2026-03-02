@@ -25,7 +25,6 @@ interface Testimonial {
 }
 
 const testimonials: Testimonial[] = [
-
   {
     quote:
       "Ana's Accounting es una plataforma digital especializada en la reserva y gestión de citas. Transformamos la organización interna de los negocios mediante herramientas automáticas que eliminan los errores de agenda y mejoran la experiencia del cliente.",
@@ -42,7 +41,7 @@ const testimonials: Testimonial[] = [
     textColorHover: "#000000",
     imagePadding: 2,
     imagePaddingTop: 6,
-    href: "https://anasaccounting.com/", // <<== URL para redirección
+    href: "https://anasaccounting.com/", 
   },
   {
     quote:
@@ -60,7 +59,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 28,
     hoverColor: "#f7ef14",
     textColorHover: "#0224bd",
-    href: "https://tiendasdaka.com", // <<== URL para redirección
+    href: "https://tiendasdaka.com", 
   },
   {
     quote:
@@ -76,7 +75,7 @@ const testimonials: Testimonial[] = [
     imagePadding: 16,
     hoverColor: "#015438",
     textColorHover: "#FF4500",
-    href: "", // <<== URL para redirección
+    href: "", 
   },
   {
     quote:
@@ -92,7 +91,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#ffffff",
     textColorHover: "#000000",
-    href: "", // <<== URL para redirección
+    href: "", 
   },
   {
     quote:
@@ -108,7 +107,7 @@ const testimonials: Testimonial[] = [
     imageBorderRadius: 0,
     hoverColor: "#adacac",
     textColorHover: "#000000",
-    href: "https://keyton.com.ve", // <<== URL para redirección
+    href: "https://keyton.com.ve", 
   },
   {
     quote:
@@ -125,7 +124,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 20,
     hoverColor: "#938376",
     textColorHover: "#ffffff",
-    href: "https://somosrentaldeluxe.com", // <<== URL para redirección
+    href: "https://somosrentaldeluxe.com", 
   },
   { 
     quote:
@@ -141,7 +140,7 @@ const testimonials: Testimonial[] = [
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#06892E",
-    href: "https://reysmartsolution.com", // <<== URL para redirección
+    href: "https://reysmartsolution.com", 
   },
   {
     quote:
@@ -157,11 +156,7 @@ const testimonials: Testimonial[] = [
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#bd0000",
-<<<<<<< HEAD
-    href: "https://piter.com.ve/", // <<== URL para redirección
-=======
-    href: "https://piter.com.ve", // <<== URL para redirección
->>>>>>> a77eb3b346f7cefa3aac2ef5e1413d4ae0a1d87a
+    href: "https://piter.com.ve/", // Aquí estaba el conflicto, ya está limpio.
   },
   {
     quote:
@@ -179,7 +174,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 20,
     hoverColor: "#949494",
     textColorHover: "#ffffff",
-    href: "https://www.yenfit.shop", // <<== URL para redirección
+    href: "https://www.yenfit.shop", 
   },
   {
     quote:
@@ -196,7 +191,7 @@ const testimonials: Testimonial[] = [
     cardPaddingTop: 16,
     hoverColor: "#235888",
     textColorHover: "#ffffff",
-    href: "", // <<== URL para redirección
+    href: "", 
   },
 ]
 
@@ -286,10 +281,10 @@ export default function TrustedBySection() {
                   descriptionClassName="mt-3 text-purple-200 text-center"
                   bgColor="rgba(124,58,237,0.12)"
                   hoverColor={t.hoverColor || "rgba(133,77,255,0.85)"}
-                  textColorHover={t.textColorHover || "#FFE600"}  // <<===== hover text color
+                  textColorHover={t.textColorHover || "#FFE600"}  
                   innerPadding={t.cardPadding ?? 16}
                   innerPaddingTop={t.cardPaddingTop ?? t.cardPadding ?? 16}
-                  href={t.href}  // <<== URL para redirección
+                  href={t.href}  
                 />
               </motion.div>
             ))}

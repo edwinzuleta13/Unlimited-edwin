@@ -157,7 +157,11 @@ const testimonials: Testimonial[] = [
     cardWidth: 400,
     hoverColor: "#ffffff",
     textColorHover: "#bd0000",
+<<<<<<< HEAD
     href: "https://piter.com.ve/", // <<== URL para redirección
+=======
+    href: "https://piter.com.ve", // <<== URL para redirección
+>>>>>>> a77eb3b346f7cefa3aac2ef5e1413d4ae0a1d87a
   },
   {
     quote:

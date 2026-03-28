@@ -200,10 +200,10 @@ const testimonials: Testimonial[] = [
     role: "COO",
     company: "Nextify",
     image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/isologo%20campo%20meat%20PNG%20(2).png",
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo%20campo%20meat%20JPEG%20(1).jpg",
     imageHeight: 180,
     imageFit: "contain",
-    imageBorderRadius: 0,
+    imageBorderRadius: 16,
     cardWidth: 400,
     cardPaddingTop: 16,
     hoverColor: "#ffffffff",

@@ -193,6 +193,41 @@ const testimonials: Testimonial[] = [
     textColorHover: "#ffffff",
     href: "", 
   },
+  {
+    quote:
+      "Campo Meat escaló su canal de ventas digital con un enfoque más robusto y seguro, optimizando la cadena de suministro para reducir costos operativos y garantizar la máxima frescura en cada entrega.",
+    name: "Campo Meat",
+    role: "COO",
+    company: "Nextify",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/isologo%20campo%20meat%20PNG%20(2).png",
+    imageHeight: 180,
+    imageFit: "contain",
+    imageBorderRadius: 0,
+    cardWidth: 400,
+    cardPaddingTop: 16,
+    hoverColor: "#ffffffff",
+    textColorHover: "#000000ff",
+    href: "https://www.campomeat.com", 
+  },
+    {
+    quote:
+      "WH Mattress consolidó su presencia en el mercado con un modelo operativo más robusto y seguro, logrando una optimización de costos que permite ofrecer productos de alta gama con tiempos de entrega superiores.",
+    name: "WH Mattdres",
+    role: "COO",
+    company: "Nextify",
+    image:
+      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/4-%20(WH)%201.png",
+    imageHeight: 180,
+    imageFit: "contain",
+    imageBorderRadius: 0,
+    cardWidth: 400,
+    cardPaddingTop: 16,
+    hoverColor: "#469D99",
+    textColorHover: "#ffffffff",
+    href: "https://www.whmattress.com", 
+  },
+
 ]
 
 

@@ -1,8 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import ParticleBackground from "@/components/particle-background";
-import TechCursor from "@/components/tech-cursor";
 import FloatingChatWidget from "@/components/floating-chat-widget";
 import { AuthForm } from "@/components/AuthForm";
 import { AlertProvider, GlobalAlerts } from "@/components/alert-context";
@@ -41,14 +39,12 @@ export default function SignUp() {
 
   return (
     <AlertProvider>
-      <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
+      <div className="relative min-h-screen bg-black text-white overflow-hidden">
         {/* Partículas debajo del contenido */}
         <div className="absolute inset-0 z-0">
-          <ParticleBackground />
           <div className="fixed inset-0 noise" />
         </div>
 
-        <TechCursor />
         <FloatingChatWidget />
 
         {/* Contenido en capa superior */}

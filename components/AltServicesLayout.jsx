@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ServiceCard from "./ServiceCard";
+import ServiceCard from "@/components/ServiceCard";
 import { Code, Database, Cloud, Brain, Shield, Boxes } from "lucide-react";
 
 export default function AltServicesLayout({ onBack }) {

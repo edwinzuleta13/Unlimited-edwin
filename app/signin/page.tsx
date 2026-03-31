@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabaseClient";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import ParticleBackground from "@/components/particle-background";
-import TechCursor from "@/components/tech-cursor";
 import FloatingChatWidget from "@/components/floating-chat-widget";
 import { AuthForm } from "@/components/AuthForm";
 import { AlertProvider, GlobalAlerts, useAlert } from "@/components/alert-context";
@@ -80,7 +78,7 @@ function SignInContent() {
         console.error("❌ [SUPABASE ERROR]:", error);
         setError(
           error.message ||
-            "No se pudo enviar el correo de recuperación. Ver consola para más detalles."
+          "No se pudo enviar el correo de recuperación. Ver consola para más detalles."
         );
         showAlert('error', error.message || 'No se pudo enviar el correo de recuperación.');
       } else {
@@ -98,13 +96,11 @@ function SignInContent() {
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <ParticleBackground />
         <div className="fixed inset-0 noise" />
       </div>
 
-      <TechCursor />
       <FloatingChatWidget />
 
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">

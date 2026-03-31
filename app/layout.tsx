@@ -1,13 +1,10 @@
 import type { Metadata } from "next"
-import { Space_Grotesk } from "next/font/google"
 import "./globals.css"
 import { Analytics } from "@vercel/analytics/react"
 import { Providers } from "./providers"
 import { AlertProvider, GlobalAlerts } from "@/components/alert-context"
 import type React from "react" // Added import for React
 import ViewportSwitcher from "@/components/ViewportSwitcher"
-
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Untitled Tech Company | Soluciones Tecnológicas Empresariales",
@@ -37,7 +34,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0f172a" />
       </head>
-      <body className={`${spaceGrotesk.className} bg-background text-foreground font-sans min-h-screen`}>
+      <body className="AlongSanss2-Thin text-foreground min-h-screen">
         <ViewportSwitcher />
         <Providers>
           <AlertProvider>

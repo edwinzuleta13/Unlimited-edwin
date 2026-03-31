@@ -4,28 +4,24 @@ import AuthNav from '@/components/AuthNav';
 import FloatingChatWidget from '@/components/floating-chat-widget';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import ParticleBackground from '@/components/particle-background';
-import TechCursor from '@/components/tech-cursor';
 import SupportRequestForm from '@/components/SupportRequestForm';
 import { AlertProvider, GlobalAlerts } from '@/components/alert-context';
 
 export default function SolicitudPage() {
   return (
     <AlertProvider>
-      <div className="relative min-h-screen bg-black text-white overflow-hidden cursor-none">
+      <div className="relative min-h-screen bg-black text-white overflow-hidden">
         {/* Fondo decorativo SIN bloquear eventos */}
         <div className="absolute inset-0 z-0">
-          <ParticleBackground />
           <div className="fixed inset-0 noise" />
         </div>
 
         {/* Header igual que landing */}
-        <header className="relative z-[9999] w-full py-6 px-8 flex justify-end">
+        <div className="relative z-[999999]">
           <AuthNav />
-        </header>
+        </div>
 
         {/* Cursor personalizado y chat flotante */}
-        <TechCursor />
         <FloatingChatWidget />
 
         {/* Alertas globales */}

@@ -12,19 +12,19 @@ interface Plan {
 // 2. DATOS
 const plansData: Plan[] = [
   {
-    number: 2,
+    number: 1,
     title: "¿Por qué elegirnos?",
     description:
       "Ofrecemos soluciones personalizadas que impulsan tu crecimiento y generan resultados reales.",
   },
   {
-    number: 3,
+    number: 2,
     title: "Misión",
     description:
       "Nuestra misión es brindar servicios profesionales que aporten valor estratégico, innovación y un acompañamiento constante para el éxito de nuestros clientes.",
   },
   {
-    number: 6,
+    number: 3,
     title: "Visión",
     description:
       "Nuestra visión es convertirnos en un aliado global reconocido por la excelencia, la transparencia y la innovación en cada proyecto.",
@@ -42,7 +42,7 @@ const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
   };
 
   const circleVariants: Variants = {
-    hover: { scale: 1.12, backgroundColor: "#c5a4ff", transition: { duration: 0.3 } },
+    hover: { scale: 1.12, backgroundColor: "rgba(168, 85, 247, 0.4)", transition: { duration: 0.3 } },
   };
 
   return (
@@ -56,11 +56,8 @@ const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
       {/* Círculo con número */}
       <motion.div
         className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 
-                   bg-purple-800/30 
-                   text-[#D9C2FF] drop-shadow-[0_0_6px_rgba(173,105,255,0.3)]
-                   rounded-full flex items-center justify-center 
-                   font-semibold text-lg shadow-md cursor-pointer 
-                   border border-purple-800"
+                   glass-effect-dark text-white rounded-full flex items-center justify-center 
+                   font-bold text-lg cursor-pointer"
         variants={circleVariants}
         whileHover="hover"
       >

@@ -20,7 +20,7 @@ export default function StatsSection() {
   return (
     <section className="relative pt-20 px-4 -mt-10 bg-transparent overflow-visible">
       <div className="container mx-auto relative z-20">
-        <div className="stats-grid grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="glass-effect-purple rounded-2xl p-6 h-full flex flex-col justify-center items-center text-center cursor-default stats-grid grid grid-cols-2 md:grid-cols-4 gap-8">
           <StatCard number="100+" text="Proyectos Completados" />
           <StatCard number="50+" text="Clientes Satisfechos" />
           <StatCard number="15+" text="Expertos en Tecnología" />

@@ -2,6 +2,55 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import { Marquee, MarqueeContent, MarqueeItem } from "@/components/ui/marquee"
+import CardBloom from "@/components/CardBloom"
+
+const techData = [
+  {
+    title: "Frontend",
+    items: [
+      { subtitle: "React, Vue.js, Angular", text: "Desarrollo de interfaces modernas y escalables, con componentes reutilizables y arquitectura avanzada." }
+    ],
+    delay: 0.1
+  },
+  {
+    title: "Backend",
+    items: [
+      { subtitle: "Node.js, Express, Nest.js", text: "Desarrollo de servidores y APIs eficientes y seguras, optimizadas para alto rendimiento." },
+      { subtitle: "Golang", text: "Microservicios concurrentes y de alto desempeño." }
+    ],
+    delay: 0.2
+  },
+  {
+    title: "Bases de Datos",
+    items: [
+      { subtitle: "PostgreSQL, MySQL, MongoDB", text: "Diseño de bases relacionales y no relacionales optimizadas para consultas rápidas." },
+      { subtitle: "Firebase & Redis", text: "Soluciones en tiempo real y caching de alto rendimiento." }
+    ],
+    delay: 0.3
+  },
+  {
+    title: "IA y ML",
+    items: [
+      { subtitle: "TensorFlow, PyTorch, Python", text: "Modelos de deep learning para visión por computadora, NLP y análisis predictivo." }
+    ],
+    delay: 0.1
+  },
+  {
+    title: "Infraestructura y Cloud",
+    items: [
+      { subtitle: "AWS, Google Cloud, Azure", text: "Arquitectura escalable y segura en la nube." },
+      { subtitle: "Docker & Kubernetes", text: "Contenedores y orquestación profesional." }
+    ],
+    delay: 0.2
+  },
+  {
+    title: "APIs y Comunicación",
+    items: [
+      { subtitle: "GraphQL & REST", text: "Creación de APIs flexibles, rápidas y bien documentadas." }
+    ],
+    delay: 0.3
+  }
+];
 
 export default function TechStackSection() {
   const techLogos = [
@@ -20,7 +69,7 @@ export default function TechStackSection() {
   ];
 
   return (
-    <section id="tecnologias" className="py-20 px-4 bg-black/60 relative">
+    <section id="tecnologias" className="py-20 px-4 bg-gradient-to-b from-transparent via-black/80 to-transparent relative">
       <div className="container mx-auto relative z-20">
         {/* Texto superior */}
         <motion.div
@@ -29,10 +78,10 @@ export default function TechStackSection() {
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
         >
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-white">
             Stack Tecnológico Avanzado
           </h1>
-          <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+          <p className="text-lg text-white max-w-2xl mx-auto">
             Dominamos las tecnologías más innovadoras para ofrecer soluciones de vanguardia
           </p>
         </motion.div>
@@ -64,137 +113,36 @@ export default function TechStackSection() {
       <div className="relative">
         <div className="pt-[40px] px-4 relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {/* CARD 1: Frontend */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="
-                group relative bg-white/10 backdrop-blur-xl 
-                p-7 rounded-2xl shadow-xl border-2 border-purple-500/20 
-                transition-all duration-500 
-                hover:bg-white/15 hover:border-purple-400/40 hover:-translate-y-2
-                hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5),_0_20px_40px_-10px_rgba(147,51,234,0.3)]
-              "
-              style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-purple-800/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700" />
-              <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">Frontend</h2>
-              <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">React, Vue.js, Angular</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Desarrollo de interfaces modernas y escalables, con componentes reutilizables y arquitectura avanzada.</p>
-            </motion.div>
+            {techData.map((card, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ y: 50, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: card.delay }}
+                className="w-full h-full flex"
+              >
+                <CardBloom
+                  className="p-1 md:p-1 h-full w-full max-w-full transition-all duration-500 hover:-translate-y-2 hover:bg-white/10"
+                  innerClassName="h-full flex flex-col justify-center"
+                >
+                  <h2 className="text-2xl lg:text-3xl font-bold text-white text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)] mb-2 mt-4">
+                    {card.title}
+                  </h2>
 
-            {/* CARD 2: Backend */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="
-                group relative bg-white/10 backdrop-blur-xl 
-                p-7 rounded-2xl shadow-xl border-2 border-purple-500/20 
-                transition-all duration-500 
-                hover:bg-white/15 hover:border-purple-400/40 hover:-translate-y-2
-                hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5),_0_20px_40px_-10px_rgba(147,51,234,0.3)]
-              "
-              style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-purple-800/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700" />
-              <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">Backend</h2>
-              <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">Node.js, Express, Nest.js</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Desarrollo de servidores y APIs eficientes y seguras, optimizadas para alto rendimiento.</p>
-              <h3 className="text-xl font-semibold text-purple-300 mt-4 text-center">Golang</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Microservicios concurrentes y de alto desempeño.</p>
-            </motion.div>
-
-            {/* CARD 3: Bases de Datos */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="
-                group relative bg-white/10 backdrop-blur-xl 
-                p-7 rounded-2xl shadow-xl border-2 border-purple-500/20 
-                transition-all duration-500 
-                hover:bg-white/15 hover:border-purple-400/40 hover:-translate-y-2
-                hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5),_0_20px_40px_-10px_rgba(147,51,234,0.3)]
-              "
-              style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-purple-800/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700" />
-              <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">Bases de Datos</h2>
-              <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">PostgreSQL, MySQL, MongoDB</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Diseño de bases relacionales y no relacionales optimizadas para consultas rápidas.</p>
-              <h3 className="text-xl font-semibold text-purple-300 mt-4 text-center">Firebase & Redis</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Soluciones en tiempo real y caching de alto rendimiento.</p>
-            </motion.div>
-
-            {/* CARD 4: IA y ML */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="
-                group relative bg-white/10 backdrop-blur-xl 
-                p-7 rounded-2xl shadow-xl border-2 border-purple-500/20 
-                transition-all duration-500 
-                hover:bg-white/15 hover:border-purple-400/40 hover:-translate-y-2
-                hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5),_0_20px_40px_-10px_rgba(147,51,234,0.3)]
-              "
-              style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-purple-800/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700" />
-              <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">IA y ML</h2>
-              <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">TensorFlow, PyTorch, Python</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Modelos de deep learning para visión por computadora, NLP y análisis predictivo.</p>
-            </motion.div>
-
-            {/* CARD 5: Infraestructura y Cloud */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="
-                group relative bg-white/10 backdrop-blur-xl 
-                p-7 rounded-2xl shadow-xl border-2 border-purple-500/20 
-                transition-all duration-500 
-                hover:bg-white/15 hover:border-purple-400/40 hover:-translate-y-2
-                hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5),_0_20px_40px_-10px_rgba(147,51,234,0.3)]
-              "
-              style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-purple-800/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700" />
-              <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">Infraestructura y Cloud</h2>
-              <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">AWS, Google Cloud, Azure</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Arquitectura escalable y segura en la nube.</p>
-              <h3 className="text-xl font-semibold text-purple-300 mt-4 text-center">Docker & Kubernetes</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Contenedores y orquestación profesional.</p>
-            </motion.div>
-
-            {/* CARD 6: APIs y Comunicación */}
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="
-                group relative bg-white/10 backdrop-blur-xl 
-                p-7 rounded-2xl shadow-xl border-2 border-purple-500/20 
-                transition-all duration-500 
-                hover:bg-white/15 hover:border-purple-400/40 hover:-translate-y-2
-                hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5),_0_20px_40px_-10px_rgba(147,51,234,0.3)]
-              "
-              style={{ transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-purple-800/10 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-700" />
-              <h2 className="text-3xl font-bold text-purple-200 text-center drop-shadow-[0_0_12px_rgba(170,100,255,0.25)]">APIs y Comunicación</h2>
-              <h3 className="text-xl font-semibold text-purple-400/80 mt-2 text-center">GraphQL & REST</h3>
-              <p className="mt-3 text-purple-100/80 text-center leading-relaxed">Creación de APIs flexibles, rápidas y bien documentadas.</p>
-            </motion.div>
+                  {card.items.map((item, itemIdx) => (
+                    <div key={itemIdx} className="mt-4 mb-2">
+                      <h3 className="text-lg lg:text-xl font-semibold text-purple-300 text-center">
+                        {item.subtitle}
+                      </h3>
+                      <p className="mt-2 text-white/90 text-center leading-relaxed text-sm lg:text-base">
+                        {item.text}
+                      </p>
+                    </div>
+                  ))}
+                </CardBloom>
+              </motion.div>
+            ))}
           </div>
         </div>
 
@@ -207,7 +155,7 @@ export default function TechStackSection() {
           transition={{ delay: 0.5, duration: 1 }}
         >
           <div className="max-w-3xl mx-auto text-center">
-            <h4 className="text-lg md:text-2xl font-semibold text-purple-300">
+            <h4 className="text-lg md:text-2xl font-semibold text-white">
               Muchas más tecnologías líderes aplicadas para ofrecer soluciones completas, innovadoras y escalables.
             </h4>
           </div>

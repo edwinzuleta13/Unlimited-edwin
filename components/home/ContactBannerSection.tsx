@@ -11,86 +11,81 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
   return (
     <section
       id="contacto"
-      className="relative z-20 w-full py-16 px-4 overflow-hidden flex justify-center"
+      className="relative w-full py-24 px-6 bg-[#070312] overflow-hidden"
     >
+      {/* Glow superior */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-600/30 blur-[120px] opacity-60"></div>
+
+      {/* Title */}
+      <div className="text-center mb-16">
+        <h2 className="text-5xl md:text-6xl font-bold text-white tracking-tight">
+          Contactanos
+        </h2>
+        <p className="text-white/50 mt-2 text-sm">
+          Home • Contacts
+        </p>
+      </div>
+
+      {/* Main container */}
       <motion.div
-        className="
-          relative w-full max-w-[1100px] h-[380px]
-          flex items-center justify-center
-          rounded-[3rem] overflow-hidden
-
-          bg-white/[0.06]
-          backdrop-blur-xl
-          border border-white/20
-
-          shadow-[0_8px_40px_rgba(0,0,0,0.35)]
-          
-          before:absolute before:inset-0 before:rounded-[3rem]
-          before:bg-gradient-to-br before:from-white/20 before:via-transparent before:to-transparent
-          before:opacity-60 before:pointer-events-none
-
-          after:absolute after:inset-0 after:rounded-[3rem]
-          after:bg-gradient-to-tl after:from-white/10 after:via-transparent after:to-transparent
-          after:opacity-50 after:pointer-events-none
-        "
-        initial={{ opacity: 0, y: 80, scale: 0.96 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center"
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        {/* Content */}
-        <div className="relative z-10 w-full flex flex-col items-center justify-center px-6 text-center gap-8">
-          
-          {/* TEXT */}
-          <div className="space-y-4 max-w-2xl">
-            <motion.h2
-              className="text-4xl md:text-6xl font-semibold text-white tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-            >
-              Trayectoria + Objetivo
-            </motion.h2>
+        {/* LEFT SIDE */}
+        <div className="space-y-8">
+          <h3 className="text-3xl md:text-4xl font-semibold text-white leading-tight">
+            Trabajemos juntos y<br />creemos soluciones a medida. 
+          </h3>
 
-            <motion.p
-              className="text-base md:text-xl text-white/70 leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.6 }}
-            >
-              Llevamos tu proyecto al siguiente nivel con tecnología que impulsa tu negocio.
-            </motion.p>
-          </div>
-
-          {/* CTA */}
-          <motion.div
-            className="relative flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.85 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.55, duration: 0.5 }}
-          >
-            {/* Glow más suave y elegante */}
-            <div className="absolute inset-0 bg-white/20 blur-2xl rounded-full scale-125 opacity-60"></div>
+          <div className="relative inline-block">
+            {/* Glow botón */}
+            <div className="absolute inset-0 bg-purple-500/30 blur-2xl rounded-full scale-150"></div>
 
             <MagneticButton
-              className="
-                relative z-10
-                rounded-full
-                px-8 py-4
-                text-base md:text-lg
-                
-                bg-white text-black
-                hover:bg-white/90
-                
-                transition-all duration-300
-                shadow-lg shadow-white/10
-              "
-              onClick={onContactClick}
+              onClick={() => window.open("https://wa.me/584243296034", "_blank")}
+              className="relative px-8 py-4 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 transition"
             >
-              Contáctanos
+              WhatsApp
             </MagneticButton>
-          </motion.div>
+          </div>
+        </div>
 
+        {/* RIGHT SIDE */}
+        <div className="space-y-6 text-white/70 text-sm">
+          <p className="max-w-md">
+            Llevamos tu proyecto al siguiente nivel, con tecnología que impulsa tu negocio.
+          </p>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-white text-xs mb-1">DIRECCION:</p>
+              <p>Valencia, Venezuela</p>
+              <p>Lima, Perú</p>
+            </div>
+
+            <div>
+              <p className="text-white text-xs mb-1">TELEFONO:</p>
+              <p>+58-4243296034</p>
+            </div>
+
+            <div>
+              <p className="text-white text-xs mb-1">EMAIL:</p>
+              <p>untitledtechcompany@gmail.com</p>
+            </div>
+
+            <div>
+              <p className="text-white text-xs mb-1">REDES SOCUALES:</p>
+              <div className="flex gap-3 text-white">
+                <span className="hover:text-purple-400 cursor-pointer">X</span>
+                <span className="hover:text-purple-400 cursor-pointer">Fb</span>
+                <span className="hover:text-purple-400 cursor-pointer">In</span>
+                <span className="hover:text-purple-400 cursor-pointer">Ig</span>
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
     </section>

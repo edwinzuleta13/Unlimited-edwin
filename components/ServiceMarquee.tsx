@@ -99,15 +99,13 @@ export function ServiceMarquee() {
 
     return (
         <div className="relative w-full hide-scrollbar">
-            {/* Lateral Gradients */}
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20 hidden md:block" />
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20 hidden md:block" />
+
 
 
 
             {/* Grid Layout Experiment */}
             <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <AnimatePresence mode="popLayout">
                         {visibleServices.map((card, idx) => (
                             <motion.div
@@ -134,22 +132,45 @@ export function ServiceMarquee() {
                                     <CardBloom
                                         className="!p-3 md:!p-4 !rounded-[2rem] w-full cursor-pointer flex flex-col transition-all duration-500 border border-white/5"
                                         innerClassName="flex flex-col items-start justify-start p-5 bg-black/40 w-full gap-2 border border-white/5 shadow-none !rounded-[1.5rem]"
-                                        bloomOuterClassName={idx % 2 === 0 ? "bg-indigo-600/10 blur-[80px]" : "bg-purple-600/10 blur-[80px]"}
-                                        bloomInnerClassName={idx % 2 === 0 ? "bg-indigo-400/10" : "bg-purple-400/10"}
+                                        bloomOuterClassName={
+                                            idx % 3 === 0 ? "bg-[#9167F1]/20 blur-[80px]" : 
+                                            idx % 3 === 1 ? "bg-[#0000FF]/20 blur-[80px]" : 
+                                            "bg-[#B4F100]/10 blur-[80px]"
+                                        }
+                                        bloomInnerClassName={
+                                            idx % 3 === 0 ? "bg-[#9167F1]/20" : 
+                                            idx % 3 === 1 ? "bg-[#0000FF]/20" : 
+                                            "bg-[#B4F100]/20"
+                                        }
                                         showDots={true}
                                     >
-                                        <div className="flex w-full justify-center mb-4">
-                                            <div className={`flex-shrink-0 p-5 rounded-2xl bg-white/5 border border-white/10 w-fit h-fit flex items-center justify-center shadow-inner relative ${idx % 2 === 0 ? 'text-indigo-400' : 'text-purple-400'}`}>
+                                        <div className="flex w-full justify-center mb-4 relative z-10">
+                                            <motion.div 
+                                                className="flex-shrink-0 p-5 rounded-2xl bg-white/5 border border-white/10 w-fit h-fit flex items-center justify-center shadow-inner relative"
+                                                animate={{
+                                                    color: [
+                                                        idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100',
+                                                        idx % 3 === 0 ? '#0000FF' : idx % 3 === 1 ? '#B4F100' : '#9167F1',
+                                                        idx % 3 === 0 ? '#B4F100' : idx % 3 === 1 ? '#9167F1' : '#0000FF',
+                                                        idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100',
+                                                    ]
+                                                }}
+                                                transition={{
+                                                    duration: 7.5 + (idx % 3) * 1.5,
+                                                    repeat: Infinity,
+                                                    ease: "linear"
+                                                }}
+                                            >
                                                 <div className="flex-shrink-0 uppercase font-black text-[10px] opacity-10 absolute top-2 left-2 pointer-events-none">
                                                     {idx + 1}
                                                 </div>
                                                 {card.icon}
-                                            </div>
+                                            </motion.div>
                                         </div>
-                                        <h3 className="text-white font-bold text-xl md:text-2xl tracking-tight text-center w-full mb-2">
+                                        <h3 className="text-white font-bold text-xl md:text-2xl tracking-tight text-center w-full mb-2 relative z-10">
                                             {card.title}
                                         </h3>
-                                        <div className="max-h-0 opacity-0 group-hover:max-h-[400px] group-hover:opacity-100 transition-all duration-500 ease-in-out overflow-hidden w-full">
+                                        <div className="max-h-0 opacity-0 group-hover:max-h-[400px] group-hover:opacity-100 transition-all duration-500 ease-in-out overflow-hidden w-full relative z-10">
                                             <div className="pt-4 flex flex-col gap-4">
                                                 <p className="text-white/60 text-sm leading-relaxed">
                                                     {card.description}
@@ -157,7 +178,12 @@ export function ServiceMarquee() {
                                                 <ul className="space-y-2 w-full border-t border-white/10 pt-4">
                                                     {card.features.slice(0, 4).map((feature: string, i: number) => (
                                                         <li key={i} className="flex items-center text-xs text-white/50">
-                                                            <div className={`w-1.5 h-1.5 rounded-full mr-2 ${idx % 2 === 0 ? 'bg-indigo-500' : 'bg-purple-500'}`} />
+                                                            <div 
+                                                                className="w-1.5 h-1.5 rounded-full mr-2" 
+                                                                style={{ 
+                                                                    backgroundColor: idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100'
+                                                                }} 
+                                                            />
                                                             {feature}
                                                         </li>
                                                     ))}

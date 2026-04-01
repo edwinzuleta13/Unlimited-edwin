@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState, useEffect, useMemo } from "react"
-import { motion, useSpring } from "framer-motion"
+import React, { useMemo } from "react"
+import { motion, useSpring, AnimatePresence } from "framer-motion"
 import { Marquee, MarqueeContent, MarqueeItem } from '@/components/ui/marquee'
-import { ServiceCard } from "./ServiceCard"
+import CardBloom from "@/components/CardBloom"
 import {
     Code,
     Database,
@@ -91,134 +91,108 @@ const SERVICES_DATA = [
 ];
 
 export function ServiceMarquee() {
-    // Instant speed implementation (no spring)
-    const [speed, setSpeed] = useState(100);
+    const [showAll, setShowAll] = React.useState(false);
+    // Velocidad fija tras quitar los botones
+    const speed = 20;
 
-    // Memoized rows logic
-    const marqueeRows = useMemo(() => {
-        return SERVICES_DATA.reduce((rows: any[], card, index) => {
-            if (index % 2 === 0) {
-                rows.push([card]);
-            } else {
-                if (rows.length > 0) rows[rows.length - 1].push(card);
-                else rows.push([card]);
-            }
-            return rows;
-        }, []);
-    }, []);
+    const visibleServices = showAll ? SERVICES_DATA : SERVICES_DATA.slice(0, 6);
 
     return (
         <div className="relative w-full hide-scrollbar">
             {/* Lateral Gradients */}
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20" />
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20" />
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-black via-black/70 to-transparent z-20 hidden md:block" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-black via-black/70 to-transparent z-20 hidden md:block" />
 
-            {/* Decrease Speed Button - Left Side */}
-            <motion.button
-                className="
-                    absolute left-4 top-1/2 -translate-y-1/2 z-30
-                    bg-purple-600/80 hover:bg-purple-500/90
-                    text-white p-3 rounded-full
-                    shadow-lg hover:shadow-purple-500/50
-                    transition-all duration-300
-                    border-2 border-purple-400/40 hover:border-purple-300/60
-                    backdrop-blur-sm
-                    active:bg-purple-400/90 active:scale-95"
-                whileHover={{ scale: 1.1 }}
-                title="Disminuir velocidad"
-                onClick={() => {
-                    // Decrease by 20, keeping minimum 100
-                    setSpeed(prev => Math.max(100, prev - 20));
-                }}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="transform rotate-180"
-                >
-                    <polyline points="13 17 18 12 13 7" />
-                    <polyline points="6 17 11 12 6 7" />
-                </svg>
-            </motion.button>
 
-            {/* Increase Speed Button - Right Side */}
-            <motion.button
-                className="
-                    absolute right-4 top-1/2 -translate-y-1/2 z-30
-                    bg-purple-600/80 hover:bg-purple-500/90
-                    text-white p-3 rounded-full
-                    shadow-lg hover:shadow-purple-500/50
-                    transition-all duration-300
-                    border-2 border-purple-400/40 hover:border-purple-300/60
-                    backdrop-blur-sm
-                    active:bg-purple-400/90 active:scale-95"
-                whileHover={{ scale: 1.1 }}
-                title="Aumentar velocidad"
-                onClick={() => {
-                    // Increase by 20, max 200
-                    setSpeed(prev => Math.min(200, prev + 20));
-                }}
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <polyline points="13 17 18 12 13 7" />
-                    <polyline points="6 17 11 12 6 7" />
-                </svg>
-            </motion.button>
 
-            {/* Marquee */}
-            <Marquee className="w-full hide-scrollbar">
-                <MarqueeContent
-                    speed={speed}
-                    pauseOnHover={true}
-                    autoFill={true}
-                    gradient={false}
-                >
-                    {marqueeRows.map((pair, idx) => (
-                        <MarqueeItem
-                            key={idx}
-                            className="mx-6 pt-10 flex flex-col gap-6 hide-scrollbar"
-                        >
-                            {Array.isArray(pair) &&
-                                pair.map((card: any, i: number) => (
-                                    <motion.div
-                                        key={i}
-                                        whileHover={{ y: -8 }}
-                                        transition={{
-                                            duration: 0.8,
-                                            ease: [0.4, 0, 0.2, 1],
-                                        }}
-                                        className="w-96"
+            {/* Grid Layout Experiment */}
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <AnimatePresence mode="popLayout">
+                        {visibleServices.map((card, idx) => (
+                            <motion.div
+                                layout
+                                key={card.title}
+                                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+                                transition={{
+                                    duration: 0.4,
+                                    delay: showAll && idx >= 6 ? (idx - 6) * 0.05 : 0,
+                                    ease: "easeOut"
+                                }}
+                                className="flex items-start justify-center"
+                            >
+                                <motion.div
+                                    whileHover={{ y: -8 }}
+                                    transition={{
+                                        duration: 0.5,
+                                        ease: [0.4, 0, 0.2, 1],
+                                    }}
+                                    className="w-full group"
+                                >
+                                    <CardBloom
+                                        className="!p-3 md:!p-4 !rounded-[2rem] w-full cursor-pointer flex flex-col transition-all duration-500 border border-white/5"
+                                        innerClassName="flex flex-col items-start justify-start p-5 bg-black/40 w-full gap-2 border border-white/5 shadow-none !rounded-[1.5rem]"
+                                        bloomOuterClassName={idx % 2 === 0 ? "bg-indigo-600/10 blur-[80px]" : "bg-purple-600/10 blur-[80px]"}
+                                        bloomInnerClassName={idx % 2 === 0 ? "bg-indigo-400/10" : "bg-purple-400/10"}
+                                        showDots={true}
                                     >
-                                        <ServiceCard
-                                            icon={card.icon}
-                                            title={card.title}
-                                            description={card.description}
-                                            features={card.features}
-                                            className="w-auto h-auto"
-                                        />
-                                    </motion.div>
-                                ))}
-                        </MarqueeItem>
-                    ))}
-                </MarqueeContent>
-            </Marquee>
+                                        <div className="flex w-full justify-center mb-4">
+                                            <div className={`flex-shrink-0 p-5 rounded-2xl bg-white/5 border border-white/10 w-fit h-fit flex items-center justify-center shadow-inner relative ${idx % 2 === 0 ? 'text-indigo-400' : 'text-purple-400'}`}>
+                                                <div className="flex-shrink-0 uppercase font-black text-[10px] opacity-10 absolute top-2 left-2 pointer-events-none">
+                                                    {idx + 1}
+                                                </div>
+                                                {card.icon}
+                                            </div>
+                                        </div>
+                                        <h3 className="text-white font-bold text-xl md:text-2xl tracking-tight text-center w-full mb-2">
+                                            {card.title}
+                                        </h3>
+                                        <div className="max-h-0 opacity-0 group-hover:max-h-[400px] group-hover:opacity-100 transition-all duration-500 ease-in-out overflow-hidden w-full">
+                                            <div className="pt-4 flex flex-col gap-4">
+                                                <p className="text-white/60 text-sm leading-relaxed">
+                                                    {card.description}
+                                                </p>
+                                                <ul className="space-y-2 w-full border-t border-white/10 pt-4">
+                                                    {card.features.slice(0, 4).map((feature: string, i: number) => (
+                                                        <li key={i} className="flex items-center text-xs text-white/50">
+                                                            <div className={`w-1.5 h-1.5 rounded-full mr-2 ${idx % 2 === 0 ? 'bg-indigo-500' : 'bg-purple-500'}`} />
+                                                            {feature}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </CardBloom>
+                                </motion.div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
+
+                {/* Show Toggle Button */}
+                {SERVICES_DATA.length > 6 && (
+                    <div className="mt-16 flex justify-center">
+                        <button
+                            onClick={() => setShowAll(!showAll)}
+                            className="px-8 py-4 rounded-2xl glass-effect-dark border border-white/10 text-white font-bold 
+                                     hover:bg-white/5 transition-all duration-300 hover:scale-105 active:scale-95
+                                     shadow-[0_0_20px_rgba(168,85,247,0.15)] group"
+                        >
+                            <span className="flex items-center gap-2">
+                                {showAll ? "Ver menos soluciones" : "Ver todas las soluciones"}
+                                <motion.span
+                                    animate={{ y: showAll ? [0, -5, 0] : [0, 5, 0] }}
+                                    transition={{ repeat: Infinity, duration: 2 }}
+                                >
+                                    {showAll ? "↑" : "↓"}
+                                </motion.span>
+                            </span>
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

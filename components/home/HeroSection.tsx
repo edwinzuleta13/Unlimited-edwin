@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import MagneticButton from "@/components/magnetic-button"
 import { ChevronDown } from "lucide-react"
 
+
 interface HeroSectionProps {
   onContactClick: () => void
   onExploreClick: (id?: string) => void

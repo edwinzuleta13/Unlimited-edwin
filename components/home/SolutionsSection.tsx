@@ -22,10 +22,10 @@ export default function SolutionsSection() {
             transition={{ duration: 0.45 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 gradient-text">
+            <h2 className="text-5xl md:text-5xl font-bold mb-4 text-white">
               Soluciones Tecnológicas
             </h2>
-            <p className="text-lg text-purple-300 max-w-2xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto">
               Servicios diseñados para impulsar la transformación digital.
             </p>
           </motion.div>

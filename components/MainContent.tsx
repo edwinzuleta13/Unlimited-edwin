@@ -3,7 +3,6 @@ import * as React from "react"
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
-import dynamic from "next/dynamic"
 
 import SplashScreen from "@/components/SplashScreen"
 import FloatingChatWidget from "@/components/floating-chat-widget"
@@ -14,6 +13,7 @@ import TechnologicalExpertise from "@/components/technological-expertise"
 import PartnershipPlans from "@/components/PartnershipPlans"
 import { useTransition } from "@/app/providers"
 
+
 import HeroSection from "@/components/home/HeroSection"
 import StatsSection from "@/components/home/StatsSection"
 import ProcessSection from "@/components/home/ProcessSection"
@@ -22,6 +22,7 @@ import SolutionsSection from "@/components/home/SolutionsSection"
 import ContactBannerSection from "@/components/home/ContactBannerSection"
 import ConnectSection from "@/components/home/ConnectSection"
 import Footer from "@/components/home/Footer"
+
 
 export default function MainContent() {
   const { startTransition } = useTransition()

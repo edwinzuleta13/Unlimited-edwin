@@ -111,7 +111,7 @@ export default function TechStackSection() {
 
       {/* CONTENIDO COMPLETO ORGANIZADO */}
       <div className="relative">
-        <div className="pt-[40px] px-4 relative z-20">
+        <div className="pt-[40px] relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {techData.map((card, idx) => (
               <motion.div

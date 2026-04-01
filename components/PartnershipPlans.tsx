@@ -31,8 +31,7 @@ const plansData: Plan[] = [
   },
 ];
 
-const imageUrl: string =
-  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?fit=crop&w=800&q=80";
+const imageUrl: string = "/iamgen-nueva-secion.JPG.jpeg";
 
 // 3. COMPONENTE: PlanItem
 const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
@@ -146,7 +145,8 @@ const PartnershipPlans: React.FC = () => {
           <motion.div
             className="w-full h-full lg:h-auto max-w-lg lg:max-w-none rounded-xl overflow-hidden shadow-2xl"
             initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            whileInView={{ opacity: 1, scale: 0.93 }}
+
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >

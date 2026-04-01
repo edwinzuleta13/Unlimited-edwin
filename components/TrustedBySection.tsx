@@ -83,31 +83,39 @@ const splitArray = (arr: Client[]) => {
 export default function TrustedBySection() {
   const [firstRow, secondRow] = splitArray(clients);
 
-  const LogoItem = ({ client, className }: { client: Client; className?: string }) => (
-    <MarqueeItem className={cn("mx-6 md:mx-10", className)}>
-      <motion.a
-        href={client.href || "#"}
-        target={client.href ? "_blank" : undefined}
-        rel="noopener noreferrer"
-        className="block group"
-        whileHover={{ scale: 1.1, y: -15 }}
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-      >
-        <div className="relative w-32 h-16 md:w-48 md:h-24 flex items-center justify-center p-4 bg-white/5 rounded-2xl border border-white/10 glass-effect-purple backdrop-blur-sm transition-all duration-300">
-          <img
-            src={client.image}
-            alt={client.name}
-            className="max-w-full max-h-full object-contain filter grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
-          />
-          {/* Subtle glow highlight on hover */}
-          <div className="absolute inset-0 rounded-2xl bg-purple-500/0 group-hover:bg-purple-500/10 blur-xl transition-all duration-500 -z-10" />
-        </div>
-        <p className="mt-3 text-[10px] md:text-xs text-white/30 uppercase tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 text-center">
-          {client.name}
-        </p>
-      </motion.a>
-    </MarqueeItem>
-  );
+  const LogoItem = ({ client, className }: { client: Client; className?: string }) => {
+    const isLink = !!client.href;
+    
+    return (
+      <MarqueeItem className={cn("mx-6 md:mx-10", className)}>
+        <motion.a
+          href={isLink ? client.href : undefined}
+          target={isLink ? "_blank" : undefined}
+          rel={isLink ? "noopener noreferrer" : undefined}
+          className={cn(
+            "block group transition-all duration-300",
+            isLink ? "cursor-pointer" : "cursor-default"
+          )}
+          whileHover={isLink ? { scale: 1.1, y: -15 } : {}}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        >
+          <div className="relative w-32 h-16 md:w-48 md:h-24 flex items-center justify-center p-4 bg-white/5 rounded-2xl border border-white/10 glass-effect-purple backdrop-blur-sm transition-all duration-300">
+            <img
+              src={client.image}
+              alt={client.name}
+              className="max-w-full max-h-full object-contain filter grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+            />
+            {/* Subtle glow highlight on hover */}
+            <div className="absolute inset-0 rounded-2xl bg-purple-500/0 group-hover:bg-purple-500/10 blur-xl transition-all duration-500 -z-10" />
+          </div>
+          <p className="mt-3 text-[10px] md:text-xs text-white/30 uppercase tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 text-center">
+            {client.name}
+          </p>
+        </motion.a>
+      </MarqueeItem>
+    );
+  };
+
 
   return (
     <section className="relative py-24 w-full overflow-hidden">

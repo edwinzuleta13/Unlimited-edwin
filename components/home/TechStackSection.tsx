@@ -97,11 +97,18 @@ export default function TechStackSection() {
         >
           <MarqueeContent speed={80}>
             {techLogos.map((tech) => (
-              <MarqueeItem key={tech.name} className="mx-12 flex flex-col items-center">
-                <img
+              <MarqueeItem key={tech.name} className="mx-12 flex flex-col items-center group cursor-pointer relative z-40 pointer-events-auto">
+                <motion.img
                   src={tech.icon}
                   alt={tech.name}
-                  className="w-16 h-16 object-contain opacity-90 hover:opacity-100 transition"
+                  className="w-16 h-16 object-contain"
+                  initial={{ filter: "grayscale(100%)", opacity: 0.5 }}
+                  whileHover={{ 
+                    filter: "grayscale(0%)", 
+                    opacity: 1,
+                    scale: 1.1 
+                  }}
+                  transition={{ duration: 0.3 }}
                 />
               </MarqueeItem>
             ))}

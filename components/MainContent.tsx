@@ -196,14 +196,15 @@ export default function MainContent() {
         <TechStackSection />
         <SolutionsSection />
         
-        <ContactBannerSection onContactClick={() => setIsSolicitudOpen(true)} />
-        
         <section id="aliados">
           <TrustedBySection />
         </section>
         <TechnologicalExpertise />
+
+        <ContactBannerSection onContactClick={() => setIsSolicitudOpen(true)} />
         
         <ConnectSection />
+
         <Footer onExploreClick={handleExploreClick} />
       </div>
     </>

@@ -2,6 +2,7 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import MagneticButton from "@/components/magnetic-button"
+import { Twitter, Facebook, Linkedin, Instagram } from "lucide-react"
 
 interface ContactBannerSectionProps {
   onContactClick: () => void
@@ -61,28 +62,28 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
 
           <div className="grid grid-cols-2 gap-6">
             <div>
-              <p className="text-white text-xs mb-1">DIRECCION:</p>
-              <p>Valencia, Venezuela</p>
-              <p>Lima, Perú</p>
+              <p className="text-white/60 text-xs mb-1 font-bold uppercase tracking-widest">Dirección:</p>
+              <p className="text-white/80">Valencia, Venezuela</p>
+              <p className="text-white/80">Lima, Perú</p>
             </div>
 
             <div>
-              <p className="text-white text-xs mb-1">TELEFONO:</p>
-              <p>+58-4243296034</p>
+              <p className="text-white/60 text-xs mb-1 font-bold uppercase tracking-widest">Teléfono:</p>
+              <p className="text-white/80">+58-4243296034</p>
             </div>
 
             <div>
-              <p className="text-white text-xs mb-1">EMAIL:</p>
-              <p>untitledtechcompany@gmail.com</p>
+              <p className="text-white/60 text-xs mb-1 font-bold uppercase tracking-widest">Email:</p>
+              <p className="text-white/80">untitledtechcompany@gmail.com</p>
             </div>
 
             <div>
-              <p className="text-white text-xs mb-1">REDES SOCUALES:</p>
-              <div className="flex gap-3 text-white">
-                <span className="hover:text-purple-400 cursor-pointer">X</span>
-                <span className="hover:text-purple-400 cursor-pointer">Fb</span>
-                <span className="hover:text-purple-400 cursor-pointer">In</span>
-                <span className="hover:text-purple-400 cursor-pointer">Ig</span>
+              <p className="text-white/60 text-xs mb-1 font-bold uppercase tracking-widest">Redes Sociales:</p>
+              <div className="flex gap-4 text-white/50 pt-1">
+                <Twitter className="w-5 h-5 hover:text-blue-400 cursor-pointer transition-colors duration-300" />
+                <Facebook className="w-5 h-5 hover:text-blue-600 cursor-pointer transition-colors duration-300" />
+                <Linkedin className="w-5 h-5 hover:text-blue-500 cursor-pointer transition-colors duration-300" />
+                <Instagram className="w-5 h-5 hover:text-pink-500 cursor-pointer transition-colors duration-300" />
               </div>
             </div>
           </div>

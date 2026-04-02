@@ -11,7 +11,7 @@ interface MouseContextType {
 
 const MouseContext = createContext<MouseContextType>({
   cursorVariant: "default",
-  setCursorVariant: () => {},
+  setCursorVariant: () => { },
 })
 
 export function MouseProvider({ children }: { children: React.ReactNode }) {
@@ -63,19 +63,7 @@ export function MouseProvider({ children }: { children: React.ReactNode }) {
   return (
     <MouseContext.Provider value={{ cursorVariant, setCursorVariant }}>
       {/* ensure container has non-static position so offsets are calculated correctly */}
-      <div className="cursor-none relative">
-        <AnimatePresence>
-          <motion.div
-            className="cursor"
-            variants={variants}
-            animate={cursorVariant}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 28,
-            }}
-          />
-        </AnimatePresence>
+      <div className="relative">
         {children}
       </div>
     </MouseContext.Provider>
@@ -83,4 +71,3 @@ export function MouseProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useMouse = () => useContext(MouseContext)
-

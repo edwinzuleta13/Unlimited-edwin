@@ -1,348 +1,189 @@
 "use client";
 
-import MultiActionAreaCard from "@/components/MultiActionAreaCard";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import React from "react";
+import { motion } from "framer-motion";
+import { Marquee, MarqueeContent, MarqueeItem } from "@/components/ui/marquee";
+import { cn } from "@/lib/utils";
 
-interface Testimonial {
-  quote: string;
+
+interface Client {
   name: string;
-  role: string;
-  company: string;
-  image?: string;
-  cardWidth?: number;
-  imageHeight?: number;
-  imageFit?: "cover" | "contain" | "fill";
-  imageBorderRadius?: string | number;
-  cardPadding?: number;       // padding general del Card
-  cardPaddingTop?: number;    // padding top del Card
-  hoverColor?: string;
-  imagePaddingTop?: number;   // margen superior de la imagen
-  imagePadding?: number;      // padding general alrededor de la imagen
-  textColorHover?: string;
-  href?: string;              // URL para redirección
+  image: string;
+  href?: string;
 }
 
-const testimonials: Testimonial[] = [
+const clients: Client[] = [
   {
-    quote:
-      "Ana's Accounting es una plataforma digital especializada en la reserva y gestión de citas. Transformamos la organización interna de los negocios mediante herramientas automáticas que eliminan los errores de agenda y mejoran la experiencia del cliente.",
     name: "Ana's Accounting",
-    role: "CEO",
-    company: "Ana's Accounting",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/ANAS%20ACCOUNTING%20SERV%20LOGO%20(2).png",
-    cardWidth: 500,
-    imageHeight: 190,
-    imageFit: "contain",
-    imageBorderRadius: 0,
-    hoverColor: "#ffffff",
-    textColorHover: "#000000",
-    imagePadding: 2,
-    imagePaddingTop: 6,
-    href: "https://anasaccounting.com/", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/ANAS%20ACCOUNTING%20SERV%20LOGO%20(2).png",
+    href: "https://anasaccounting.com/",
   },
   {
-    quote:
-      "DAKA logró modernizar su infraestructura digital gracias a nuestra integración ágil y soporte continuo, potenciando su innovación en la nube.",
     name: "DAKA",
-    role: "CTO",
-    company: "CloudNova",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/daka-logo.png",
-    cardWidth: 420,
-    imageHeight: 190,
-    imageFit: "cover",
-    imagePaddingTop: 16,
-    imageBorderRadius: 12,
-    cardPaddingTop: 28,
-    hoverColor: "#f7ef14",
-    textColorHover: "#0224bd",
-    href: "https://tiendasdaka.com", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/daka-logo.png",
+    href: "https://tiendasdaka.com",
   },
   {
-    quote:
-      "Extra Ganga consiguió un sistema más eficiente para la gestión de productos y ventas, impulsando su capacidad de respuesta en el sector retail.",
     name: "Extra ganga",
-    role: "Product Manager",
-    company: "Finnect",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/extra_ganga_logo.jpeg",
-    cardWidth: 400,
-    imageHeight: 190,
-    imageFit: "cover",
-    imagePadding: 16,
-    hoverColor: "#015438",
-    textColorHover: "#FF4500",
-    href: "", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/extra_ganga_logo.jpeg",
+    href: "",
   },
   {
-    quote:
-      "KAOZ confió en nosotros para digitalizar procesos y mejorar la calidad tecnológica de sus operaciones, logrando un salto significativo en eficiencia.",
     name: "KAOZ",
-    role: "Director de Tecnología",
-    company: "RetailPro",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/KAOZ.png",
-    imageHeight: 190,
-    cardWidth: 400,
-    imageFit: "contain",
-    imageBorderRadius: 0,
-    hoverColor: "#ffffff",
-    textColorHover: "#000000",
-    href: "", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/KAOZ.png",
+    href: "",
   },
   {
-    quote:
-      "Keyton escaló sus servicios en la nube sin interrupciones, implementando soluciones estables y confiables desarrolladas a la medida.",
     name: "KEYTON",
-    role: "Head of Cloud",
-    company: "DataWorks",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/keyton_logo.png",
-    imageHeight: 190,
-    cardWidth: 400,
-    imageFit: "contain",
-    imageBorderRadius: 0,
-    hoverColor: "#adacac",
-    textColorHover: "#000000",
-    href: "https://keyton.com.ve", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/keyton_logo.png",
+    href: "https://keyton.com.ve",
   },
   {
-    quote:
-      "Rental Deluxe es una plataforma de alquiler vacacional que combina tecnología de vanguardia para ofrecer reservas rápidas y seguras en casas y hoteles, optimizando la experiencia de viaje de sus usuarios.",
     name: "Rental Deluxe",
-    role: "CTO",
-    company: "HealthAxis",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
-    imageHeight: 215,
-    cardWidth: 450,
-    imageFit: "cover",
-    imageBorderRadius: 0,
-    cardPaddingTop: 20,
-    hoverColor: "#938376",
-    textColorHover: "#ffffff",
-    href: "https://somosrentaldeluxe.com", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
+    href: "https://somosrentaldeluxe.com",
   },
-  { 
-    quote:
-      "Reys Smart logró automatizar tareas clave y fortalecer su presencia digital con herramientas modernas y un desarrollo impecable.",
+  {
     name: "Reys Smart",
-    role: "CEO",
-    company: "MarketHive",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-reys-smart-01.jpg",
-    imageHeight: 210,
-    imageFit: "cover",
-    imageBorderRadius: 0,
-    cardWidth: 400,
-    hoverColor: "#ffffff",
-    textColorHover: "#06892E",
-    href: "https://reysmartsolution.com", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-reys-smart-01.jpg",
+    href: "https://reysmartsolution.com",
   },
   {
-    quote:
-      "Piper incrementó la estabilidad y calidad de su plataforma gracias a nuestras prácticas de ingeniería y un soporte técnico altamente especializado.",
     name: "Piter",
-    role: "Engineering Manager",
-    company: "BrightEdge",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/piper_logo.png",
-    imageHeight: 220,
-    imageFit: "cover",
-    imagePaddingTop: 10,
-    cardWidth: 400,
-    hoverColor: "#ffffff",
-    textColorHover: "#bd0000",
-    href: "https://piter.com.ve/", // Aquí estaba el conflicto, ya está limpio.
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/piper_logo.png",
+    href: "https://piter.com.ve/",
   },
   {
-    quote:
-      "Yenfit transformó su modelo de ventas mediante una plataforma digital que aceleró su crecimiento comercial y permitió una operación escalable.",
     name: "yenfit",
-    role: "VP of Product",
-    company: "Untitled Tech",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/yenfit.png",
-    imageHeight: 190,
-    imageFit: "contain",
-    imageBorderRadius: 0,
-    cardWidth: 400,
-    imagePaddingTop: 16,
-    cardPaddingTop: 20,
-    hoverColor: "#949494",
-    textColorHover: "#ffffff",
-    href: "https://www.yenfit.shop", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/yenfit.png",
+    href: "https://www.yenfit.shop",
   },
   {
-    quote:
-      "You Space escaló su plataforma con un enfoque más robusto y seguro, reduciendo costos operativos y mejorando su tiempo de entrega.",
     name: "You Space",
-    role: "COO",
-    company: "Nextify",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/you_space_logo.png",
-    imageHeight: 190,
-    imageFit: "cover",
-    imageBorderRadius: 0,
-    cardWidth: 400,
-    cardPaddingTop: 16,
-    hoverColor: "#235888",
-    textColorHover: "#ffffff",
-    href: "", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/you_space_logo.png",
+    href: "",
   },
   {
-    quote:
-      "Campo Meat escaló su canal de ventas digital con un enfoque más robusto y seguro, optimizando la cadena de suministro para reducir costos operativos y garantizar la máxima frescura en cada entrega.",
     name: "Campo Meat",
-    role: "COO",
-    company: "Nextify",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo%20campo%20meat%20JPEG%20(1).jpg",
-    imageHeight: 180,
-    imageFit: "contain",
-    imageBorderRadius: 16,
-    cardWidth: 400,
-    cardPaddingTop: 16,
-    hoverColor: "#ffffffff",
-    textColorHover: "#000000ff",
-    href: "https://www.campomeat.com", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo%20campo%20meat%20JPEG%20(1).jpg",
+    href: "https://www.campomeat.com",
   },
-    {
-    quote:
-      "WH Mattress consolidó su presencia en el mercado con un modelo operativo más robusto y seguro, logrando una optimización de costos que permite ofrecer productos de alta gama con tiempos de entrega superiores.",
+  {
     name: "WH Mattdres",
-    role: "COO",
-    company: "Nextify",
-    image:
-      "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/4-%20(WH)%201.png",
-    imageHeight: 180,
-    imageFit: "contain",
-    imageBorderRadius: 0,
-    cardWidth: 400,
-    cardPaddingTop: 16,
-    hoverColor: "#469D99",
-    textColorHover: "#ffffffff",
-    href: "https://www.whmattress.com", 
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/4-%20(WH)%201.png",
+    href: "https://www.whmattress.com",
   },
+];
 
-]
-
+const splitArray = (arr: Client[]) => {
+  const mid = Math.ceil(arr.length / 2);
+  return [arr.slice(0, mid), arr.slice(mid)];
+};
 
 export default function TrustedBySection() {
-  const [page, setPage] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const itemsPerPage = 3;
-  const totalPages = Math.ceil(testimonials.length / itemsPerPage);
+  const [firstRow, secondRow] = splitArray(clients);
 
-  const nextPage = () => setPage((p) => (p + 1) % totalPages);
-  const prevPage = () => setPage((p) => (p === 0 ? totalPages - 1 : p - 1));
-
-  useEffect(() => {
-    if (paused) return;
-    const timer = setInterval(nextPage, 6000);
-    return () => clearInterval(timer);
-  }, [paused, totalPages]);
-
-  const start = page * itemsPerPage;
-  const visible = testimonials.slice(start, start + itemsPerPage);
-
-  const slideVariants = {
-    initial: { opacity: 0, y: 50 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -50 },
+  const LogoItem = ({ client, className }: { client: Client; className?: string }) => {
+    const isLink = !!client.href;
+    
+    return (
+      <MarqueeItem className={cn("mx-6 md:mx-10", className)}>
+        <motion.a
+          href={isLink ? client.href : undefined}
+          target={isLink ? "_blank" : undefined}
+          rel={isLink ? "noopener noreferrer" : undefined}
+          className={cn(
+            "block group transition-all duration-300",
+            isLink ? "cursor-pointer" : "cursor-default"
+          )}
+          whileHover={isLink ? { scale: 1.1, y: -15 } : {}}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+        >
+          <div className="relative w-32 h-16 md:w-48 md:h-24 flex items-center justify-center p-4 bg-white/5 rounded-2xl border border-white/10 glass-effect-purple backdrop-blur-sm transition-all duration-300">
+            <img
+              src={client.image}
+              alt={client.name}
+              className="max-w-full max-h-full object-contain filter grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+            />
+            {/* Subtle glow highlight on hover */}
+            <div className="absolute inset-0 rounded-2xl bg-purple-500/0 group-hover:bg-purple-500/10 blur-xl transition-all duration-500 -z-10" />
+          </div>
+          <p className="mt-3 text-[10px] md:text-xs text-white/30 uppercase tracking-widest AlongSanss2-Thin opacity-0 group-hover:opacity-100 transition-all duration-300 text-center">
+            {client.name}
+          </p>
+        </motion.a>
+      </MarqueeItem>
+    );
   };
 
+
   return (
-    <section
-      className="relative py-20 text-center bg-gradient-to-b from-purple-900/40 via-purple-800/10 to-transparent"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <motion.h2
-        className="text-3xl md:text-5xl font-bold mb-6 gradient-text"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+    <section className="relative py-24 w-full overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black z-0" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+      
+      <motion.div 
+        className="relative z-10 max-w-7xl mx-auto px-4 mb-20 text-center"
+        initial={{ x: 60, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
       >
-        Nuestros Aliados
-      </motion.h2>
+        <motion.span 
+          className="inline-block text-purple-400 ALONGSANSS-REGULAR text-xs uppercase tracking-[0.3em] mb-4"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Confianza Global
+        </motion.span>
+        <motion.h2
+          className="text-4xl md:text-6xl text-white ALONGSANSS-REGULAR tracking-tight mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          Nuestros Aliados
+        </motion.h2>
+        <motion.p
+          className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto AlongSanss2-Thin"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          Colaboramos con empresas innovadoras para construir el futuro digital.
+        </motion.p>
+      </motion.div>
 
-      <motion.p
-        className="text-lg text-purple-300 max-w-2xl mx-auto mb-12"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        Desde startups hasta empresas Fortune 500 — más de 20 años entregando resultados.
-      </motion.p>
-
-      <div className="mt-8 min-h-[420px] flex flex-col items-center justify-center w-full">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={page}
-            className={`grid gap-8 justify-items-center ${visible.length === 1
-              ? "grid-cols-1 justify-center"
-              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-              }`}
-            style={{ maxWidth: 1320 }}
-            variants={slideVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-          >
-            {visible.map((t) => (
-              <motion.div
-                key={t.name + t.company}
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <MultiActionAreaCard
-                  title={t.name}
-                  description={`“${t.quote}”`}
-                  image={t.image || "/logo-Untitled-26.png"}
-                  alt={`${t.role} — ${t.company}`}
-                  maxWidth={t.cardWidth || 420}
-                  imageHeight={t.imageHeight || 140}
-                  imageFit={t.imageFit || "contain"}
-                  imageBorderRadius={t.imageBorderRadius || 0}
-                  imagePaddingTop={t.imagePaddingTop || 0}
-                  imagePadding={t.imagePadding || 0}
-                  className=""
-                  titleClassName="text-xl font-semibold text-white"
-                  descriptionClassName="mt-3 text-purple-200 text-center"
-                  bgColor="rgba(124,58,237,0.12)"
-                  hoverColor={t.hoverColor || "rgba(133,77,255,0.85)"}
-                  textColorHover={t.textColorHover || "#FFE600"}  
-                  innerPadding={t.cardPadding ?? 16}
-                  innerPaddingTop={t.cardPaddingTop ?? t.cardPadding ?? 16}
-                  href={t.href}  
-                />
-              </motion.div>
+      <div className="relative space-y-0">
+        {/* Top Marquee - Scrolling Left */}
+        <Marquee style={{ overflow: "visible" }}>
+          <MarqueeContent speed={30} direction="left" pauseOnHover={true} style={{ overflow: "visible" }}>
+            {firstRow.map((client) => (
+              <LogoItem key={client.name} client={client} className="py-10" />
             ))}
-          </motion.div>
-        </AnimatePresence>
+          </MarqueeContent>
+        </Marquee>
 
-        <div className="flex justify-center gap-4 mt-8">
-          <button
-            className="p-2 rounded-full bg-purple-900/30 hover:bg-purple-700/60 transition"
-            onClick={prevPage}
-            aria-label="Anterior"
-          >
-            <ChevronUp className="w-5 h-5" />
-          </button>
+        {/* Bottom Marquee - Scrolling Right */}
+        <Marquee style={{ overflow: "visible" }}>
+          <MarqueeContent speed={30} direction="right" pauseOnHover={true} style={{ overflow: "visible" }}>
+            {secondRow.map((client) => (
+              <LogoItem key={client.name} client={client} className="py-10" />
+            ))}
+          </MarqueeContent>
+        </Marquee>
 
-          <button
-            className="p-2 rounded-full bg-purple-900/30 hover:bg-purple-700/60 transition"
-            onClick={nextPage}
-            aria-label="Siguiente"
-          >
-            <ChevronDown className="w-5 h-5" />
-          </button>
-        </div>
+
+
+
+        
+        {/* Soft Side Blurs */}
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" />
       </div>
     </section>
   );

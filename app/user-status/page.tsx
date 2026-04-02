@@ -2,8 +2,6 @@
 import BotonConSonido from "@/components/BotonConSonido";
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/services/supabaseClient";
-import ParticleBackground from "@/components/particle-background";
-import TechCursor from "@/components/tech-cursor";
 import FloatingChatWidget from "@/components/floating-chat-widget";
 import AuthNav from "@/components/AuthNav";
 import { GlobalAlerts } from '@/components/alert-context';
@@ -76,12 +74,12 @@ export default function UserStatus() {
       setPeticiones((prev) => prev.filter((p) => p.id !== id));
       setOpenMenuId(null);
       if (typeof showAlert === 'function') {
-      showAlert('success', 'Solicitud eliminada correctamente.');
+        showAlert('success', 'Solicitud eliminada correctamente.');
       }
     } catch (err) {
       console.error('Excepción al eliminar solicitud:', err);
       if (typeof showAlert === 'function') {
-      showAlert('error', 'Error al eliminar la solicitud.');
+        showAlert('error', 'Error al eliminar la solicitud.');
       }
     }
   };
@@ -98,13 +96,10 @@ export default function UserStatus() {
   const headData = ["Fecha", "Hora", "Estado", "Tipo", "Descripción", ""];
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-x-hidden cursor-none">
+    <div className="relative min-h-screen bg-black text-white overflow-x-hidden">
       <div className="absolute inset-0 z-0">
-        <ParticleBackground />
         <div className="fixed inset-0 noise" />
       </div>
-
-      <TechCursor />
 
       <div className="absolute top-8 left-0 right-0 z-20 flex justify-center">
         <GlobalAlerts />
@@ -112,12 +107,12 @@ export default function UserStatus() {
       <FloatingChatWidget />
 
       {/* AuthNav */}
-      <div className="fixed top-6 right-8 z-20">
+      <div className="relative z-[999999]">
         <AuthNav />
       </div>
 
       {/* Contenido principal SIN BORDE MORADO */}
-  <div className="absolute inset-0 z-10 flex items-start justify-center p-10 overflow-auto">
+      <div className="absolute inset-0 z-10 flex items-start justify-center p-10 overflow-auto">
         <div className="w-full max-w-[1400px] flex flex-col gap-10">
 
           {/* ✅ Título SIN LOGO */}
@@ -187,9 +182,8 @@ export default function UserStatus() {
                     return (
                       <TableRow
                         key={p.id}
-                        className={`font-medium transition ${
-                          idx % 2 === 0 ? "bg-purple-950/40" : "bg-black/40"
-                        } hover:bg-purple-800/30`}
+                        className={`font-medium transition ${idx % 2 === 0 ? "bg-purple-950/40" : "bg-black/40"
+                          } hover:bg-purple-800/30`}
                       >
                         <TableCell className="py-5">
                           {fecha.toLocaleDateString()}
@@ -204,34 +198,32 @@ export default function UserStatus() {
                           <div className="flex items-center gap-3">
                             <div className="relative inline-flex">
                               <div
-                                className={`w-3 h-3 rounded-full ${
-                                  ["confirmed"].includes(p.status?.toLowerCase())
+                                className={`w-3 h-3 rounded-full ${["confirmed"].includes(p.status?.toLowerCase())
                                     ? "bg-green-500"
                                     : ["rechazada", "rejected"].includes(
+                                      p.status?.toLowerCase()
+                                    )
+                                      ? "bg-red-500"
+                                      : ["recibida", "received"].includes(
                                         p.status?.toLowerCase()
                                       )
-                                    ? "bg-red-500"
-                                    : ["recibida", "received"].includes(
-                                        p.status?.toLowerCase()
-                                      )
-                                    ? "bg-yellow-400"
-                                    : "bg-purple-400"
-                                }`}
+                                        ? "bg-yellow-400"
+                                        : "bg-purple-400"
+                                  }`}
                               ></div>
                               <div
-                                className={`w-3 h-3 rounded-full absolute top-0 left-0 animate-ping ${
-                                  ["confirmed"].includes(p.status?.toLowerCase())
+                                className={`w-3 h-3 rounded-full absolute top-0 left-0 animate-ping ${["confirmed"].includes(p.status?.toLowerCase())
                                     ? "bg-green-500"
                                     : ["rechazada", "rejected"].includes(
+                                      p.status?.toLowerCase()
+                                    )
+                                      ? "bg-red-500"
+                                      : ["recibida", "received"].includes(
                                         p.status?.toLowerCase()
                                       )
-                                    ? "bg-red-500"
-                                    : ["recibida", "received"].includes(
-                                        p.status?.toLowerCase()
-                                      )
-                                    ? "bg-yellow-400"
-                                    : "bg-purple-400"
-                                }`}
+                                        ? "bg-yellow-400"
+                                        : "bg-purple-400"
+                                  }`}
                               ></div>
                             </div>
                             <p className="capitalize">{p.status}</p>
@@ -280,7 +272,7 @@ export default function UserStatus() {
                             </div>
                           )}
                         </TableCell>
-                      </TableRow>
+                       </TableRow>
                     );
                   })}
                 </TableBody>
@@ -289,6 +281,6 @@ export default function UserStatus() {
           )}
         </div>
       </div>
-      </div>
+    </div>
   );
 }

@@ -245,10 +245,10 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                     {/* Campos del formulario */}
                     <div className="flex flex-col gap-6">
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">Nombre</label>
+                        <label className="block text-purple-200 mb-1 AlongSanss2-Thin">Nombre</label>
                         <input
                           type="text"
-                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 AlongSanss2-Thin"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
                           required
@@ -256,10 +256,10 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                         />
                       </div>
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">Nombre de empresa</label>
+                        <label className="block text-purple-200 mb-1 AlongSanss2-Thin">Nombre de empresa</label>
                         <input
                           type="text"
-                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 AlongSanss2-Thin"
                           value={companyName}
                           onChange={(e) => setCompanyName(e.target.value)}
                           required
@@ -267,10 +267,10 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                         />
                       </div>
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">¿A qué se dedica la empresa?</label>
+                        <label className="block text-purple-200 mb-1 AlongSanss2-Thin">¿A qué se dedica la empresa?</label>
                         <input
                           type="text"
-                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 AlongSanss2-Thin"
                           value={companyActivity}
                           onChange={(e) => setCompanyActivity(e.target.value)}
                           required
@@ -278,10 +278,10 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                         />
                       </div>
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">Correo electrónico</label>
+                        <label className="block text-purple-200 mb-1 AlongSanss2-Thin">Correo electrónico</label>
                         <input
                           type="email"
-                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 AlongSanss2-Thin"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
@@ -289,9 +289,9 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                         />
                       </div>
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">Tipo de solicitud</label>
+                        <label className="block text-purple-200 mb-1 AlongSanss2-Thin">Tipo de solicitud</label>
                         <select
-                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black"
+                          className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black AlongSanss2-Thin"
                           value={requestType}
                           onChange={(e) => setRequestType(e.target.value)}
                         >
@@ -320,10 +320,10 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                         </AnimatePresence>
                       </div>
                       <div>
-                        <label className="block font-medium text-purple-200 mb-1">País</label>
-                        <div className="flex gap-2">
+                        <label className="block text-purple-200 mb-1 AlongSanss2-Thin">País</label>
+                        <div className="flex gap-2 AlongSanss2-Thin">
                           <select
-                            className="w-1/2 border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="w-1/2 border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 AlongSanss2-Thin"
                             value={country.iso}
                             onChange={(e) => {
                               const c = COUNTRIES.find((x) => x.iso === e.target.value);
@@ -338,7 +338,7 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                           </select>
                           <input
                             type="tel"
-                            className="w-1/2 border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-purple-400"
+                            className="w-1/2 border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-purple-400 AlongSanss2-Thin"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                             placeholder="Número de teléfono"
@@ -348,22 +348,22 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                       </div>
 
                       {/* Consentimiento */}
-                      <div className="md:col-span-2 mt-2">
-                        <label className="flex items-start gap-3 text-sm text-purple-200">
+                      <div className="md:col-span-2 mt-2 AlongSanss2-Thin">
+                        <label className="flex items-start gap-3 text-sm text-purple-200 AlongSanss2-Thin">
                           <input
                             type="checkbox"
                             checked={consent}
                             onChange={(e) => setConsent(e.target.checked)}
                             className="mt-1 w-4 h-4 text-purple-600 bg-black/60 border border-purple-700 rounded focus:ring-2 focus:ring-purple-500"
                           />
-                          <span>
+                          <span className="AlongSanss2-Thin">
                             Acepto recibir comunicaciones por correo electrónico de Truelogic Software, incluyendo
                             actualizaciones, recursos y información relevante. Al enviar este formulario, acepto la{" "}
                             <a href="/privacy-policy" className="underline">
                               Política de Privacidad
                             </a>
-                            . <span className="font-bold">*</span>
-                            <div className="mt-2">
+                            . <span className="ALONGSANSS-REGULAR">*</span>
+                            <div className="mt-2 AlongSanss2-Thin">
                               Al proporcionar un número de teléfono y enviar este formulario, usted consiente ser
                               contactado por mensaje de texto SMS. Pueden aplicarse tarifas de mensaje y datos. Puede
                               responder STOP para cancelar más mensajes.
@@ -376,9 +376,9 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
 
                     {/* Descripción */}
                     <div className="flex flex-col">
-                      <label className="block font-medium text-purple-200 mb-1">Descripción</label>
+                      <label className="block text-purple-200 mb-1 AlongSanss2-Thin">Descripción</label>
                       <textarea
-                        className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 flex-1 resize-none"
+                        className="w-full border border-purple-700 bg-black/60 text-white rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400 flex-1 resize-none AlongSanss2-Thin"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required
@@ -391,16 +391,16 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                     <div className="md:col-span-2 flex justify-end mt-4">
                       <MagneticButton
                         type="submit"
-                        className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto"
+                        className="glow bg-purple-600 hover:bg-purple-700 text-lg px-8 py-6 w-full md:w-auto AlongSanss2-Thin"
                         disabled={loading}
                       >
                         {loading ? (
-                          <span>Enviando...</span>
+                          <span className="AlongSanss2-Thin">Enviando...</span>
                         ) : (
-                          <>
+                          <span className="flex items-center AlongSanss2-Thin">
                             Enviar solicitud
                             <ArrowRight className="ml-2 w-4 h-4" />
-                          </>
+                          </span>
                         )}
                       </MagneticButton>
                     </div>

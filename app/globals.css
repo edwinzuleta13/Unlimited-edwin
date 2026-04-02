@@ -82,11 +82,6 @@
   body {
     @apply text-foreground;
     background-color: #000000;
-    background-image: url('/fondo.png');
-    background-size: 80%; /* <-- Reducido desde 'cover' */
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
   }
 }
 

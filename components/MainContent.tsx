@@ -174,8 +174,23 @@ export default function MainContent() {
         style={{ pointerEvents: showSplash ? "none" : "auto", opacity: showSplash ? 0 : 1, transition: 'opacity 0.8s ease 0.15s' }}
         aria-hidden={showSplash}
       >
-        <div className="absolute inset-0 -z-10">
-          <div className="fixed inset-0 noise" />
+        <div className="absolute inset-0 -z-10 bg-black">
+          <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full max-w-[80vw] max-h-[80vh] object-contain"
+              style={{ 
+                transform: 'translateY(6%)',
+                maskImage: 'linear-gradient(to bottom, black 90%, transparent 90%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 90%)'
+              }}
+            >
+              <source src="/fondo.mp4" type="video/mp4" />
+            </video>
+          </div>
         </div>
         
         <FloatingChatWidget />

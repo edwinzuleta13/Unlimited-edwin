@@ -100,7 +100,7 @@ function ExpertiseCard({ icon, title, description, color, delay, idx }: {
             </motion.div>
         </div>
 
-        <h3 className="text-2xl md:text-3xl mb-4 text-white ALONGSANSS-REGULAR tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+        <h3 className="text-xl lg:text-2xl mb-4 text-white ALONGSANSS-REGULAR tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
           {title}
         </h3>
         

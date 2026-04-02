@@ -2,8 +2,8 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import MagneticButton from "@/components/magnetic-button"
-import { Twitter, Facebook, Linkedin, Instagram } from "lucide-react"
-import { FaWhatsapp } from "react-icons/fa"
+import { Linkedin, Instagram } from "lucide-react"
+import { FaWhatsapp, FaTiktok } from "react-icons/fa"
 
 interface ContactBannerSectionProps {
   onContactClick: () => void
@@ -87,9 +87,15 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
             <div>
               <p className="text-white/60 text-xs mb-1 AlongSanss2-Thin uppercase tracking-widest">Redes Sociales:</p>
               <div className="flex gap-4 text-white/50 pt-1">
-                <Facebook className="w-5 h-5 hover:text-blue-600 cursor-pointer transition-colors duration-300" />
-                <Linkedin className="w-5 h-5 hover:text-blue-500 cursor-pointer transition-colors duration-300" />
-                <Instagram className="w-5 h-5 hover:text-pink-500 cursor-pointer transition-colors duration-300" />
+                <a href="https://www.tiktok.com/@untitledtechco1?_r=1&_t=ZS-95CoPLSvG0z" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-300">
+                  <FaTiktok className="w-5 h-5" />
+                </a>
+                <a href="https://www.linkedin.com/company/untitled-tech-company/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors duration-300">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="https://www.instagram.com/untitledtechco?igsh=MWdwd3U1Mjhia2g=" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors duration-300">
+                  <Instagram className="w-5 h-5" />
+                </a>
               </div>
             </div>
           </div>

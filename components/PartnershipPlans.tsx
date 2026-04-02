@@ -104,7 +104,7 @@ const PartnershipPlans: React.FC = () => {
   return (
     <section className="bg-[#0a0a0a]/80 backdrop-blur-xl py-16 md:py-24 px-4 sm:px-6 lg:px-8 rounded-xl shadow-2xl m-4">
       <motion.div 
-        className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch"
+        className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-16 items-stretch"
         initial={{ x: 60, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -150,9 +150,9 @@ const PartnershipPlans: React.FC = () => {
         </div>
 
         {/* Lado derecho - Imagen */}
-        <div className="order-1 lg:order-2 flex justify-center items-center">
+        <div className="order-1 lg:order-2 flex justify-center">
           <motion.div
-            className="w-full h-full lg:h-auto max-w-lg lg:max-w-none rounded-xl overflow-hidden shadow-2xl"
+            className="w-full h-full max-w-lg lg:max-w-none rounded-xl overflow-hidden shadow-2xl"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 0.93 }}
 

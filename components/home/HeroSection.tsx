@@ -12,38 +12,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ onContactClick, onExploreClick }: HeroSectionProps) {
-  const [pexelsVideoUrl, setPexelsVideoUrl] = useState<string>("")
-
-  // Fetch video URL from our server API (`/api/pexels-media`)
-  useEffect(() => {
-    const userPage = "https://www.pexels.com/video/point-of-view-of-a-person-riding-a-bus-5821984"
-    const match = userPage.match(/-(\d+)(?:\/|$)/)
-
-    const fetchServerMedia = async () => {
-      try {
-        let endpoint = '/api/pexels-media?type=video'
-
-        if (match) {
-          endpoint = `/api/pexels-media?id=${encodeURIComponent(match[1])}&type=video`
-        } else {
-          const q = 'bus ride'
-          endpoint = `/api/pexels-media?query=${encodeURIComponent(q)}&type=video&per_page=1`
-        }
-
-        const res = await fetch(endpoint)
-        if (!res.ok) return
-
-        const json = await res.json()
-        if (json && json.url) {
-          setPexelsVideoUrl(json.url)
-        }
-      } catch (err) {
-        console.error('[PEXELS] Error fetching:', err)
-      }
-    }
-
-    fetchServerMedia()
-  }, [])
+  const videoUrl = "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/videos/5821984-hd_1280_720_30fps.mp4"
 
   return (
     <div 
@@ -54,17 +23,14 @@ export default function HeroSection({ onContactClick, onExploreClick }: HeroSect
       }}
     >
       {/* BACKGROUND VIDEO */}
-      {pexelsVideoUrl && (
-        <video
-          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
-          src={pexelsVideoUrl}
-          autoPlay
-          loop
-          muted
-          playsInline
-          crossOrigin="anonymous"
-        />
-      )}
+      <video
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+        src={videoUrl}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
 
       {/* Overlays */}
       <div className="absolute inset-0 bg-black/80 pointer-events-none z-10" />

@@ -3,7 +3,7 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import MagneticButton from "@/components/magnetic-button"
 import { Linkedin, Instagram } from "lucide-react"
-import { FaWhatsapp, FaTiktok } from "react-icons/fa"
+import { FaWhatsapp, FaTiktok } from "react-icons/fa6"
 
 interface ContactBannerSectionProps {
   onContactClick: () => void

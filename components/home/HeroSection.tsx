@@ -69,8 +69,6 @@ export default function HeroSection({ onContactClick, onExploreClick }: HeroSect
       {/* Overlays */}
       <div className="absolute inset-0 bg-black/80 pointer-events-none z-10" />
 
-      {/* Header Info removed to be placed at root level */}
-
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-32 pb-0 overflow-hidden">
         <div className="relative z-30 w-full flex flex-col items-center justify-center">
           <motion.h1

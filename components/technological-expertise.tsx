@@ -46,8 +46,8 @@ function ExpertiseCard({ icon, title, description, color, delay, idx }: {
       className="flex h-full w-full"
     >
       <CardBloom
-        className="w-full !p-1 !rounded-[2.5rem] group hover:-translate-y-2 transition-all duration-500"
-        innerClassName="flex flex-col items-center text-center p-8 bg-black/40 border-white/5"
+        className="h-full !p-[1px] !rounded-[2.5rem] group hover:-translate-y-2 transition-all duration-500"
+        innerClassName="h-full flex flex-col items-center text-center p-8 bg-black/40 backdrop-blur-2xl border-white/5"
         bloomOuterClassName={
           idx % 3 === 0 ? "bg-[#9167F1]/10 blur-[80px]" : 
           idx % 3 === 1 ? "bg-[#0000FF]/10 blur-[80px]" : 
@@ -108,23 +108,25 @@ function ExpertiseCard({ icon, title, description, color, delay, idx }: {
           {description}
         </p>
 
-        {/* Decorative accent line */}
-        <motion.div 
-          className="mt-8 w-12 h-[2px] rounded-full mx-auto"
-          animate={{
-              backgroundColor: [
-                  idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100',
-                  idx % 3 === 0 ? '#0000FF' : idx % 3 === 1 ? '#B4F100' : '#9167F1',
-                  idx % 3 === 0 ? '#B4F100' : idx % 3 === 1 ? '#9167F1' : '#0000FF',
-                  idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100',
-              ]
-          }}
-          transition={{
-              duration: 7.5 + (idx % 3) * 1.5,
-              repeat: Infinity,
-              ease: "linear"
-          }}
-        />
+        {/* Decorative accent line (cintillo) */}
+        <div className="mt-auto pt-8 w-full">
+            <motion.div 
+              className="w-full h-[2px] rounded-full"
+              animate={{
+                  backgroundColor: [
+                      idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100',
+                      idx % 3 === 0 ? '#0000FF' : idx % 3 === 1 ? '#B4F100' : '#9167F1',
+                      idx % 3 === 0 ? '#B4F100' : idx % 3 === 1 ? '#9167F1' : '#0000FF',
+                      idx % 3 === 0 ? '#9167F1' : idx % 3 === 1 ? '#0000FF' : '#B4F100',
+                  ]
+              }}
+              transition={{
+                  duration: 7.5 + (idx % 3) * 1.5,
+                  repeat: Infinity,
+                  ease: "linear"
+              }}
+            />
+        </div>
       </CardBloom>
     </motion.div>
   )

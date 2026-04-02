@@ -188,7 +188,7 @@ export default function MainContent() {
                 WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 90%)'
               }}
             >
-              <source src="/fondo.mp4" type="video/mp4" />
+              <source src="https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/videos/fondo.mp4" type="video/mp4" />
             </video>
           </div>
         </div>

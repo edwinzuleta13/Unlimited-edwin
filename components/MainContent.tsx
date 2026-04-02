@@ -20,7 +20,6 @@ import ProcessSection from "@/components/home/ProcessSection"
 import TechStackSection from "@/components/home/TechStackSection"
 import SolutionsSection from "@/components/home/SolutionsSection"
 import ContactBannerSection from "@/components/home/ContactBannerSection"
-import ConnectSection from "@/components/home/ConnectSection"
 import Footer from "@/components/home/Footer"
 
 
@@ -203,8 +202,6 @@ export default function MainContent() {
 
         <ContactBannerSection onContactClick={() => setIsSolicitudOpen(true)} />
         
-        <ConnectSection />
-
         <Footer onExploreClick={handleExploreClick} />
       </div>
     </>

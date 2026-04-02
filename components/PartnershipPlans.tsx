@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 // 1. DEFINICIÓN DE TIPOS (Interfaces)
 interface Plan {
@@ -7,6 +8,7 @@ interface Plan {
   title: string;
   description?: string;
   features?: string[];
+  isLast?: boolean;
 }
 
 // 2. DATOS
@@ -34,7 +36,7 @@ const plansData: Plan[] = [
 const imageUrl: string = "/iamgen-nueva-secion.JPG.jpeg";
 
 // 3. COMPONENTE: PlanItem
-const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
+const PlanItem: React.FC<Plan> = ({ number, title, description, features, isLast }) => {
   const itemVariants: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } },
@@ -46,7 +48,7 @@ const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
 
   return (
     <motion.div
-      className="flex gap-4 mb-8"
+      className={cn("flex gap-4", !isLast && "mb-8")}
       variants={itemVariants}
       initial="hidden"
       whileInView="visible"
@@ -56,7 +58,7 @@ const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
       <motion.div
         className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 
                    glass-effect-dark text-white rounded-full flex items-center justify-center 
-                   font-bold text-lg cursor-pointer"
+                   text-lg cursor-pointer ALONGSANSS-REGULAR"
         variants={circleVariants}
         whileHover="hover"
       >
@@ -65,20 +67,20 @@ const PlanItem: React.FC<Plan> = ({ number, title, description, features }) => {
 
       {/* Contenido */}
       <div>
-        <h3 className="text-xl font-bold text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.18)] mb-1">
+        <h3 className="text-xl text-white drop-shadow-[0_0_6px_rgba(255,255,255,0.18)] mb-1 ALONGSANSS-REGULAR">
           {title}
         </h3>
 
         {description && (
-          <p className="text-gray-300 drop-shadow-[0_0_4px_rgba(255,255,255,0.12)] mb-2 text-base">
+          <p className="text-gray-300 drop-shadow-[0_0_4px_rgba(255,255,255,0.12)] mb-2 text-base AlongSanss2-Thin">
             {description}
           </p>
         )}
 
         {features && (
-          <ul className="list-disc ml-5 text-gray-300 space-y-1">
+          <ul className="list-disc ml-5 text-gray-300 space-y-1 AlongSanss2-Thin">
             {features.map((feature, index) => (
-              <li key={index} className="text-sm drop-shadow-[0_0_4px_rgba(255,255,255,0.12)]">
+              <li key={index} className="text-sm drop-shadow-[0_0_4px_rgba(255,255,255,0.12)] AlongSanss2-Thin">
                 {feature}
               </li>
             ))}
@@ -101,13 +103,19 @@ const PartnershipPlans: React.FC = () => {
 
   return (
     <section className="bg-[#0a0a0a]/80 backdrop-blur-xl py-16 md:py-24 px-4 sm:px-6 lg:px-8 rounded-xl shadow-2xl m-4">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <motion.div 
+        className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch"
+        initial={{ x: 60, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
         
         {/* Lado izquierdo */}
         <div className="order-2 lg:order-1">
 
           <motion.h2
-            className="text-4xl md:text-5xl font-extrabold 
+            className="text-4xl md:text-5xl ALONGSANSS-REGULAR
                        text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.18)]
                        mb-12 leading-tight"
             initial={{ opacity: 0, y: -20 }}
@@ -116,7 +124,7 @@ const PartnershipPlans: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             Conoce más sobre <br />
-            <span className="text-purple-500 drop-shadow-[0_0_10px_rgba(173,105,255,0.35)]">
+            <span className="text-purple-500 drop-shadow-[0_0_10px_rgba(173,105,255,0.35)] ALONGSANSS-REGULAR">
               Nosotros
             </span>{" "}
             <br />
@@ -135,6 +143,7 @@ const PartnershipPlans: React.FC = () => {
                 title={plan.title}
                 description={plan.description}
                 features={plan.features}
+                isLast={index === plansData.length - 1}
               />
             ))}
           </motion.div>
@@ -153,11 +162,11 @@ const PartnershipPlans: React.FC = () => {
             <img
               src={imageUrl}
               alt="Equipo trabajando en oficina"
-              className="object-cover w-full h-full min-h-[400px] lg:min_h-[500px]"
+              className="object-cover w-full h-full"
             />
           </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

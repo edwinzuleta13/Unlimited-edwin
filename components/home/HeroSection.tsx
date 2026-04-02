@@ -98,13 +98,13 @@ export default function HeroSection({ onContactClick, onExploreClick }: HeroSect
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <MagneticButton
-              className="glow rounded-full glass-effect-2 border-2 border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
+              className="glow rounded-full glass-effect-2 border-2 border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6 AlongSanss2-Thin"
               onClick={() => onExploreClick("servicios")}
             >
               Servicios
             </MagneticButton>
             <MagneticButton
-              className="glow rounded-full glass-effect-2 border-2 border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6"
+              className="glow rounded-full glass-effect-2 border-2 border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6 AlongSanss2-Thin"
               onClick={onContactClick}
             >
               Contactanos

@@ -14,36 +14,32 @@ export default function SolutionsSection() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="container mx-auto relative">
+        <motion.div 
+          className="container mx-auto relative"
+          initial={{ x: -60, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
           {/* TITULO CENTRADO */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-5xl md:text-5xl font-bold mb-4 text-white">
+          <div className="text-center mb-12">
+            <h2 className="text-5xl md:text-5xl ALONGSANSS-REGULAR mb-4 text-white">
               Soluciones Tecnológicas
             </h2>
-            <p className="text-lg text-white max-w-2xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto AlongSanss2-Thin">
               Servicios diseñados para impulsar la transformación digital.
             </p>
-          </motion.div>
+          </div>
 
           {/* MARQUEE CON DOS COLUMNAS */}
           <div className="overflow-hidden relative pt-10 hide-scrollbar">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
-            >
+            <div>
               <div className="relative w-full hide-scrollbar">
                 <ServiceMarquee />
               </div>
-            </motion.div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </motion.section>
     </AnimatePresence>
   )

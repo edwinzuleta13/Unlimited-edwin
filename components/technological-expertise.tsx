@@ -3,7 +3,6 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { Server, Cpu, Globe } from "lucide-react"
-import Scene from "@/components/scene"
 import CardBloom from "@/components/CardBloom"
 
 const expertiseData = [
@@ -101,7 +100,7 @@ function ExpertiseCard({ icon, title, description, color, delay, idx }: {
             </motion.div>
         </div>
 
-        <h3 className="text-2xl md:text-3xl font-bold mb-4 text-white ALONGSANSS-REGULAR tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+        <h3 className="text-2xl md:text-3xl mb-4 text-white ALONGSANSS-REGULAR tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
           {title}
         </h3>
         
@@ -142,15 +141,15 @@ export default function TechnologicalExpertise() {
       <div className="container mx-auto relative z-10">
         <motion.div
           className="text-center mb-24"
-          initial={{ y: 30, opacity: 0 }}
+          initial={{ y: 50, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
         >
-          <span className="inline-block text-white font-bold text-xs uppercase tracking-[0.4em] mb-4">
+          <span className="inline-block text-white ALONGSANSS-REGULAR text-xs uppercase tracking-[0.4em] mb-4">
             Expertis de Vanguardia
           </span>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white ALONGSANSS-REGULAR tracking-tight">
+          <h2 className="text-4xl md:text-6xl mb-6 text-white ALONGSANSS-REGULAR tracking-tight">
             Nuestra <span className="text-white">Trayectoria</span>
           </h2>
           <p className="text-lg md:text-xl text-white max-w-2xl mx-auto AlongSanss2-Thin">
@@ -170,25 +169,6 @@ export default function TechnologicalExpertise() {
               delay={exp.delay}
             />
           ))}
-        </div>
-
-        {/* Visualización 3D refinada */}
-        <div className="mt-32 relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-blue-500/10 to-purple-500/20 blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000" />
-          <div className="relative bg-black/60 backdrop-blur-3xl rounded-[3rem] p-1 border border-white/10 overflow-hidden">
-            <div className="h-96 md:h-[500px]">
-              <Scene />
-            </div>
-            
-            {/* Overlay Gradient on 3D Context */}
-            <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
-            
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center w-full px-6">
-              <p className="text-xs md:text-sm text-white/30 uppercase tracking-[0.5em] font-bold">
-                Visualización de Datos • Motor Interactivo
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>

@@ -161,23 +161,23 @@ export function ServiceMarquee() {
                                                     ease: "linear"
                                                 }}
                                             >
-                                                <div className="flex-shrink-0 uppercase font-black text-[10px] opacity-10 absolute top-2 left-2 pointer-events-none">
+                                                <div className="flex-shrink-0 uppercase ALONGSANSS-REGULAR text-[10px] opacity-10 absolute top-2 left-2 pointer-events-none">
                                                     {idx + 1}
                                                 </div>
                                                 {card.icon}
                                             </motion.div>
                                         </div>
-                                        <h3 className="text-white font-bold text-xl md:text-2xl tracking-tight text-center w-full mb-2 relative z-10">
+                                        <h3 className="text-white ALONGSANSS-REGULAR text-xl md:text-2xl tracking-tight text-center w-full mb-2 relative z-10">
                                             {card.title}
                                         </h3>
                                         <div className="max-h-0 opacity-0 group-hover:max-h-[400px] group-hover:opacity-100 transition-all duration-500 ease-in-out overflow-hidden w-full relative z-10">
                                             <div className="pt-4 flex flex-col gap-4">
-                                                <p className="text-white/60 text-sm leading-relaxed">
+                                                <p className="text-white/60 text-sm leading-relaxed AlongSanss2-Thin">
                                                     {card.description}
                                                 </p>
-                                                <ul className="space-y-2 w-full border-t border-white/10 pt-4">
+                                                <ul className="space-y-2 w-full border-t border-white/10 pt-4 AlongSanss2-Thin">
                                                     {card.features.slice(0, 4).map((feature: string, i: number) => (
-                                                        <li key={i} className="flex items-center text-xs text-white/50">
+                                                        <li key={i} className="flex items-center text-xs text-white/50 AlongSanss2-Thin">
                                                             <div 
                                                                 className="w-1.5 h-1.5 rounded-full mr-2" 
                                                                 style={{ 
@@ -202,7 +202,7 @@ export function ServiceMarquee() {
                     <div className="mt-16 flex justify-center">
                         <button
                             onClick={() => setShowAll(!showAll)}
-                            className="px-8 py-4 rounded-2xl glass-effect-dark border border-white/10 text-white font-bold 
+                            className="px-8 py-4 rounded-2xl glass-effect-dark border border-white/10 text-white AlongSanss2-Thin 
                                      hover:bg-white/5 transition-all duration-300 hover:scale-105 active:scale-95
                                      shadow-[0_0_20px_rgba(168,85,247,0.15)] group"
                         >

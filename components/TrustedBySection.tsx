@@ -108,7 +108,7 @@ export default function TrustedBySection() {
             {/* Subtle glow highlight on hover */}
             <div className="absolute inset-0 rounded-2xl bg-purple-500/0 group-hover:bg-purple-500/10 blur-xl transition-all duration-500 -z-10" />
           </div>
-          <p className="mt-3 text-[10px] md:text-xs text-white/30 uppercase tracking-widest font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 text-center">
+          <p className="mt-3 text-[10px] md:text-xs text-white/30 uppercase tracking-widest AlongSanss2-Thin opacity-0 group-hover:opacity-100 transition-all duration-300 text-center">
             {client.name}
           </p>
         </motion.a>
@@ -123,9 +123,15 @@ export default function TrustedBySection() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black z-0" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
       
-      <div className="relative z-10 max-w-7xl mx-auto px-4 mb-20 text-center">
+      <motion.div 
+        className="relative z-10 max-w-7xl mx-auto px-4 mb-20 text-center"
+        initial={{ x: 60, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
         <motion.span 
-          className="inline-block text-purple-400 font-bold text-xs uppercase tracking-[0.3em] mb-4"
+          className="inline-block text-purple-400 ALONGSANSS-REGULAR text-xs uppercase tracking-[0.3em] mb-4"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -133,7 +139,7 @@ export default function TrustedBySection() {
           Confianza Global
         </motion.span>
         <motion.h2
-          className="text-4xl md:text-6xl font-bold text-white ALONGSANSS-REGULAR tracking-tight mb-6"
+          className="text-4xl md:text-6xl text-white ALONGSANSS-REGULAR tracking-tight mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -150,7 +156,7 @@ export default function TrustedBySection() {
         >
           Colaboramos con empresas innovadoras para construir el futuro digital.
         </motion.p>
-      </div>
+      </motion.div>
 
       <div className="relative space-y-0">
         {/* Top Marquee - Scrolling Left */}

@@ -1,5 +1,6 @@
 "use client"
 import * as React from "react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import BotonConSonido from "@/components/BotonConSonido"
 
@@ -9,8 +10,14 @@ interface FooterProps {
 
 export default function Footer({ onExploreClick }: FooterProps) {
   return (
-    <footer className="py-8 px-4 border-t border-purple-500/20 relative z-[9999]">
-      <div className="container mx-auto">
+    <footer className="my-19 py-8 px-4 border-t border-purple-500/20 relative z-[9999]">
+      <motion.div
+        className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col items-center text-center">
             <Image
@@ -20,67 +27,46 @@ export default function Footer({ onExploreClick }: FooterProps) {
               height={100}
               className="mb-4"
             />
-            <p className="text-sm text-gray-400">
-              Transformando empresas a través de soluciones tecnológicas innovadoras
-            </p>
           </div>
           <div>
-            <h3 className="font-bold mb-4">Servicios</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="mb-4 ALONGSANSS-REGULAR text-white">Servicios</h3>
+            <ul className="space-y-2 text-sm text-gray-400 AlongSanss2-Thin">
               <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400">
+                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
                   Desarrollo Web y Móvil
                 </BotonConSonido>
               </li>
               <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400">
+                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
                   CRM y ERP
                 </BotonConSonido>
               </li>
               <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400">
+                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
                   Cloud Solutions
                 </BotonConSonido>
               </li>
               <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400">
+                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
                   Inteligencia Artificial
                 </BotonConSonido>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="font-bold mb-4">Empresa</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>Sobre Nosotros</li>
-              <li>Casos de Éxito</li>
-              <li>Blog</li>
-              <li>Carreras</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold mb-4">Contacto</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>
-                <a
-                  href="https://mail.google.com/mail/?view=cm&fs=1&to=untitledtechcompany@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-purple-400 transition-colors underline underline-offset-2"
-                >
-                  untitledtechcompany@gmail.com
-                </a>
-              </li>
-              <li>+58 424-3296034</li>
-              <li>Valencia, Venezuela. </li>
-              <li>Lima, Peru. </li>
+            <h3 className="mb-4 ALONGSANSS-REGULAR text-white">Empresa</h3>
+            <ul className="space-y-2 text-sm text-gray-400 AlongSanss2-Thin">
+              <li className="AlongSanss2-Thin">Sobre Nosotros</li>
+              <li className="AlongSanss2-Thin">Casos de Éxito</li>
+              <li className="AlongSanss2-Thin">Blog</li>
+              <li className="AlongSanss2-Thin">Carreras</li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-purple-500/20 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>© {new Date().getFullYear()} Untitled Tech Company. Todos los derechos reservados.</p>
+        <div className="border-t border-purple-500/20 mt-8 pt-8 text-center text-sm text-gray-400 AlongSanss2-Thin">
+          <p className="AlongSanss2-Thin">© {new Date().getFullYear()} Untitled Tech Company. Todos los derechos reservados.</p>
         </div>
-      </div>
+      </motion.div>
     </footer>
   )
 }

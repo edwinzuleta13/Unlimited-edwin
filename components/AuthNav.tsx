@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { spaceGrotesk } from '@/lib/fonts';
 import { Home, Menu, X } from 'lucide-react';
 import { FaRectangleXmark } from 'react-icons/fa6';
 import { GrStatusGood } from 'react-icons/gr';
@@ -91,7 +90,7 @@ export default function AuthNav() {
     }, []);
 
     return (
-        <header className="fixed z-[99999] w-full px-2 font-sans left-0 top-0 isolate">
+        <header className="fixed z-[99999] w-full px-2 AlongSanss2-Thin left-0 top-0 isolate">
             <nav aria-label="Navegación principal">
                 <div className={cn(
                     'rounded-2xl mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',
@@ -181,11 +180,11 @@ export default function AuthNav() {
                                     {/* Opciones de usuario móvil */}
                                     {user && (
                                         <div className="pt-4 border-t border-purple-500/30 w-full mt-4">
-                                            <div className="flex flex-col gap-5 text-purple-200">
-                                                <button onClick={handleGoToStatus} className="flex items-center gap-3 hover:text-white text-left font-bold text-lg">
+                                            <div className="flex flex-col gap-5 text-purple-200 AlongSanss2-Thin">
+                                                <button onClick={handleGoToStatus} className="flex items-center gap-3 hover:text-white text-left text-lg">
                                                     <GrStatusGood className="w-6 h-6" /> Estado de Usuario
                                                 </button>
-                                                <button onClick={handleLogout} className="flex items-center gap-3 hover:text-red-400 text-left font-bold text-lg">
+                                                <button onClick={handleLogout} className="flex items-center gap-3 hover:text-red-400 text-left text-lg">
                                                     <FaRectangleXmark className="w-6 h-6 text-red-400" /> Cerrar sesión
                                                 </button>
                                             </div>
@@ -205,10 +204,7 @@ export default function AuthNav() {
                                 <div className="relative">
                                     <button
                                         onClick={() => setUserMenuOpen((prev) => !prev)}
-                                        className={cn(
-                                            "w-10 h-10 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold uppercase shadow-md focus:outline-none transition-transform hover:scale-105",
-                                            spaceGrotesk.className
-                                        )}
+                                        className="w-10 h-10 rounded-full bg-purple-700 text-white flex items-center justify-center font-bold uppercase shadow-md focus:outline-none transition-transform hover:scale-105 ALONGSANSS-REGULAR"
                                     >
                                         {getInitials(user.email)}
                                     </button>
@@ -233,7 +229,7 @@ export default function AuthNav() {
                                                         animate={{ opacity: 1, y: 0 }}
                                                         exit={{ opacity: 0, y: 20 }}
                                                         transition={{ delay: 0.08 * idx, duration: 0.25 }}
-                                                        className="text-left px-5 py-4 text-purple-200 hover:bg-purple-700 hover:text-white transition whitespace-nowrap font-bold tracking-tight text-md flex items-center"
+                                                        className="text-left px-5 py-4 text-purple-200 hover:bg-purple-700 hover:text-white transition whitespace-nowrap tracking-tight text-md flex items-center AlongSanss2-Thin"
                                                     >
                                                         {btn.icon}
                                                         {btn.label}

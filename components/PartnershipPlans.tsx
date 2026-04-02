@@ -102,7 +102,12 @@ const PartnershipPlans: React.FC = () => {
   };
 
   return (
-    <section className="bg-[#0a0a0a]/80 backdrop-blur-xl py-16 md:py-24 px-4 sm:px-6 lg:px-8 rounded-xl shadow-2xl m-4">
+    <section className="relative py-16 md:py-24 px-4 sm:px-6 lg:px-8 m-4 rounded-[2.5rem] overflow-hidden isolate shadow-2xl">
+      {/* Estabilizador de cristal para móviles: evita el parpadeo al cargar animaciones */}
+      <div 
+        className="absolute inset-0 glass-effect-2 bg-black/40 backdrop-blur-lg -z-10" 
+        style={{ willChange: 'backdrop-filter, transform' }}
+      />
       <motion.div 
         className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 lg:gap-16 items-stretch"
         initial={{ x: 60, opacity: 0 }}

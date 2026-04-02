@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 
+import Image from "next/image"
 import SplashScreen from "@/components/SplashScreen"
 import FloatingChatWidget from "@/components/floating-chat-widget"
 import AuthNav from "@/components/AuthNav"
@@ -176,20 +177,22 @@ export default function MainContent() {
       >
         <div className="absolute inset-0 -z-10 bg-black">
           <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full max-w-[80vw] max-h-[80vh] object-contain"
+            <div 
+              className="w-full h-full max-w-[80vw] max-h-[80vh] relative"
               style={{ 
                 transform: 'translateY(6%)',
                 maskImage: 'linear-gradient(to bottom, black 90%, transparent 90%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 90%)'
+                WebkitMaskImage: 'linear-gradient(to bottom, black 90% , transparent 90%)'
               }}
             >
-              <source src="https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/videos/fondo.mp4" type="video/mp4" />
-            </video>
+              <Image
+                src="/fondo.png"
+                alt="Background"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
           </div>
         </div>
         

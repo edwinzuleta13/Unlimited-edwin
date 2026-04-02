@@ -55,7 +55,7 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
             Llevamos tu proyecto al siguiente nivel, con tecnología que impulsa tu negocio.
           </p>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-x-16 md:gap-y-10">
             <div>
               <p className="text-white/60 text-xs mb-1 AlongSanss2-Thin uppercase tracking-widest">Dirección:</p>
               <p className="text-white/80 AlongSanss2-Thin">Valencia, Venezuela</p>
@@ -78,7 +78,7 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
               <p className="text-white/60 text-xs mb-1 AlongSanss2-Thin uppercase tracking-widest">E-mail:</p>
               <a 
                 href="mailto:untitledtechcompany@gmail.com" 
-                className="text-white/80 hover:text-purple-400 transition-colors duration-300 block AlongSanss2-Thin"
+                className="text-white/80 hover:text-purple-400 transition-colors duration-300 block AlongSanss2-Thin break-all sm:break-normal"
               >
                 untitledtechcompany@gmail.com
               </a>

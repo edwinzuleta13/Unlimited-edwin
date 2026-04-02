@@ -2,6 +2,8 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { Linkedin, Instagram, Mail, MapPin, Phone } from "lucide-react"
+import { FaTiktok } from "react-icons/fa6"
 import BotonConSonido from "@/components/BotonConSonido"
 
 interface FooterProps {
@@ -9,64 +11,95 @@ interface FooterProps {
 }
 
 export default function Footer({ onExploreClick }: FooterProps) {
+  const currentYear = new Date().getFullYear();
+
+  const socialLinks = [
+    { icon: <FaTiktok />, href: "https://www.tiktok.com/@untitledtechco1?_r=1&_t=ZS-95CoPLSvG0z", label: "TikTok", hoverClass: "hover:text-white" },
+    { icon: <Linkedin />, href: "https://www.linkedin.com/company/untitled-tech-company/", label: "LinkedIn", hoverClass: "hover:text-blue-500" },
+    { icon: <Instagram />, href: "https://www.instagram.com/untitledtechco?igsh=MWdwd3U1Mjhia2g=", label: "Instagram", hoverClass: "hover:text-pink-500" },
+  ];
+
+  const footerLinks = [
+    {
+      title: "Servicios",
+      links: [
+        { name: "Desarrollo Web & Móvil", href: "servicios" },
+        { name: "CRM & ERP", href: "servicios" },
+        { name: "Cloud Solutions", href: "servicios" },
+        { name: "Inteligencia Artificial", href: "servicios" },
+      ],
+    },
+    {
+      title: "Empresa",
+      links: [
+        { name: "Sobre Nosotros", href: "sobre-nosotros" },
+        { name: "Casos de Éxito", href: "aliados" },
+        { name: "Nuestros Aliados", href: "aliados" },
+        { name: "Contacto", href: "contacto" },
+      ],
+    },
+  ];
+
   return (
-    <footer className="my-19 py-8 px-4 border-t border-purple-500/20 relative z-[9999]">
-      <motion.div
-        className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        viewport={{ once: true }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="flex flex-col items-center text-center">
+    <footer className="relative mt-24 pt-16 pb-12 px-4 border-t border-white/10 backdrop-blur-sm isolate">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+          
+          {/* Brand & Socials */}
+          <div className="space-y-8 flex flex-col items-center md:items-start">
             <Image
               src="/logo-Untitled-10.png"
               alt="Untitled Tech Logo"
-              width={100}
-              height={100}
-              className="mb-4"
+              width={120}
+              height={120}
+              className="object-contain"
             />
+            <div className="flex gap-6">
+              {socialLinks.map((social, idx) => (
+                <motion.a
+                  key={idx}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-white text-xl transition-all duration-300 ${social.hoverClass}`}
+                  whileHover={{ scale: 1.2, y: -2 }}
+                  aria-label={social.label}
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
+            </div>
           </div>
-          <div>
-            <h3 className="mb-4 ALONGSANSS-REGULAR text-white">Servicios</h3>
-            <ul className="space-y-2 text-sm text-gray-400 AlongSanss2-Thin">
-              <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
-                  Desarrollo Web y Móvil
-                </BotonConSonido>
-              </li>
-              <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
-                  CRM y ERP
-                </BotonConSonido>
-              </li>
-              <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
-                  Cloud Solutions
-                </BotonConSonido>
-              </li>
-              <li>
-                <BotonConSonido onClick={() => onExploreClick("servicios")} className="hover:text-purple-400 AlongSanss2-Thin">
-                  Inteligencia Artificial
-                </BotonConSonido>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 ALONGSANSS-REGULAR text-white">Empresa</h3>
-            <ul className="space-y-2 text-sm text-gray-400 AlongSanss2-Thin">
-              <li className="AlongSanss2-Thin">Sobre Nosotros</li>
-              <li className="AlongSanss2-Thin">Casos de Éxito</li>
-              <li className="AlongSanss2-Thin">Blog</li>
-              <li className="AlongSanss2-Thin">Carreras</li>
-            </ul>
+
+          {/* Link Columns */}
+          {footerLinks.map((column, idx) => (
+            <div key={idx} className="flex flex-col items-center md:items-start">
+              <h4 className="text-white ALONGSANSS-REGULAR text-sm uppercase tracking-[0.2em] mb-8">{column.title}</h4>
+              <ul className="space-y-4">
+                {column.links.map((link, linkIdx) => (
+                  <li key={linkIdx}>
+                    <BotonConSonido
+                      onClick={() => onExploreClick(link.href)}
+                      className="text-white/80 hover:text-purple-400 AlongSanss2-Thin text-sm transition-colors duration-200 block"
+                    >
+                      {link.name}
+                    </BotonConSonido>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-white/60 text-[10px] AlongSanss2-Thin uppercase tracking-[0.3em]">
+          <p>© {currentYear} Untitled Tech Company. All rights reserved.</p>
+          <div className="flex gap-10">
+            <span className="hover:text-white cursor-pointer transition-colors duration-300">Privacy Policy</span>
+            <span className="hover:text-white cursor-pointer transition-colors duration-300">Terms of Service</span>
           </div>
         </div>
-        <div className="border-t border-purple-500/20 mt-8 pt-8 text-center text-sm text-gray-400 AlongSanss2-Thin">
-          <p className="AlongSanss2-Thin">© {new Date().getFullYear()} Untitled Tech Company. Todos los derechos reservados.</p>
-        </div>
-      </motion.div>
+      </div>
     </footer>
   )
 }

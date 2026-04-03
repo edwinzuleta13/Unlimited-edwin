@@ -73,14 +73,16 @@ export default function Footer({ onExploreClick }: FooterProps) {
 
           {/* Link Columns */}
           {footerLinks.map((column, idx) => (
-            <div key={idx} className="flex flex-col items-center md:items-start">
-              <h4 className="text-white ALONGSANSS-REGULAR text-sm uppercase tracking-[0.2em] mb-8">{column.title}</h4>
-              <ul className="space-y-4">
+            <div key={idx} className="flex flex-col items-center md:items-start w-full md:w-auto">
+              <h4 className="text-white ALONGSANSS-REGULAR text-sm uppercase tracking-[0.2em] mb-8 text-center md:text-left w-full">
+                {column.title}
+              </h4>
+              <ul className="space-y-4 w-full">
                 {column.links.map((link, linkIdx) => (
-                  <li key={linkIdx}>
+                  <li key={linkIdx} className="w-full">
                     <BotonConSonido
                       onClick={() => onExploreClick(link.href)}
-                      className="text-white/80 hover:text-purple-400 AlongSanss2-Thin text-sm transition-colors duration-200 block"
+                      className="text-white/80 hover:text-purple-400 AlongSanss2-Thin text-sm transition-colors duration-200 block w-full text-center md:text-left"
                     >
                       {link.name}
                     </BotonConSonido>
@@ -92,9 +94,9 @@ export default function Footer({ onExploreClick }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-white/60 text-[10px] AlongSanss2-Thin uppercase tracking-[0.3em]">
-          <p>© {currentYear} Untitled Tech Company. All rights reserved.</p>
-          <div className="flex gap-10">
+        <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-white/60 text-[10px] AlongSanss2-Thin uppercase tracking-[0.3em] text-center md:text-left">
+          <p className="w-full md:w-auto">© {currentYear} Untitled Tech Company. All rights reserved.</p>
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10 w-full md:w-auto justify-center">
             <span className="hover:text-white cursor-pointer transition-colors duration-300">Privacy Policy</span>
             <span className="hover:text-white cursor-pointer transition-colors duration-300">Terms of Service</span>
           </div>

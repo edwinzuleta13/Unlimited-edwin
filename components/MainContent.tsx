@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 
-import Image from "next/image"
+
 import SplashScreen from "@/components/SplashScreen"
 import FloatingChatWidget from "@/components/floating-chat-widget"
 import AuthNav from "@/components/AuthNav"
@@ -27,14 +27,14 @@ import Footer from "@/components/home/Footer"
 export default function MainContent() {
   const { startTransition } = useTransition()
   const containerRef = useRef<HTMLDivElement>(null)
-  
+
   const [showSplash, setShowSplash] = useState(true)
   const [audioReady, setAudioReady] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [audioUnlocked, setAudioUnlocked] = useState(false)
-  
+
   const [isSolicitudOpen, setIsSolicitudOpen] = useState(false)
-  
+
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -84,7 +84,7 @@ export default function MainContent() {
         await a.play()
         a.pause()
         a.currentTime = 0
-      } catch (err) {}
+      } catch (err) { }
     }
 
     const markUserInteracted = () => {
@@ -100,7 +100,7 @@ export default function MainContent() {
       const a = audioRef.current
       if (a && a.readyState >= 2) {
         a.currentTime = 0
-        a.play().catch(() => {})
+        a.play().catch(() => { })
       }
     }
 
@@ -144,7 +144,7 @@ export default function MainContent() {
       setLink('icon')
       setLink('shortcut icon')
       setLink('apple-touch-icon')
-    } catch {}
+    } catch { }
   }, [])
 
   // SPLASH SCREEN
@@ -175,51 +175,43 @@ export default function MainContent() {
         style={{ pointerEvents: showSplash ? "none" : "auto", opacity: showSplash ? 0 : 1, transition: 'opacity 0.8s ease 0.15s' }}
         aria-hidden={showSplash}
       >
-        <div className="absolute inset-0 -z-10 bg-black">
-          <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
-            <div 
-              className="w-full h-full max-w-[80vw] max-h-[80vh] relative"
-              style={{ 
-                transform: 'translateY(6%)',
-                maskImage: 'linear-gradient(to bottom, black 90%, transparent 90%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 90% , transparent 90%)'
-              }}
-            >
-              <Image
-                src="/fondo.png"
-                alt="Background"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-          </div>
-        </div>
-        
+        {/* Fixed background image */}
+        <div
+          className="fixed inset-0 -z-10 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/fondo.png)',
+            backgroundSize: '65%',
+            backgroundPosition: 'center center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: '#000',
+          }}
+          aria-hidden="true"
+        />
+
         <FloatingChatWidget />
         <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
 
         <AuthNav />
 
         <HeroSection onContactClick={() => setIsSolicitudOpen(true)} onExploreClick={handleExploreClick} />
-        
+
         <StatsSection />
         <ProcessSection />
-        
+
         <section id="sobre-nosotros">
           <PartnershipPlans />
         </section>
-        
+
         <TechStackSection />
         <SolutionsSection />
-        
+
         <section id="aliados">
           <TrustedBySection />
         </section>
         <TechnologicalExpertise />
 
         <ContactBannerSection onContactClick={() => setIsSolicitudOpen(true)} />
-        
+
         <Footer onExploreClick={handleExploreClick} />
       </div>
     </>

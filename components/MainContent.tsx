@@ -17,8 +17,6 @@ import { useTransition } from "@/app/providers"
 
 import HeroSection from "@/components/home/HeroSection"
 import StatsSection from "@/components/home/StatsSection"
-import ProcessSection from "@/components/home/ProcessSection"
-import TechStackSection from "@/components/home/TechStackSection"
 import SolutionsSection from "@/components/home/SolutionsSection"
 import ContactBannerSection from "@/components/home/ContactBannerSection"
 import Footer from "@/components/home/Footer"
@@ -196,18 +194,18 @@ export default function MainContent() {
         <HeroSection onContactClick={() => setIsSolicitudOpen(true)} onExploreClick={handleExploreClick} />
 
         <StatsSection />
-        <ProcessSection />
 
         <section id="sobre-nosotros">
           <PartnershipPlans />
         </section>
 
-        <TechStackSection />
-        <SolutionsSection />
-
         <section id="aliados">
           <TrustedBySection />
         </section>
+
+        <SolutionsSection />
+
+
         <TechnologicalExpertise />
 
         <ContactBannerSection onContactClick={() => setIsSolicitudOpen(true)} />

@@ -99,7 +99,7 @@ export default function TrustedBySection() {
           whileHover={isLink ? { scale: 1.1, y: -15 } : {}}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          <div className="relative w-32 h-16 md:w-48 md:h-24 flex items-center justify-center p-4 bg-white/5 rounded-2xl border border-white/10 glass-effect-purple backdrop-blur-sm transition-all duration-300">
+          <div className="relative w-36 h-[70px] md:w-[211px] md:h-[106px] flex items-center justify-center p-4 bg-white/5 rounded-2xl border border-white/10 glass-effect-purple backdrop-blur-sm transition-all duration-300">
             <img
               src={client.image}
               alt={client.name}

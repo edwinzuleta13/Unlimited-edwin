@@ -2,6 +2,7 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ServiceMarquee } from "@/components/ServiceMarquee"
+import TechLogoMarquee from "@/components/home/TechLogoMarquee"
 
 export default function SolutionsSection() {
   return (
@@ -30,6 +31,9 @@ export default function SolutionsSection() {
               Servicios diseñados para impulsar la transformación digital.
             </p>
           </div>
+
+          {/* TECH LOGO MARQUEE */}
+          <TechLogoMarquee />
 
           {/* MARQUEE CON DOS COLUMNAS */}
           <div className="overflow-hidden relative pt-10 hide-scrollbar">

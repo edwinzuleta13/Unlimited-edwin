@@ -59,11 +59,11 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
             <div>
               <p className="text-white/60 text-xs mb-1 AlongSanss2-Thin uppercase tracking-widest">Dirección:</p>
               <div className="space-y-1">
-                <p className="text-white/80 AlongSanss2-Thin flex items-center gap-2">
-                  <span>🇻🇪</span> Valencia, Venezuela
+                <p className="text-white/80 AlongSanss2-Thin">
+                  Valencia, Venezuela
                 </p>
-                <p className="text-white/80 AlongSanss2-Thin flex items-center gap-2">
-                  <span>🇵🇪</span> Lima, Perú
+                <p className="text-white/80 AlongSanss2-Thin">
+                  Lima, Perú
                 </p>
               </div>
             </div>
@@ -71,33 +71,47 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
             <div className="space-y-4">
               <p className="text-white/60 text-xs mb-1 AlongSanss2-Thin uppercase tracking-widest">Teléfono:</p>
               
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {/* Venezuela */}
-                <div className="flex items-center gap-3 group/phone">
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/phone:border-purple-500/50 transition-colors">
-                    <span className="text-lg">🇻🇪</span>
+                <div className="flex items-center gap-4 group/phone">
+                  <div className="relative w-[26px] h-[26px] flex-shrink-0">
+                    <div className="absolute inset-0 bg-purple-500/20 blur-md rounded-full group-hover/phone:bg-purple-500/40 transition-colors"></div>
+                    <div className="relative w-full h-full rounded-full border border-white/20 overflow-hidden bg-black/40 flex items-center justify-center">
+                      <img 
+                        src="https://flagcdn.com/ve.svg" 
+                        alt="Venezuela" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
                   <a 
                     href="https://wa.me/584243296034" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-white/80 hover:text-purple-400 transition-colors duration-300 AlongSanss2-Thin"
+                    className="text-lg text-white/90 hover:text-purple-400 transition-colors duration-300 AlongSanss2-Thin tracking-wide"
                   >
                     +58 424-3296034
                   </a>
                 </div>
 
                 {/* Perú */}
-                <div className="flex items-center gap-3 group/phone">
-                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/phone:border-purple-500/50 transition-colors">
-                    <span className="text-lg">🇵🇪</span>
+                <div className="flex items-center gap-4 group/phone">
+                  <div className="relative w-[26px] h-[26px] flex-shrink-0">
+                    <div className="absolute inset-0 bg-white/5 blur-md rounded-full"></div>
+                    <div className="relative w-full h-full rounded-full border border-white/10 overflow-hidden bg-black/40 flex items-center justify-center grayscale group-hover/phone:grayscale-0 transition-all duration-500">
+                      <img 
+                        src="https://flagcdn.com/pe.svg" 
+                        alt="Perú" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-white/40 text-[10px] uppercase tracking-tighter">Perú</span>
+                    <span className="text-white/30 text-[10px] uppercase tracking-[0.2em] mb-0.5">Sede Perú</span>
                     <a 
                       href="#" 
                       onClick={(e) => e.preventDefault()}
-                      className="text-white/60 hover:text-purple-400 transition-colors duration-300 AlongSanss2-Thin"
+                      className="text-white/50 hover:text-purple-400 transition-colors duration-300 AlongSanss2-Thin"
                     >
                       (Próximamente)
                     </a>

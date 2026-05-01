@@ -273,7 +273,7 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                           >
                             {COUNTRIES.map((c) => (
                               <option key={c.iso} value={c.iso}>
-                                {c.name} ({c.code})
+                                {c.flag} {c.name} ({c.code})
                               </option>
                             ))}
                           </select>

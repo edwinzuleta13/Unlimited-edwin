@@ -81,59 +81,31 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
     const { data: { user } = {} } = await supabase.auth.getUser();
     const isOther = requestType === "Otro" || requestType === "OTRO";
 
-    if (user) {
-      const token = uuidv4();
-      const created_at = new Date().toISOString();
-
-      const initialRow = {
-        token,
-        created_at,
-        first_name: firstName,
-        company_name: companyName,
-        company_activity: companyActivity,
-        country_code: country.iso,
-        phone_number: `${country.code}${phoneNumber}`,
-        email,
-        request_type: isOther ? "OTRO" : requestType,
-        custom_reason: isOther ? otherDetails : null,
-        description: finalDescription,
-        user_id: user.id,
-        status: "confirmed",
-      };
-
-      const tryInsert = async (row) => {
-        const { error } = await supabase.from("support_requests").insert([row]);
-        return error;
-      };
-
-      let insertError = await tryInsert(initialRow);
-      if (insertError) {
-        const msg = String(insertError.message || insertError.details || "");
-        if (/country_code|phone_number/i.test(msg)) {
-          const fallback = {
-            token,
-            created_at,
-            first_name: firstName,
-            company_name: companyName,
-            company_activity: companyActivity,
-            phone_number: `${country.code}${phoneNumber}`,
-            email,
-            request_type: isOther ? "OTRO" : requestType,
-            custom_reason: isOther ? otherDetails : null,
-            description: finalDescription,
-            user_id: user.id,
-            status: "confirmed",
-          };
-          insertError = await tryInsert(fallback);
-        }
-      }
+    try {
+      const response = await fetch("/api/support-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName,
+          companyName,
+          companyActivity,
+          email,
+          requestType,
+          customReason: isOther ? otherDetails : null,
+          description: finalDescription,
+          country: country.iso,
+          phone: `${country.code}${phoneNumber}`,
+          userId: user?.id || null, // Pasamos el ID si existe, pero no es obligatorio
+        }),
+      });
 
       setLoading(false);
-      if (insertError) {
-        console.error("Insert error support_requests:", insertError);
-        setError("Error al enviar la solicitud. Intenta de nuevo.");
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || "Error al enviar la solicitud.");
       } else {
-        showAlert("success", "Tu solicitud fue enviada correctamente. Pronto nos pondremos en contacto contigo.");
+        showAlert("success", "Tu solicitud fue enviada correctamente. Por favor, revisa tu correo electrónico para confirmarla.");
         setFirstName("");
         setCompanyName("");
         setCompanyActivity("");
@@ -143,44 +115,11 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
         setOtherDetails("");
         setPhoneNumber("");
         setCountry({ iso: "VE", code: "+58", name: "Venezuela" });
+        onClose(); // Cerramos el modal tras éxito
       }
-    } else {
-      try {
-        const response = await fetch("/api/support-request", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName,
-            companyName,
-            companyActivity,
-            email,
-            requestType,
-            customReason: isOther ? otherDetails : null,
-            description: finalDescription,
-            country: country.iso,
-            phone: `${country.code}${phoneNumber}`,
-          }),
-        });
-        setLoading(false);
-        if (!response.ok) {
-          setError("Error al enviar la solicitud.");
-        } else {
-          setNotLoggedIn(true);
-          showAlert("info", "Revisa tu correo para confirmar tu solicitud. Por favor inicia sesión para mantenernos en contacto.");
-          setFirstName("");
-          setCompanyName("");
-          setCompanyActivity("");
-          setEmail("");
-          setRequestType(REQUEST_TYPES[0]);
-          setDescription("");
-          setOtherDetails("");
-          setPhoneNumber("");
-          setCountry({ iso: "VE", code: "+58", name: "Venezuela" });
-        }
-      } catch {
-        setLoading(false);
-        setError("Error al enviar la solicitud.");
-      }
+    } catch (err) {
+      setLoading(false);
+      setError("Error de conexión al enviar la solicitud.");
     }
   };
 
@@ -205,7 +144,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
         {isOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+              style={{ zIndex: 100000 }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -213,7 +153,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
             />
 
             <motion.div
-              className={fullScreen ? "fixed inset-0 z-50" : "fixed inset-0 flex items-center justify-center z-50 p-4"}
+              className={fullScreen ? "fixed inset-0" : "fixed inset-0 flex items-center justify-center p-4"}
+              style={{ zIndex: 100001 }}
               initial={{ opacity: 0, scale: 0.8, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}

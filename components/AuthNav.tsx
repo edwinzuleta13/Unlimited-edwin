@@ -90,7 +90,7 @@ export default function AuthNav() {
     }, []);
 
     return (
-        <header className="fixed z-[99999] w-full px-2 AlongSanss2-Thin left-0 top-0 isolate">
+        <header className="fixed z-[100] w-full px-2 AlongSanss2-Thin left-0 top-0 isolate">
             <nav aria-label="Navegación principal">
                 <div className={cn(
                     'rounded-2xl mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',

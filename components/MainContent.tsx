@@ -167,6 +167,8 @@ export default function MainContent() {
     <>
       <AnimatePresence>{showSplash && <SplashScreen />}</AnimatePresence>
 
+      <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
+
       <div
         ref={containerRef}
         className="relative min-h-screen text-white overflow-x-hidden"
@@ -187,8 +189,6 @@ export default function MainContent() {
         />
 
         <FloatingChatWidget />
-        <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
-
         <AuthNav />
 
         <HeroSection onContactClick={() => setIsSolicitudOpen(true)} onExploreClick={handleExploreClick} />

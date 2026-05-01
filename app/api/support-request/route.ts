@@ -16,28 +16,15 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { firstName, lastName, email, requestType, description, customReason, country, phone } = body;
+    const { firstName, lastName, email, requestType, description, customReason, country, phone, userId } = body;
     const isOther = String(requestType ?? '').toUpperCase() === 'OTRO';
 
-    // Validaciones: nombre (nombre y apellido), email, teléfono y descripción son obligatorios.
-    if (!firstName || !lastName || !email || !description || !phone) {
+    // Validaciones: nombre, email, teléfono y descripción son obligatorios.
+    if (!firstName || !email || !description || !phone) {
       return NextResponse.json({ error: 'Faltan campos requeridos.' }, { status: 400 });
     }
 
-    // Si es "OTRO", customReason debe existir; si no, requestType debe existir
-    if (isOther) {
-      if (!customReason) {
-        return NextResponse.json({ error: 'Falta la razón personalizada para "OTRO".' }, { status: 400 });
-      }
-    } else {
-      if (!requestType) {
-        return NextResponse.json({ error: 'Falta el tipo de solicitud.' }, { status: 400 });
-      }
-    }
-
     const token = uuidv4();
-
-    // Guardar como pending en la tabla
     const createdAt = new Date().toISOString();
 
     const { error: pendingError } = await supabase.from('support_requests').insert([
@@ -48,10 +35,10 @@ export async function POST(req: Request) {
         country_code: country ?? null,
         phone_number: phone ?? null,
         email,
-        // Si es OTRO guardamos request_type como NULL y ponemos la razón en custom_reason
         request_type: isOther ? null : requestType,
         custom_reason: isOther ? customReason : null,
         description,
+        user_id: userId ?? null,
         status: 'pending',
         created_at: createdAt,
       },
@@ -81,6 +68,7 @@ export async function POST(req: Request) {
             request_type: isOther ? 'OTRO' : requestType,
             custom_reason: isOther ? customReason : null,
             description,
+            user_id: userId ?? null,
             status: 'pending',
             created_at: createdAt,
           },
@@ -97,17 +85,37 @@ export async function POST(req: Request) {
 
     const confirmUrl = `${BASE_URL}/api/support-request/confirm?token=${token}`;
     try {
-      console.log('Enviando correo a:', email);
-      const info = await transporter.sendMail({
+      console.log('Enviando correos...');
+      
+      // Correo para el usuario
+      await transporter.sendMail({
         from: process.env.SMTP_USER,
         to: email,
         subject: 'Confirma tu solicitud de soporte',
-        html: `<p>Hola ${firstName} ${lastName},</p>
+        html: `<p>Hola ${firstName},</p>
           <p>Haz clic en el siguiente enlace para confirmar tu solicitud de soporte:</p>
           <a href="${confirmUrl}">${confirmUrl}</a>
           <p>Si no solicitaste esto, ignora este correo.</p>`,
       });
-      console.log('Resultado de sendMail:', info);
+
+      // Correo para la empresa (Notificación inmediata)
+      await transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: 'untitledtechcompany@gmail.com',
+        subject: `🚨 Nueva solicitud de: ${firstName} (${requestType})`,
+        html: `
+          <h1>Nueva solicitud de contacto (Pendiente de confirmación)</h1>
+          <p><strong>Nombre:</strong> ${firstName}</p>
+          <p><strong>Empresa:</strong> ${companyName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Teléfono:</strong> ${phone}</p>
+          <p><strong>Tipo:</strong> ${requestType === 'Otro' ? customReason : requestType}</p>
+          <p><strong>Descripción:</strong></p>
+          <p>${description}</p>
+          <p><em>Nota: El usuario aún debe confirmar su correo.</em></p>
+        `,
+      });
+
       return NextResponse.json({ message: 'Correo de confirmación enviado.' });
     } catch (error: any) {
       console.error('Error enviando el correo:', error);

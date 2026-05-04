@@ -73,6 +73,12 @@ const clients: Client[] = [
     image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/4-%20(WH)%201.png",
     href: "https://www.whmattress.com",
   },
+  {
+    name: "CSBIKE",
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo1.png",
+    href: "https://cs-bike.vercel.app",
+  },
+
 ];
 
 const splitArray = (arr: Client[]) => {

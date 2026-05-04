@@ -75,7 +75,7 @@ const clients: Client[] = [
   },
   {
     name: "CSBIKE",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo1.png",
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/csbike.png",
     href: "https://cs-bike.vercel.app",
   },
 

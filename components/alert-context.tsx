@@ -27,19 +27,24 @@ export function useAlert() {
 export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [alerts, setAlerts] = useState<GlobalAlert[]>([]);
 
-  const showAlert = useCallback((severity: AlertSeverity, message: string) => {
-    // Debug: log calls so we can verify showAlert is invoked
-    console.debug('[Alert] showAlert called:', { severity, message });
-
-    setAlerts((prev) => [
-      ...prev,
-      { id: Math.random().toString(36).slice(2), severity, message },
-    ]);
-  }, []);
-
   const closeAlert = useCallback((id: string) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
   }, []);
+
+  const showAlert = useCallback((severity: AlertSeverity, message: string) => {
+    console.debug('[Alert] showAlert called:', { severity, message });
+    const id = Math.random().toString(36).slice(2);
+
+    setAlerts((prev) => [
+      ...prev,
+      { id, severity, message },
+    ]);
+
+    // Auto-cerrar después de 6 segundos
+    setTimeout(() => {
+      closeAlert(id);
+    }, 6000);
+  }, [closeAlert]);
 
   return (
     <AlertContext.Provider value={{ alerts, showAlert, closeAlert }}>
@@ -51,15 +56,15 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 export function GlobalAlerts() {
   const { alerts, closeAlert } = useAlert();
   return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex flex-col items-center px-4 pointer-events-none">
+    <div className="fixed top-10 left-0 right-0 z-[999999] flex flex-col items-center px-4 pointer-events-none">
       <AnimatePresence>
         {alerts.map((alert) => (
           <motion.div
             key={alert.id}
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
             className="w-full max-w-3xl pointer-events-auto mb-4"
           >
             <Alert severity={alert.severity} className="relative pr-10">

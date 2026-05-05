@@ -105,7 +105,7 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
         const errorData = await response.json();
         setError(errorData.error || "Error al enviar la solicitud.");
       } else {
-        showAlert("success", "Tu solicitud fue enviada correctamente. Por favor, revisa tu correo electrónico para confirmarla.");
+        showAlert("success", "Tu solicitud fue enviada correctamente. Pronto nos pondremos en contacto contigo.");
         setFirstName("");
         setCompanyName("");
         setCompanyActivity("");

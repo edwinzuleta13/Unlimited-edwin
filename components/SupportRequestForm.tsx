@@ -166,7 +166,7 @@ export default function SupportRequestForm() {
           setError('Error al enviar la solicitud.');
         } else {
           // Mostrar alerta de información para usuarios no autenticados
-          showAlert('info', 'Revisa tu correo para confirmar tu solicitud. Por favor inicia sesión para mantenernos en contacto.');
+          showAlert('success', 'Tu solicitud fue enviada correctamente. Pronto nos pondremos en contacto contigo.');
           setFirstName('');
           setLastName('');
           setEmail('');

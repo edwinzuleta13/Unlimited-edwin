@@ -89,14 +89,14 @@ export async function POST(req: Request) {
       
       // Correo para el usuario
       await transporter.sendMail({
-        from: process.env.SMTP_USER,
+        from: `"${firstName} via Untitled" <${process.env.SMTP_USER}>`,
         to: email,
         subject: 'Confirma tu solicitud de soporte',
         html: `<p>Hola ${firstName},</p>
           <p>Haz clic en el siguiente enlace para confirmar tu solicitud de soporte:</p>
           <a href="${confirmUrl}">${confirmUrl}</a>
           <p>Si no solicitaste esto, ignora este correo.</p>`,
-      });
+      }).catch(e => console.error("Error enviando correo al usuario:", e));
 
       // Correo para la empresa (Notificación inmediata)
       await transporter.sendMail({
@@ -105,23 +105,21 @@ export async function POST(req: Request) {
         to: 'untitledtechcompany@gmail.com',
         subject: `🚨 Nueva solicitud de: ${firstName} (${requestType})`,
         html: `
-          <h1>Nueva solicitud de contacto (Pendiente de confirmación)</h1>
+          <h1>Nueva solicitud de contacto</h1>
           <p><strong>Nombre:</strong> ${firstName}</p>
-          <p><strong>Empresa:</strong> ${companyName ?? 'N/A'}</p>
-          <p><strong>Actividad:</strong> ${companyActivity ?? 'N/A'}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Teléfono:</strong> ${phone}</p>
           <p><strong>Tipo:</strong> ${requestType === 'Otro' ? customReason : requestType}</p>
           <p><strong>Descripción:</strong></p>
-          <p>${description}</p>
-          <p><em>Nota: El usuario aún debe confirmar su correo.</em></p>
+          <p>${fullDescription}</p>
         `,
-      });
+      }).catch(e => console.error("Error enviando correo a la empresa:", e));
 
-      return NextResponse.json({ message: 'Correo de confirmación enviado.' });
+      return NextResponse.json({ message: 'Solicitud recibida correctamente.' });
     } catch (error: any) {
-      console.error('Error enviando el correo:', error);
-      return NextResponse.json({ error: error?.message || 'Error enviando el correo.' }, { status: 500 });
+      // Si llegamos aquí es por un error crítico de ejecución, no por SMTP fallido (que ya capturamos arriba)
+      console.error('Error en proceso de correo:', error);
+      return NextResponse.json({ message: 'Solicitud recibida correctamente.' });
     }
   } catch (err: any) {
     console.error('Error en handler support-request:', err);

@@ -124,6 +124,15 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
   };
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+    return () => document.body.classList.remove("modal-open");
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) {
       setFirstName("");
       setCompanyName("");
@@ -163,8 +172,8 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
               <div
                 className={
                   fullScreen
-                    ? "bg-black/90 border border-purple-500/30 rounded-none shadow-2xl w-full h-full p-4 md:p-8 relative overflow-auto hide-scrollbar"
-                    : "bg-black/90 border border-purple-500/30 rounded-[36px] shadow-2xl w-full max-w-4xl p-8 relative"
+                    ? "bg-black/95 border border-purple-500/30 rounded-none shadow-2xl w-full h-full p-4 md:p-12 relative overflow-y-auto"
+                    : "bg-black/95 border border-purple-500/30 rounded-[36px] shadow-2xl w-full max-w-4xl max-h-[90vh] p-8 relative overflow-y-auto"
                 }
                 onClick={(e) => e.stopPropagation()}
               >
@@ -178,7 +187,7 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
                 <div
                   className={
                     fullScreen
-                      ? "bg-black/80 rounded-none p-6 md:p-8 h-full overflow-auto hide-scrollbar"
+                      ? "bg-black/80 rounded-none p-6 md:p-8 min-h-full"
                       : "bg-black/80 rounded-t-2xl rounded-b-[36px] p-6"
                   }
                 >
@@ -357,14 +366,10 @@ export default function SolicitudModal({ isOpen, onClose, fullScreen = false }) 
         )}
       </AnimatePresence>
 
-      {/* 🔥 Oculta scrollbars pero mantiene scroll funcional */}
+      {/* Estilos para asegurar que el scroll sea visible y fluido */}
       <style jsx global>{`
-        .hide-scrollbar {
-          scrollbar-width: none; /* Firefox */
-          -ms-overflow-style: none; /* IE y Edge antiguos */
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none; /* Chrome, Safari y Opera */
+        .modal-open {
+          overflow: hidden;
         }
       `}</style>
     </>

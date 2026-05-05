@@ -16,7 +16,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { firstName, lastName, email, requestType, description, customReason, country, phone, userId } = body;
+    const { firstName, lastName, companyName, companyActivity, email, requestType, description, customReason, country, phone, userId } = body;
     const isOther = String(requestType ?? '').toUpperCase() === 'OTRO';
 
     // Validaciones: nombre, email, teléfono y descripción son obligatorios.
@@ -32,7 +32,8 @@ export async function POST(req: Request) {
         token,
         first_name: firstName ?? null,
         last_name: lastName ?? null,
-        country_code: country ?? null,
+        company_name: companyName ?? null,
+        company_activity: companyActivity ?? null,
         phone_number: phone ?? null,
         email,
         request_type: isOther ? null : requestType,
@@ -62,7 +63,8 @@ export async function POST(req: Request) {
             token,
             first_name: firstName ?? null,
             last_name: lastName ?? null,
-            country_code: country ?? null,
+            company_name: companyName ?? null,
+            company_activity: companyActivity ?? null,
             phone_number: phone ?? null,
             email,
             request_type: isOther ? 'OTRO' : requestType,
@@ -100,13 +102,15 @@ export async function POST(req: Request) {
 
       // Correo para la empresa (Notificación inmediata)
       await transporter.sendMail({
-        from: process.env.SMTP_USER,
+        from: `"${firstName} via Untitled" <${process.env.SMTP_USER}>`,
+        replyTo: email,
         to: 'untitledtechcompany@gmail.com',
         subject: `🚨 Nueva solicitud de: ${firstName} (${requestType})`,
         html: `
           <h1>Nueva solicitud de contacto (Pendiente de confirmación)</h1>
           <p><strong>Nombre:</strong> ${firstName}</p>
-          <p><strong>Empresa:</strong> ${companyName}</p>
+          <p><strong>Empresa:</strong> ${companyName ?? 'N/A'}</p>
+          <p><strong>Actividad:</strong> ${companyActivity ?? 'N/A'}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Teléfono:</strong> ${phone}</p>
           <p><strong>Tipo:</strong> ${requestType === 'Otro' ? customReason : requestType}</p>

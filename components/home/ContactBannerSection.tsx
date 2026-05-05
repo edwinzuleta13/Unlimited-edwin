@@ -98,7 +98,7 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
                 <div className="flex items-center gap-4 group/phone">
                   <div className="relative w-[26px] h-[26px] flex-shrink-0">
                     <div className="absolute inset-0 bg-white/5 blur-md rounded-full"></div>
-                    <div className="relative w-full h-full rounded-full border border-white/10 overflow-hidden bg-black/40 flex items-center justify-center grayscale group-hover/phone:grayscale-0 transition-all duration-500">
+                    <div className="relative w-full h-full rounded-full border border-white/10 overflow-hidden bg-black/40 flex items-center justify-center transition-all duration-500">
                       <img 
                         src="https://flagcdn.com/pe.svg" 
                         alt="Perú" 
@@ -109,11 +109,12 @@ export default function ContactBannerSection({ onContactClick }: ContactBannerSe
                   <div className="flex flex-col">
                     <span className="text-white/30 text-[10px] uppercase tracking-[0.2em] mb-0.5">Sede Perú</span>
                     <a 
-                      href="#" 
-                      onClick={(e) => e.preventDefault()}
-                      className="text-white/50 hover:text-purple-400 transition-colors duration-300 AlongSanss2-Thin"
+                      href="https://wa.me/51982090584" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-lg text-white/90 hover:text-purple-400 transition-colors duration-300 AlongSanss2-Thin tracking-wide"
                     >
-                      (Próximamente)
+                      +51 982090584
                     </a>
                   </div>
                 </div>

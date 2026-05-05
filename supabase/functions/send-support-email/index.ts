@@ -27,6 +27,7 @@ serve(async (req) => {
       body: JSON.stringify({
         from: 'Notificaciones Untitled <onboarding@resend.dev>',
         to: COMPANY_EMAIL,
+        reply_to: record.email,
         subject: `🚀 Nueva Solicitud: ${record.request_type || 'Contacto'}`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">

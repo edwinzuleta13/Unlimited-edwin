@@ -24,6 +24,8 @@ export default function SupportRequestForm() {
   const [requestType, setRequestType] = useState(REQUEST_TYPES[0]);
   const [description, setDescription] = useState('');
   const [otherDetails, setOtherDetails] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [companyActivity, setCompanyActivity] = useState('');
   const [country, setCountry] = useState({ iso: 'VE', code: '+58', name: 'Venezuela' });
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
@@ -79,7 +81,7 @@ export default function SupportRequestForm() {
   // selecciona "Otro". Evitar duplicados: no mezclar ambos en `description`.
   const finalDescription = description;
 
-    if (!firstName || !lastName || !email || !finalDescription || !phoneNumber) {
+    if (!firstName || !lastName || !email || !finalDescription || !phoneNumber || !companyName || !companyActivity) {
       setError('Todos los campos son obligatorios.');
       return;
     }
@@ -106,7 +108,8 @@ export default function SupportRequestForm() {
         created_at,
         first_name: firstName,
         last_name: lastName,
-        country_code: country.iso,
+        company_name: companyName,
+        company_activity: companyActivity,
         phone_number: `${country.code}${phoneNumber}`,
         email,
         request_type: isOther ? 'OTRO' : requestType,
@@ -122,26 +125,6 @@ export default function SupportRequestForm() {
       };
 
       let insertError = await tryInsert(initialRow);
-      if (insertError) {
-        const msg = String(insertError.message || insertError.details || '');
-        // Si el error indica columnas inexistentes, reintentar con payload compatible
-        if (/country_code|phone_number/i.test(msg)) {
-          const fallback = {
-            token,
-            created_at,
-            first_name: firstName,
-            last_name: lastName,
-            phone_number: `${country.code}${phoneNumber}`,
-            email,
-            request_type: isOther ? 'OTRO' : requestType,
-            custom_reason: isOther ? otherDetails : null,
-            description: finalDescription,
-            user_id: user.id,
-            status: 'confirmed',
-          };
-          insertError = await tryInsert(fallback);
-        }
-      }
 
       setLoading(false);
       if (insertError) {
@@ -168,6 +151,8 @@ export default function SupportRequestForm() {
           body: JSON.stringify({
             firstName,
             lastName,
+            companyName,
+            companyActivity,
             email,
             requestType,
             customReason: isOther ? otherDetails : null,
@@ -212,6 +197,28 @@ export default function SupportRequestForm() {
               onChange={e => setFirstName(e.target.value)}
               required
               placeholder="Nombre"
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-purple-200 mb-1">Nombre de empresa</label>
+            <input
+              type="text"
+              className="w-full border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+              value={companyName}
+              onChange={e => setCompanyName(e.target.value)}
+              required
+              placeholder="Nombre de empresa"
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-purple-200 mb-1">¿A qué se dedica la empresa?</label>
+            <input
+              type="text"
+              className="w-full border border-purple-700 bg-black/60 text-white rounded p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-black placeholder-purple-400"
+              value={companyActivity}
+              onChange={e => setCompanyActivity(e.target.value)}
+              required
+              placeholder="Actividad principal"
             />
           </div>
           <div>

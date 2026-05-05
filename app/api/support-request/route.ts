@@ -27,18 +27,18 @@ export async function POST(req: Request) {
     const token = uuidv4();
     const createdAt = new Date().toISOString();
 
+    const fullDescription = `Empresa: ${companyName ?? 'N/A'}\nActividad: ${companyActivity ?? 'N/A'}\n\n${description}`;
+
     const { error: pendingError } = await supabase.from('support_requests').insert([
       {
         token,
         first_name: firstName ?? null,
         last_name: lastName ?? null,
-        company_name: companyName ?? null,
-        company_activity: companyActivity ?? null,
         phone_number: phone ?? null,
         email,
         request_type: isOther ? null : requestType,
         custom_reason: isOther ? customReason : null,
-        description,
+        description: fullDescription,
         user_id: userId ?? null,
         status: 'pending',
         created_at: createdAt,
@@ -63,13 +63,11 @@ export async function POST(req: Request) {
             token,
             first_name: firstName ?? null,
             last_name: lastName ?? null,
-            company_name: companyName ?? null,
-            company_activity: companyActivity ?? null,
             phone_number: phone ?? null,
             email,
             request_type: isOther ? 'OTRO' : requestType,
             custom_reason: isOther ? customReason : null,
-            description,
+            description: fullDescription,
             user_id: userId ?? null,
             status: 'pending',
             created_at: createdAt,

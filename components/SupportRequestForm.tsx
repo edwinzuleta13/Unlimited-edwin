@@ -103,18 +103,18 @@ export default function SupportRequestForm() {
 
       // Intentar insertar con campos extendidos; si la tabla no tiene esas columnas
       // (p. ej. country_code) reintentar con un payload reducido para compatibilidad.
+      const fullDescription = `Empresa: ${companyName}\nActividad: ${companyActivity}\n\n${finalDescription}`;
+
       const initialRow: any = {
         token,
         created_at,
         first_name: firstName,
         last_name: lastName,
-        company_name: companyName,
-        company_activity: companyActivity,
         phone_number: `${country.code}${phoneNumber}`,
         email,
         request_type: isOther ? 'OTRO' : requestType,
         custom_reason: isOther ? otherDetails : null,
-        description: finalDescription,
+        description: fullDescription,
         user_id: user.id,
         status: 'confirmed',
       };

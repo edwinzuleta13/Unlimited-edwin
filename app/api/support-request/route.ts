@@ -98,11 +98,11 @@ export async function POST(req: Request) {
       }).then(() => console.log(`[API] Correo de confirmación enviado a: ${email}`))
         .catch(e => console.error(`[API] Error enviando correo al usuario (${email}):`, e.message));
 
-      console.log('[API] Enviando notificación a UTC (edwinforwork14@gmail.com)');
+      console.log('[API] Enviando notificación a UTC (untitledtechcompany@gmail.com)');
       await transporter.sendMail({
         from: `"${firstName} via Untitled" <${process.env.SMTP_USER}>`,
         replyTo: email,
-        to: 'edwinforwork14@gmail.com',
+        to: 'untitledtechcompany@gmail.com',
         subject: `🚨 Nueva solicitud de: ${firstName} (${requestType})`,
         html: `
           <h1>Nueva solicitud de contacto</h1>

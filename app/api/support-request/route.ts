@@ -29,6 +29,7 @@ export async function POST(req: Request) {
 
     const fullDescription = `Empresa: ${companyName ?? 'N/A'}\nActividad: ${companyActivity ?? 'N/A'}\n\n${description}`;
 
+    console.log(`[API] Iniciando solicitud de soporte para: ${email}`);
     const { error: pendingError } = await supabase.from('support_requests').insert([
       {
         token,
@@ -45,19 +46,14 @@ export async function POST(req: Request) {
       },
     ]);
 
-    // Manejo específico: si la tabla tiene una constraint NOT NULL en request_type
-    // (p. ej. código Postgres 23502), reintentamos insertando 'OTRO' en request_type
-    // en lugar de NULL. Preferible: ejecutar una migración para permitir NULL en
-    // request_type. SQL sugerido:
-    // ALTER TABLE support_requests ALTER COLUMN request_type DROP NOT NULL;
     if (pendingError) {
-      console.error('Error guardando la solicitud pendiente:', pendingError);
+      console.error('[API] Error al insertar en DB (intento 1):', pendingError);
 
       const pgCode = (pendingError as any)?.code || (pendingError as any)?.details || '';
       const isNotNullViolation = String(pgCode).includes('23502') || String(pendingError.message || '').includes('null value in column "request_type"');
 
       if (isNotNullViolation) {
-        // Reintentar insertando request_type = 'OTRO' para evitar la violación
+        console.log('[API] Reintentando inserción con request_type="OTRO"...');
         const { error: retryError } = await supabase.from('support_requests').insert([
           {
             token,
@@ -75,19 +71,22 @@ export async function POST(req: Request) {
         ]);
 
         if (retryError) {
-          console.error('Reintento falló guardando la solicitud pendiente:', retryError);
-          return NextResponse.json({ error: retryError.message || 'Error guardando la solicitud pendiente.' }, { status: 500 });
+          console.error('[API] Error crítico al insertar en DB:', retryError);
+          return NextResponse.json({ error: retryError.message || 'Error guardando la solicitud.' }, { status: 500 });
         }
       } else {
-        return NextResponse.json({ error: pendingError.message || 'Error guardando la solicitud pendiente.' }, { status: 500 });
+        return NextResponse.json({ error: pendingError.message || 'Error guardando la solicitud.' }, { status: 500 });
       }
     }
 
+    console.log('[API] Registro insertado en DB con éxito. Token:', token);
+
     const confirmUrl = `${BASE_URL}/api/support-request/confirm?token=${token}`;
     try {
-      console.log('Enviando correos...');
+      console.log('[API] Intentando enviar correos...');
       
       // Correo para el usuario
+      console.log(`[API] Enviando correo de confirmación a: ${email}`);
       await transporter.sendMail({
         from: `"${firstName} via Untitled" <${process.env.SMTP_USER}>`,
         to: email,
@@ -96,9 +95,11 @@ export async function POST(req: Request) {
           <p>Haz clic en el siguiente enlace para confirmar tu solicitud de soporte:</p>
           <a href="${confirmUrl}">${confirmUrl}</a>
           <p>Si no solicitaste esto, ignora este correo.</p>`,
-      }).catch(e => console.error("Error enviando correo al usuario:", e));
+      }).then(() => console.log(`[API] Correo de confirmación enviado a: ${email}`))
+        .catch(e => console.error(`[API] Error enviando correo al usuario (${email}):`, e.message));
 
       // Correo para la empresa (Notificación inmediata)
+      console.log('[API] Enviando notificación a UTC (untitledtechcompany@gmail.com)');
       await transporter.sendMail({
         from: `"${firstName} via Untitled" <${process.env.SMTP_USER}>`,
         replyTo: email,
@@ -113,12 +114,12 @@ export async function POST(req: Request) {
           <p><strong>Descripción:</strong></p>
           <p>${fullDescription}</p>
         `,
-      }).catch(e => console.error("Error enviando correo a la empresa:", e));
+      }).then(() => console.log('[API] Notificación enviada a UTC con éxito'))
+        .catch(e => console.error('[API] Error enviando correo a la empresa:', e.message));
 
       return NextResponse.json({ message: 'Solicitud recibida correctamente.' });
     } catch (error: any) {
-      // Si llegamos aquí es por un error crítico de ejecución, no por SMTP fallido (que ya capturamos arriba)
-      console.error('Error en proceso de correo:', error);
+      console.error('[API] Error inesperado en el proceso de correo:', error);
       return NextResponse.json({ message: 'Solicitud recibida correctamente.' });
     }
   } catch (err: any) {

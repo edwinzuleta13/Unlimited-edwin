@@ -28,7 +28,7 @@ export default function FloatingChatWidget() {
     >
       <Button
         onClick={handleWhatsApp}
-        className="w-16 h-16 rounded-full bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all duration-500 hover:scale-110 active:scale-95 group border-none"
+        className="w-16 h-16 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white shadow-[0_0_25px_rgba(37,211,102,0.4)] transition-all duration-500 hover:scale-110 active:scale-95 group border-none"
         title="Contactar por WhatsApp"
       >
         <FaWhatsapp className="w-8 h-8 transition-transform group-hover:scale-110" />

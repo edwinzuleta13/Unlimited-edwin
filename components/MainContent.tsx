@@ -10,6 +10,7 @@ import FloatingChatWidget from "@/components/floating-chat-widget"
 import AuthNav from "@/components/AuthNav"
 import SolicitudModal from "@/components/SolicitudModal"
 import TrustedBySection from "@/components/TrustedBySection"
+import AlliesOverlay from "@/components/AlliesOverlay"
 import TechnologicalExpertise from "@/components/technological-expertise"
 import PartnershipPlans from "@/components/PartnershipPlans"
 import { useTransition } from "@/app/providers"
@@ -32,6 +33,7 @@ export default function MainContent() {
   const [audioUnlocked, setAudioUnlocked] = useState(false)
 
   const [isSolicitudOpen, setIsSolicitudOpen] = useState(false)
+  const [isAlliesOpen, setIsAlliesOpen] = useState(false)
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -168,6 +170,7 @@ export default function MainContent() {
       <AnimatePresence>{showSplash && <SplashScreen />}</AnimatePresence>
 
       <SolicitudModal isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)} fullScreen={true} />
+      <AlliesOverlay isOpen={isAlliesOpen} onClose={() => setIsAlliesOpen(false)} />
 
       <div
         ref={containerRef}
@@ -200,7 +203,7 @@ export default function MainContent() {
         </section>
 
         <section id="aliados">
-          <TrustedBySection />
+          <TrustedBySection onOpenAllies={() => setIsAlliesOpen(true)} />
         </section>
 
         <SolutionsSection />

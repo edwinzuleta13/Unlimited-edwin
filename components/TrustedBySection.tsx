@@ -4,89 +4,21 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Marquee, MarqueeContent, MarqueeItem } from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
+import MagneticButton from "@/components/magnetic-button";
 
 
-interface Client {
-  name: string;
-  image: string;
-  href?: string;
-}
-
-const clients: Client[] = [
-  {
-    name: "Ana's Accounting",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/ANAS%20ACCOUNTING%20SERV%20LOGO%20(2).png",
-    href: "https://anasaccounting.com/",
-  },
-  {
-    name: "DAKA",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/daka-logo.png",
-    href: "https://tiendasdaka.com",
-  },
-  {
-    name: "Extra ganga",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/extra_ganga_logo.jpeg",
-    href: "",
-  },
-  {
-    name: "KAOZ",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/KAOZ.png",
-    href: "",
-  },
-  {
-    name: "KEYTON",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/keyton_logo.png",
-    href: "https://keyton.com.ve",
-  },
-  {
-    name: "Rental Deluxe",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-Rental-deluxe-JPEG-(8).jpg",
-    href: "https://somosrentaldeluxe.com",
-  },
-  {
-    name: "Reys Smart",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo-reys-smart-01.jpg",
-    href: "https://reysmartsolution.com",
-  },
-  {
-    name: "Piter",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/piper_logo.png",
-    href: "https://piter.com.ve/",
-  },
-  {
-    name: "yenfit",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/yenfit.png",
-    href: "https://www.yenfit.shop",
-  },
-  {
-    name: "You Space",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/you_space_logo.png",
-    href: "",
-  },
-  {
-    name: "Campo Meat",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logo%20campo%20meat%20JPEG%20(1).jpg",
-    href: "https://www.campomeat.com",
-  },
-  {
-    name: "WH Mattdres",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/4-%20(WH)%201.png",
-    href: "https://www.whmattress.com",
-  },
-  {
-    name: "CSBIKE",
-    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/csbike.png",
-    href: "https://cs-bike.vercel.app",
-  },
-
-];
+import { clients, type Client } from "@/data/clients";
 
 const splitArray = (arr: Client[]) => {
   const mid = Math.ceil(arr.length / 2);
   return [arr.slice(0, mid), arr.slice(mid)];
 };
 
-export default function TrustedBySection() {
+interface TrustedBySectionProps {
+  onOpenAllies?: () => void;
+}
+
+export default function TrustedBySection({ onOpenAllies }: TrustedBySectionProps = {}) {
   const [firstRow, secondRow] = splitArray(clients);
 
   const LogoItem = ({ client, className }: { client: Client; className?: string }) => {
@@ -191,6 +123,22 @@ export default function TrustedBySection() {
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" />
       </div>
+
+      {/* Botón Ver todos los aliados */}
+      <motion.div
+        className="relative z-10 flex justify-center mt-16"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        viewport={{ once: true }}
+      >
+        <MagneticButton
+          onClick={onOpenAllies}
+          className="glow rounded-full glass-effect-2 border-2 border-purple-500 hover:bg-purple-500/10 text-lg px-8 py-6 AlongSanss2-Thin"
+        >
+          Ver todos los aliados
+        </MagneticButton>
+      </motion.div>
     </section>
   );
 }

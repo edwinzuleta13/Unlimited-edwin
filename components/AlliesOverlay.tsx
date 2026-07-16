@@ -200,7 +200,7 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
             </motion.button>
 
             {/* ========== HEADER ========== */}
-            <div className="text-center mb-4 md:mb-6 flex-shrink-0">
+            <div className="text-center mb-4 md:mb-6 mt-2 md:mt-0 flex-shrink-0">
               <motion.span
                 className="inline-block text-purple-400 ALONGSANSS-REGULAR text-[10px] md:text-xs uppercase tracking-[0.3em] mb-2"
                 initial={{ opacity: 0 }}
@@ -210,7 +210,7 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
                 Confianza Global
               </motion.span>
               <motion.h2
-                className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl text-white ALONGSANSS-REGULAR tracking-tight"
+                className="text-4xl sm:text-4xl md:text-4xl lg:text-5xl text-white ALONGSANSS-REGULAR tracking-tight"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.5 }}

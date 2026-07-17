@@ -344,7 +344,7 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
                     Visitar sitio web
                   </a>
                 )}
-                <p className="text-[18px] md:text-base text-white/60 AlongSanss2-Thin leading-relaxed">
+                <p className="text-[18px] md:text-base text-white/60 AlongSanss2-Thin leading-relaxed whitespace-pre-line">
                   {selectedClient.description || "Empresa aliada que confía en nosotros para impulsar su transformación digital."}
                 </p>
               </motion.div>

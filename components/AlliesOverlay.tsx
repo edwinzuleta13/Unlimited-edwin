@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { clients } from "@/data/clients";
+import { clients, type Client } from "@/data/clients";
 
 interface AlliesOverlayProps {
   isOpen: boolean;
@@ -14,234 +14,224 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
   const totalClients = clients.length;
   const displayClients = useMemo(() => [...clients, ...clients, ...clients], []);
 
-  // Inicializamos con el índice del medio
   const [renderedIndex, setRenderedIndex] = useState(totalClients);
-
-  // SEGURIDAD: Calculamos el cliente seleccionado con una salvaguarda
-  const selectedIndex = totalClients > 0 ? renderedIndex % totalClients : 0;
+  const selectedIndex = renderedIndex % totalClients;
   const selectedClient = clients[selectedIndex];
 
   const carouselRef = useRef<HTMLDivElement>(null);
-  const isTeleporting = useRef(false);
-  const rafRef = useRef<number | null>(null);
+  const selectedCardRef = useRef<HTMLDivElement>(null);
+  const isArrowNav = useRef(false);
+  const teleportTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const touchStartX = useRef(0);
 
   const getCardStep = useCallback((container: HTMLElement) => {
     const card = container.querySelector("[data-card]") as HTMLElement | null;
     if (!card) return 0;
-    const gap = parseInt(getComputedStyle(container).gap) || 12;
+    const gap = parseInt(getComputedStyle(container).gap) || 16;
     return card.offsetWidth + gap;
   }, []);
 
-  const getSnapScrollLeft = useCallback((index: number) => {
+  // Función de scroll mejorada para soportar múltiples pasos
+  const scrollCarousel = useCallback((steps: number, direction: "prev" | "next") => {
     const container = carouselRef.current;
-    if (!container) return 0;
+    if (!container) return;
     const step = getCardStep(container);
-    if (!step) return 0;
-    const gap = parseInt(getComputedStyle(container).gap) || 12;
-    const cardWidth = step - gap;
-    const snapOffset = (container.clientWidth - cardWidth) / 2;
-    return index * step - snapOffset;
+    if (!step) return;
+
+    const moveAmount = step * steps;
+    const newScrollLeft = direction === "next" 
+      ? container.scrollLeft + moveAmount 
+      : container.scrollLeft - moveAmount;
+
+    container.scrollTo({ left: newScrollLeft, behavior: "smooth" });
   }, [getCardStep]);
 
-  const handleScroll = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    if (isTeleporting.current) return;
+  const goToPrevious = useCallback((steps: number = 1) => {
+    isArrowNav.current = true;
+    const newIndex = renderedIndex - steps;
 
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      const container = carouselRef.current;
-      if (!container) return;
-
-      const containerRect = container.getBoundingClientRect();
-      const containerCenter = containerRect.left + containerRect.width / 2;
-
-      const cards = container.querySelectorAll<HTMLElement>("[data-card]");
-      let closestIdx = -1;
-      let closestDist = Infinity;
-
-      cards.forEach((card, i) => {
-        const rect = card.getBoundingClientRect();
-        const cardCenter = rect.left + rect.width / 2;
-        const dist = Math.abs(cardCenter - containerCenter);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestIdx = i;
+    if (newIndex < totalClients) {
+      if (teleportTimer.current) clearTimeout(teleportTimer.current);
+      scrollCarousel(steps, "prev");
+      setRenderedIndex(newIndex);
+      teleportTimer.current = setTimeout(() => {
+        const container = carouselRef.current;
+        const step = container ? getCardStep(container) : 0;
+        if (container && step) {
+          const targetIndex = newIndex + totalClients;
+          container.scrollLeft = targetIndex * step - 24;
+          setRenderedIndex(targetIndex);
         }
-      });
+      }, 350);
+    } else {
+      scrollCarousel(steps, "prev");
+      setRenderedIndex(newIndex);
+    }
+  }, [renderedIndex, totalClients, scrollCarousel, getCardStep]);
 
-      if (closestIdx >= 0) {
-        setRenderedIndex(closestIdx);
-      }
-    });
-  }, []);
+  const goToNext = useCallback((steps: number = 1) => {
+    isArrowNav.current = true;
+    if (teleportTimer.current) clearTimeout(teleportTimer.current);
+    const newIndex = renderedIndex + steps;
 
-  const goToPrevious = useCallback(() => {
-    const container = carouselRef.current;
-    if (!container) return;
-    const step = getCardStep(container);
-    if (!step) return;
-    container.scrollTo({ left: container.scrollLeft - step, behavior: "smooth" });
-  }, [getCardStep]);
+    if (newIndex >= totalClients * 2) {
+      scrollCarousel(steps, "next");
+      setRenderedIndex(newIndex);
+      teleportTimer.current = setTimeout(() => {
+        const container = carouselRef.current;
+        const step = container ? getCardStep(container) : 0;
+        if (container && step) {
+          const targetIndex = newIndex - totalClients;
+          container.scrollLeft = targetIndex * step - 24;
+          setRenderedIndex(targetIndex);
+        }
+      }, 350);
+    } else {
+      scrollCarousel(steps, "next");
+      setRenderedIndex(newIndex);
+    }
+  }, [renderedIndex, totalClients, scrollCarousel, getCardStep]);
 
-  const goToNext = useCallback(() => {
-    const container = carouselRef.current;
-    if (!container) return;
-    const step = getCardStep(container);
-    if (!step) return;
-    container.scrollTo({ left: container.scrollLeft + step, behavior: "smooth" });
-  }, [getCardStep]);
+  // Manejo de swipe con detección de velocidad/distancia
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const diffX = e.changedTouches[0].clientX - touchStartX.current;
+    const absDiff = Math.abs(diffX);
+    const threshold = 40; 
+
+    if (absDiff > threshold) {
+      // Si el swipe es largo (ej. más de 140px), salta 2 o 3 posiciones
+      const steps = absDiff > 220 ? 3 : absDiff > 120 ? 2 : 1;
+      if (diffX > 0) goToPrevious(steps);
+      else goToNext(steps);
+    }
+  }, [goToPrevious, goToNext]);
 
   useEffect(() => {
-    if (!carouselRef.current || totalClients === 0) return;
-
-    if (renderedIndex < totalClients) {
-      isTeleporting.current = true;
-      const container = carouselRef.current;
-      const targetIndex = renderedIndex + totalClients;
-      container.scrollLeft = getSnapScrollLeft(targetIndex);
-      setRenderedIndex(targetIndex);
-      requestAnimationFrame(() => { isTeleporting.current = false; });
-    } else if (renderedIndex >= totalClients * 2) {
-      isTeleporting.current = true;
-      const container = carouselRef.current;
-      const targetIndex = renderedIndex - totalClients;
-      container.scrollLeft = getSnapScrollLeft(targetIndex);
-      setRenderedIndex(targetIndex);
-      requestAnimationFrame(() => { isTeleporting.current = false; });
+    if (isArrowNav.current) {
+      isArrowNav.current = false;
+      return;
     }
-  }, [renderedIndex, totalClients, getSnapScrollLeft]);
-
-  const scrollToCard = useCallback((index: number) => {
-    const container = carouselRef.current;
-    if (!container) return;
-    const scrollLeft = getSnapScrollLeft(index);
-    container.scrollTo({ left: scrollLeft, behavior: "smooth" });
-  }, [getSnapScrollLeft]);
+    if (selectedCardRef.current && carouselRef.current) {
+      const card = selectedCardRef.current;
+      const container = carouselRef.current;
+      const scrollTarget = card.offsetLeft - 24;
+      container.scrollTo({ left: scrollTarget, behavior: "smooth" });
+    }
+  }, [selectedIndex]);
 
   useEffect(() => {
     if (!isOpen) return;
-    const timer = setTimeout(() => {
-      const container = carouselRef.current;
-      if (container && totalClients > 0) {
-        setRenderedIndex(totalClients);
-        container.scrollLeft = getSnapScrollLeft(totalClients);
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [isOpen, totalClients, getSnapScrollLeft]);
-
-  // Si no hay cliente seleccionado (por error de carga), no renderizamos el contenido problemático
-  if (!selectedClient && isOpen) return null;
+    const container = carouselRef.current;
+    if (!container) return;
+    const step = getCardStep(container);
+    if (!step) return;
+    setRenderedIndex(totalClients);
+    container.scrollLeft = totalClients * step - 24;
+  }, [isOpen, totalClients, getCardStep]);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-start overflow-hidden bg-black/90 backdrop-blur-xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         >
-          {/* Botón Cerrar */}
-          <button
-            onClick={onClose}
-            className="fixed top-4 right-4 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <motion.div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={onClose} />
 
           <motion.div
-            className="w-full max-w-7xl h-full flex flex-col px-4 pt-12 pb-4 overflow-y-auto md:overflow-hidden scrollbar-none"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="relative z-10 w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8 flex flex-col overflow-hidden"
+            initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}
           >
-            {/* Header */}
-            <div className="text-center mb-6 flex-shrink-0">
-              <span className="text-purple-400 ALONGSANSS-REGULAR text-[10px] md:text-xs uppercase tracking-[0.3em] block mb-2">
-                Confianza Global
-              </span>
-              <h2 className="text-2xl md:text-5xl text-white ALONGSANSS-REGULAR tracking-tight">
-                Nuestros <span className="text-purple-400">Aliados Comerciales</span>
-              </h2>
+            {/* Close Button */}
+            <motion.button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white"
+              whileHover={{ rotate: 90 }}
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            </motion.button>
+
+            {/* HEADER */}
+            <div className="text-center mb-4 flex-shrink-0">
+              <span className="text-purple-400 text-[10px] uppercase tracking-[0.3em] mb-1 block">Alianzas Estratégicas</span>
+              <h2 className="text-2xl md:text-4xl text-white ALONGSANSS-REGULAR">Nuestros <span className="text-purple-400">Aliados</span></h2>
             </div>
 
-            {/* Carousel */}
-            <div className="relative mb-6 md:mb-12 flex-shrink-0">
-              <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-black/60 to-transparent pointer-events-none z-[5]" />
-              <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-black/60 to-transparent pointer-events-none z-[5]" />
-
+            {/* CAROUSEL */}
+            <div className="relative flex-shrink-0 mb-6">
               <motion.div
                 ref={carouselRef}
-                onScroll={handleScroll}
-                className="flex gap-3 md:gap-6 overflow-x-auto py-4 px-[35%] md:px-12 snap-x snap-mandatory scrollbar-none"
+                className="flex gap-4 overflow-x-auto py-4 px-6 scrollbar-none touch-pan-y"
+                onTouchStart={(e) => touchStartX.current = e.touches[0].clientX}
+                onTouchEnd={handleTouchEnd}
               >
-                {displayClients.map((client, i) => (
-                  <div
-                    key={`${client.name}-${i}`}
-                    data-card
-                    className={cn(
-                      "relative flex-shrink-0 w-[200px] md:w-[240px] h-[110px] md:h-[120px] flex items-center justify-center p-4 rounded-xl border transition-all duration-500 snap-center",
-                      i === renderedIndex
-                        ? "bg-white/10 border-purple-500/50 scale-110 shadow-lg shadow-purple-500/20"
-                        : "bg-white/5 border-white/10 scale-95 opacity-40 grayscale"
-                    )}
-                  >
-                    <img src={client.image} alt={client.name} className="max-w-full max-h-full object-contain" />
-                  </div>
-                ))}
+                {displayClients.map((client, i) => {
+                  const isSelected = i === renderedIndex;
+                  return (
+                    <motion.div
+                      key={`${client.name}-${i}`}
+                      ref={isSelected ? selectedCardRef : undefined}
+                      data-card
+                      className={cn(
+                        "relative flex-shrink-0 w-[160px] md:w-[220px] h-[80px] md:h-[110px] flex items-center justify-center p-4 rounded-xl border transition-all duration-500",
+                        isSelected ? "bg-white/10 border-purple-500/50 scale-105" : "bg-white/5 border-white/5 opacity-40"
+                      )}
+                    >
+                      <img src={client.image} alt={client.name} className="max-w-full max-h-full object-contain" />
+                    </motion.div>
+                  );
+                })}
               </motion.div>
             </div>
 
-            {/* INFO PANEL - Aquí estaba el error */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-8 md:flex-1 md:min-h-0">
-              <div className="col-span-1 md:col-span-3 bg-white/5 border border-white/10 rounded-2xl p-6 md:p-10 backdrop-blur-md flex flex-col md:h-full md:overflow-hidden">
-                <div className="flex-shrink-0">
-                  <div className="mb-3">
-                    <h3 className="text-5xl md:text-4xl text-white ALONGSANSS-REGULAR mb-2 tracking-tight">
-                      {selectedClient.name}
-                    </h3>
-                    {selectedClient.href && (
-                      <a href={selectedClient.href} target="_blank" rel="noopener noreferrer" className="text-purple-400 text-lg md:text-sm flex items-center gap-2 mb-2">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101" strokeWidth={2} /></svg>
-                        Sitio Web Oficial
-                      </a>
-                    )}
-                  </div>
-                  <p className="text-xl md:text-lg text-white/70 AlongSanss2-Thin leading-relaxed whitespace-pre-line">
-                    {selectedClient.description}
-                  </p>
-                </div>
+            {/* INFO + IMAGE PANEL (Texto adaptable y logo visible) */}
+            <div className="flex-1 min-h-0 w-full flex flex-col md:grid md:grid-cols-5 gap-4 md:gap-8 overflow-hidden">
+              {/* Contenedor de Texto */}
+              <motion.div
+                key={selectedClient.name + "-info"}
+                initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+                className="md:col-span-3 bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 md:p-8 flex flex-col justify-center overflow-y-auto scrollbar-none"
+              >
+                <h3 className="text-2xl md:text-3xl lg:text-4xl text-white ALONGSANSS-REGULAR mb-2 leading-tight">
+                  {selectedClient.name}
+                </h3>
+                
+                {selectedClient.href && (
+                  <a href={selectedClient.href} target="_blank" className="text-purple-400 text-sm mb-4 block hover:underline">Visitar sitio web</a>
+                )}
 
-                {/* LOGO MÓVIL PROTAGONISTA */}
-                <div className="mt-8 pt-8 border-t border-white/10 flex flex-col items-center justify-center md:hidden flex-grow">
-                  <motion.img
-                    key={selectedClient.image}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                {/* Texto con tamaño fluido (text-base a text-xl) que se adapta al espacio */}
+                <p className="text-[15px] sm:text-[17px] md:text-lg lg:text-xl text-white/70 AlongSanss2-Thin leading-relaxed">
+                  {selectedClient.description || "Aliado estratégico comprometido con la innovación y el desarrollo tecnológico continuo."}
+                </p>
+              </motion.div>
+
+              {/* Contenedor de Logo (Se mantiene visible al lado) */}
+              <motion.div
+                key={selectedClient.name + "-img"}
+                initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                className="md:col-span-2 flex items-center justify-center bg-white/[0.02] rounded-2xl p-6"
+              >
+                <div className="relative w-full max-w-[180px] md:max-w-[300px] aspect-square flex items-center justify-center">
+                  <div className="absolute inset-0 bg-purple-500/5 rounded-full blur-3xl" />
+                  <img
                     src={selectedClient.image}
-                    className="h-44 w-auto max-w-[85%] object-contain brightness-110 drop-shadow-[0_0_30px_rgba(168,85,247,0.35)]"
+                    alt={selectedClient.name}
+                    className="relative z-10 w-full h-full object-contain filter drop-shadow-2xl"
                   />
-                  <div className="w-32 h-1 bg-purple-500/20 blur-xl mt-4"></div>
                 </div>
-              </div>
-
-              {/* LOGO DESKTOP */}
-              <div className="hidden md:flex col-span-2 items-center justify-center bg-white/5 border border-white/10 rounded-2xl relative">
-                <img src={selectedClient.image} alt={selectedClient.name} className="relative z-10 w-3/5 object-contain" />
-              </div>
+              </motion.div>
             </div>
 
             {/* DOTS */}
-            <div className="flex items-center justify-center gap-2 mt-4 mb-4 flex-shrink-0">
+            <div className="flex justify-center gap-1.5 mt-4 flex-shrink-0">
               {clients.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => scrollToCard(totalClients + i)}
+                  onClick={() => setRenderedIndex(totalClients + i)}
                   className={cn(
                     "h-1.5 transition-all duration-300 rounded-full",
-                    i === selectedIndex ? "w-8 bg-purple-500" : "w-1.5 bg-white/20"
+                    i === selectedIndex ? "w-6 bg-purple-500" : "w-1.5 bg-white/20"
                   )}
                 />
               ))}

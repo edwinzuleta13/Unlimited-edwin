@@ -201,7 +201,7 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
                 )}
 
                 {/* Texto con tamaño fluido (text-base a text-xl) que se adapta al espacio */}
-                <p className="text-[15px] sm:text-[17px] md:text-lg lg:text-xl text-white/70 AlongSanss2-Thin leading-relaxed">
+                <p className="text-[15px] sm:text-[17px] md:text-lg lg:text-xl text-white/70 AlongSanss2-Thin leading-relaxed whitespace-pre-line">
                   {selectedClient.description || "Aliado estratégico comprometido con la innovación y el desarrollo tecnológico continuo."}
                 </p>
               </motion.div>

@@ -159,6 +159,24 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
 
             {/* CAROUSEL */}
             <div className="relative flex-shrink-0 mb-6">
+              {/* Flecha Anterior - visible solo en desktop */}
+              <button
+                onClick={() => goToPrevious(1)}
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:bg-purple-600/60 hover:border-purple-500/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-md shadow-lg"
+                aria-label="Anterior"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              </button>
+
+              {/* Flecha Siguiente - visible solo en desktop */}
+              <button
+                onClick={() => goToNext(1)}
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:bg-purple-600/60 hover:border-purple-500/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-md shadow-lg"
+                aria-label="Siguiente"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              </button>
+
               <motion.div
                 ref={carouselRef}
                 className="flex gap-4 overflow-x-auto py-4 px-6 scrollbar-none touch-pan-y"

@@ -89,20 +89,20 @@ export default function TrustedBySection({ onOpenAllies }: TrustedBySectionProps
           {/* Flechas compartidas - centradas verticalmente entre los dos carruseles */}
           <button
             onClick={handlePrev}
-            className="absolute left-0 md:-left-6 top-[40%] -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:bg-purple-600/60 hover:border-purple-500/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-md shadow-lg"
+            className="absolute left-0 md:-left-6 top-[40%] -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600/50 hover:border-purple-400/70 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-xl shadow-lg shadow-purple-500/20"
             aria-label="Anterior"
           >
-            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
           <button
             onClick={handleNext}
-            className="absolute right-0 md:-right-6 top-[40%] -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:bg-purple-600/60 hover:border-purple-500/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-md shadow-lg"
+            className="absolute right-0 md:-right-6 top-[40%] -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600/50 hover:border-purple-400/70 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-xl shadow-lg shadow-purple-500/20"
             aria-label="Siguiente"
           >
-            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>

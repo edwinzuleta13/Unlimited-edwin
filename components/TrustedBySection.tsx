@@ -89,7 +89,7 @@ export default function TrustedBySection({ onOpenAllies }: TrustedBySectionProps
           {/* Flechas compartidas - centradas verticalmente entre los dos carruseles */}
           <button
             onClick={handlePrev}
-            className="absolute left-0 md:-left-6 top-[40%] -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600/50 hover:border-purple-400/70 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-xl shadow-lg shadow-purple-500/20"
+            className="absolute left-0 md:-left-6 top-[40%] -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/5 border border-white/20 text-purple-300 hover:bg-purple-500/15 hover:border-purple-400/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-xl shadow-lg shadow-black/10"
             aria-label="Anterior"
           >
             <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +99,7 @@ export default function TrustedBySection({ onOpenAllies }: TrustedBySectionProps
 
           <button
             onClick={handleNext}
-            className="absolute right-0 md:-right-6 top-[40%] -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600/50 hover:border-purple-400/70 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-xl shadow-lg shadow-purple-500/20"
+            className="absolute right-0 md:-right-6 top-[40%] -translate-y-1/2 z-30 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-white/5 border border-white/20 text-purple-300 hover:bg-purple-500/15 hover:border-purple-400/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-xl shadow-lg shadow-black/10"
             aria-label="Siguiente"
           >
             <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">

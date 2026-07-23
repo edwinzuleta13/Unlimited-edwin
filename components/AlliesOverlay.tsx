@@ -210,16 +210,16 @@ export default function AlliesOverlay({ isOpen, onClose }: AlliesOverlayProps) {
                 initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                 className="md:col-span-3 bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5 md:p-8 flex flex-col justify-center overflow-y-auto scrollbar-none"
               >
-                <h3 className="text-2xl md:text-3xl lg:text-4xl text-white ALONGSANSS-REGULAR mb-2 leading-tight">
+                <h3 className="text-[26px] md:text-3xl lg:text-4xl text-white ALONGSANSS-REGULAR mb-2 leading-tight text-center">
                   {selectedClient.name}
                 </h3>
                 
                 {selectedClient.href && (
-                  <a href={selectedClient.href} target="_blank" className="text-purple-400 text-sm mb-4 block hover:underline">Visitar sitio web</a>
+                  <a href={selectedClient.href} target="_blank" className="text-purple-400 text-lg md:text-xl mb-4 block text-center hover:underline">Visitar sitio web</a>
                 )}
 
-                {/* Texto con tamaño fluido (text-base a text-xl) que se adapta al espacio */}
-                <p className="text-[15px] sm:text-[17px] md:text-lg lg:text-xl text-white/70 AlongSanss2-Thin leading-relaxed whitespace-pre-line">
+                {/* Texto con tamaño fluido que se adapta al espacio */}
+                <p className="text-[19px] sm:text-[21px] md:text-xl lg:text-2xl text-white/70 AlongSanss2-Thin leading-relaxed whitespace-pre-line text-center">
                   {selectedClient.description || "Aliado estratégico comprometido con la innovación y el desarrollo tecnológico continuo."}
                 </p>
               </motion.div>

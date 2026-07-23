@@ -165,10 +165,10 @@ const AlliesCarousel = forwardRef<AlliesCarouselHandle, AlliesCarouselProps>(({ 
                 if (isLink) window.open(client.href, "_blank");
               }}
               className={cn(
-                "relative flex-shrink-0 w-[170px] md:w-[240px] h-[85px] md:h-[120px] flex items-center justify-center p-3 md:p-4 rounded-xl border transition-all duration-500 cursor-pointer",
+                "relative flex-shrink-0 w-[170px] md:w-[240px] h-[85px] md:h-[120px] flex items-center justify-center p-3 md:p-4 rounded-xl border transition-all duration-500 cursor-pointer backdrop-blur-lg group",
                 isSelected 
                   ? "bg-white/10 border-purple-500/50 scale-105 shadow-lg shadow-purple-500/20" 
-                  : "bg-white/5 border-white/5 opacity-50 hover:opacity-80 hover:border-white/20"
+                  : "bg-white/5 border-white/10 hover:bg-purple-500/10 hover:border-purple-400/40 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
               )}
               whileHover={{ scale: isSelected ? 1.05 : 1.08 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -176,7 +176,7 @@ const AlliesCarousel = forwardRef<AlliesCarouselHandle, AlliesCarouselProps>(({ 
               <img 
                 src={client.image} 
                 alt={client.name} 
-                className="max-w-full max-h-full object-contain pointer-events-none"
+                className="max-w-full max-h-full object-contain pointer-events-none grayscale group-hover:grayscale-0 transition-all duration-500"
                 draggable={false}
               />
             </motion.div>

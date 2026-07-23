@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import { Marquee, MarqueeContent, MarqueeItem } from "@/components/ui/marquee";
-import { cn } from "@/lib/utils";
+import AlliesCarousel, { type AlliesCarouselHandle } from "@/components/AlliesCarousel";
 import MagneticButton from "@/components/magnetic-button";
 
 
@@ -21,39 +20,18 @@ interface TrustedBySectionProps {
 export default function TrustedBySection({ onOpenAllies }: TrustedBySectionProps = {}) {
   const [firstRow, secondRow] = splitArray(clients);
 
-  const LogoItem = ({ client, className }: { client: Client; className?: string }) => {
-    const isLink = !!client.href;
-    
-    return (
-      <MarqueeItem className={cn("mx-6 md:mx-10", className)}>
-        <motion.a
-          href={isLink ? client.href : undefined}
-          target={isLink ? "_blank" : undefined}
-          rel={isLink ? "noopener noreferrer" : undefined}
-          className={cn(
-            "block group transition-all duration-300",
-            isLink ? "cursor-pointer" : "cursor-default"
-          )}
-          whileHover={isLink ? { scale: 1.1, y: -15 } : {}}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          <div className="relative w-36 h-[70px] md:w-[211px] md:h-[106px] flex items-center justify-center p-4 bg-white/5 rounded-2xl border border-white/10 glass-effect-purple backdrop-blur-sm transition-all duration-300">
-            <img
-              src={client.image}
-              alt={client.name}
-              className="max-w-full max-h-full object-contain filter grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
-            />
-            {/* Subtle glow highlight on hover */}
-            <div className="absolute inset-0 rounded-2xl bg-purple-500/0 group-hover:bg-purple-500/10 blur-xl transition-all duration-500 -z-10" />
-          </div>
-          <p className="mt-3 text-[10px] md:text-xs text-white/30 uppercase tracking-widest AlongSanss2-Thin opacity-0 group-hover:opacity-100 transition-all duration-300 text-center">
-            {client.name}
-          </p>
-        </motion.a>
-      </MarqueeItem>
-    );
+  const carousel1Ref = useRef<AlliesCarouselHandle>(null);
+  const carousel2Ref = useRef<AlliesCarouselHandle>(null);
+
+  const handlePrev = () => {
+    carousel1Ref.current?.goToPrevious(1);
+    carousel2Ref.current?.goToPrevious(1);
   };
 
+  const handleNext = () => {
+    carousel1Ref.current?.goToNext(1);
+    carousel2Ref.current?.goToNext(1);
+  };
 
   return (
     <section className="relative py-24 w-full overflow-hidden">
@@ -96,32 +74,39 @@ export default function TrustedBySection({ onOpenAllies }: TrustedBySectionProps
         </motion.p>
       </motion.div>
 
-      <div className="relative space-y-0">
-        {/* Top Marquee - Scrolling Left */}
-        <Marquee style={{ overflow: "visible" }}>
-          <MarqueeContent speed={30} direction="left" pauseOnHover={true} style={{ overflow: "visible" }}>
-            {firstRow.map((client) => (
-              <LogoItem key={client.name} client={client} className="py-10" />
-            ))}
-          </MarqueeContent>
-        </Marquee>
+      <div className="relative max-w-7xl mx-auto px-4">
+        <div className="relative space-y-4 md:space-y-6">
+          {/* Difuminados laterales */}
+          <div className="absolute inset-y-0 left-0 w-24 md:w-32 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-24 md:w-32 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" />
 
-        {/* Bottom Marquee - Scrolling Right */}
-        <Marquee style={{ overflow: "visible" }}>
-          <MarqueeContent speed={30} direction="right" pauseOnHover={true} style={{ overflow: "visible" }}>
-            {secondRow.map((client) => (
-              <LogoItem key={client.name} client={client} className="py-10" />
-            ))}
-          </MarqueeContent>
-        </Marquee>
+          {/* Primer carrusel */}
+          <AlliesCarousel ref={carousel1Ref} clients={firstRow} />
 
+          {/* Segundo carrusel */}
+          <AlliesCarousel ref={carousel2Ref} clients={secondRow} reverse />
 
+          {/* Flechas compartidas - centradas verticalmente entre los dos carruseles */}
+          <button
+            onClick={handlePrev}
+            className="absolute left-0 md:-left-6 top-[40%] -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:bg-purple-600/60 hover:border-purple-500/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-md shadow-lg"
+            aria-label="Anterior"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
 
-
-        
-        {/* Soft Side Blurs */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" />
+          <button
+            onClick={handleNext}
+            className="absolute right-0 md:-right-6 top-[40%] -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:bg-purple-600/60 hover:border-purple-500/50 hover:text-white hover:scale-110 active:scale-95 transition-all duration-300 backdrop-blur-md shadow-lg"
+            aria-label="Siguiente"
+          >
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Botón Ver todos los aliados */}

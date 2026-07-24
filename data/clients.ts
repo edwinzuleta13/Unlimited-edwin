@@ -113,6 +113,13 @@ export const clients: Client[] = [
     services: ["E-commerce", "Catálogo digital", "Portal web"],
   },
   {
+    name: "Embutidos El Drago",
+    image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/logodrago.png",
+    href: "https://embutidoseldrago.com",
+    description: "Embutidos El Drago, es una empresa encargada de la producción de embutidos, 100% venezolana.",
+    services: ["Identidad digital", "Presencia web", "Marketing digital"],
+  },
+  {
     name: "HCS Distribution",
     image: "https://tmnjhjfayezmqkzjtqgn.supabase.co/storage/v1/object/public/imagenes/logos%20clientes/HCS.jpg",
     href: "https://www.hcstrading.org/",
